@@ -9,6 +9,7 @@ Launch BlackTeam to execute a project with the Director orchestrating parallel s
 | **Team Lead** | The Director | Strategy, Coordination, Decisions |
 | **Data Engineering** | DataForge | Pipelines, Lakehouse, ETL |
 | **Code Quality** | CodeGuard | Standards, Reviews, Security |
+| **UX/UI Design** | PixelPerfect | Visual QA, Accessibility, Design Systems |
 | **SEO Strategy** | SEO Commander | Rankings, Keywords, Takeover |
 | **ML/Data Science** | Elias Thorne | Models, Analytics, Agents |
 | **BI Development** | DataViz | Dashboards, Reports, Visualization |
@@ -260,12 +261,24 @@ LOG DECISION: "Project Intake: [Project Name]"
 2. [Task]
 **Decision Points:** [Where Director approval needed]
 
+### Visual QA Track (AUTO-ASSIGNED FOR UI PROJECTS)
+**Lead:** PixelPerfect (Senior UX/UI Designer)
+**Auto-Trigger Keywords:** ui, ux, design, dashboard, visualization, theme, dark mode, styling, css, html, frontend
+**Tasks:**
+1. Review color contrast (WCAG AA compliance)
+2. Validate dark/light mode consistency
+3. Check interactive states (hover, focus, active)
+4. Verify responsive breakpoints
+5. Accessibility audit
+**Decision Points:** Visual QA approval required before release
+
 ## Dependencies
 [Task X must complete before Task Y]
 
 ## Quality Gates
 - [ ] [Gate 1]
 - [ ] [Gate 2]
+- [ ] **Visual QA passed (MANDATORY for UI projects)** - PixelPerfect review
 - [ ] Release notes generated (MANDATORY for releases)
 - [ ] QA review passed (MANDATORY for releases)
 - [ ] Director approval obtained (MANDATORY for releases)
@@ -400,7 +413,25 @@ The Director generates release notes capturing ALL changes in this release:
 **Awaiting:** QA Review
 ```
 
-### Step 2: QA Engineer Review (Post Production Manager)
+### Step 2: Visual QA Review (PixelPerfect) - MANDATORY FOR UI PROJECTS
+
+For ANY project with UI/visual components, PixelPerfect MUST review before release:
+
+```
+VISUAL QA CHECKLIST:
+- [ ] Color contrast meets WCAG AA (4.5:1 minimum for text)
+- [ ] No white text on white/light backgrounds
+- [ ] Dark mode displays correctly (if applicable)
+- [ ] All hover/focus states visible and accessible
+- [ ] Typography hierarchy is clear
+- [ ] Responsive design works across breakpoints
+- [ ] Loading/error/empty states are styled
+- [ ] Interactive elements have proper states
+```
+
+**Visual QA Status:** `APPROVED` / `NEEDS REVISION` (with specific issues)
+
+### Step 3: QA Engineer Review (Post Production Manager)
 
 The Post Production Manager MUST review the release notes for:
 - **Accuracy:** All changes listed match actual commits
@@ -420,7 +451,7 @@ QA CHECKLIST:
 
 **QA Status:** `APPROVED` / `NEEDS REVISION` (with comments)
 
-### Step 3: Director Final Approval
+### Step 4: Director Final Approval
 
 The Director reviews QA feedback and makes final decision:
 
@@ -433,7 +464,7 @@ DIRECTOR APPROVAL:
 DECISION: APPROVED / REJECTED
 ```
 
-### Step 4: Execute Merge/Push
+### Step 5: Execute Merge/Push
 
 **ONLY after Director approval:**
 1. Confirm with stakeholder: "Ready to push to [target]?"
@@ -605,6 +636,7 @@ Run: `bedrock team dashboard` to view full activity report
 - Specialists work autonomously within their assigned tasks
 - Decision points return control to Director
 - Quality gates must pass before final delivery
+- **MANDATORY: Visual QA by PixelPerfect MUST pass before ANY UI project release**
 - **MANDATORY: Release notes MUST be generated before ANY merge to main or branch releases**
 - **MANDATORY: Release notes MUST be QA-reviewed by Post Production Manager**
 - **MANDATORY: Director MUST approve release notes before executing merge/push**
