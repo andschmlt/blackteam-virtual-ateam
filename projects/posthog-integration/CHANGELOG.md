@@ -17,44 +17,76 @@ This changelog tracks all commits, versions, and updates across all domains in t
 | Domain | Version | Status | PostHog ID | Last Update |
 |--------|---------|--------|------------|-------------|
 | hudsonreporter.com | 1.1.0 | Active | 295222 | 2026-01-21 |
-| lover.io | 1.0.0 | Active | - | 2026-01-16 |
 | northeasttimes.com | 1.1.0 | Active | - | 2026-01-21 |
-| pokerology.com | 1.0.0 | Pending | - | 2026-01-16 |
-| europeangaming.eu | 1.0.0 | Pending | - | 2026-01-16 |
-| bestdaily.com | 1.0.0 | Pending | - | 2026-01-21 |
-| betanews.com | 1.0.0 | Pending | - | 2026-01-21 |
-| centraljersey.com | 1.0.0 | Pending | - | 2026-01-21 |
-| countryqueer.com | 1.0.0 | Pending | - | 2026-01-21 |
-| culture.org | 1.0.0 | Pending | - | 2026-01-21 |
-| dotesports.com | 1.0.0 | Pending | - | 2026-01-21 |
-| esports.gg | 1.0.0 | Pending | - | 2026-01-21 |
-| godisageek.com | 1.0.0 | Pending | - | 2026-01-21 |
-| iogames.space | 1.0.0 | Pending | - | 2026-01-21 |
-| lowerbuckstimes.com | 1.0.0 | Pending | - | 2026-01-21 |
-| management.org | 1.0.0 | Pending | - | 2026-01-21 |
-| metrotimes.com | 1.0.0 | Pending | - | 2026-01-21 |
-| mrracy.com | 1.0.0 | Pending | - | 2026-01-21 |
-| newgamenetwork.com | 1.0.0 | Pending | - | 2026-01-21 |
-| ostexperte.de | 1.0.0 | Pending | - | 2026-01-21 |
-| philadelphiaweekly.com | 1.0.0 | Pending | - | 2026-01-21 |
-| pokertube.com | 1.0.0 | Pending | - | 2026-01-21 |
-| silvergames.com | 1.0.0 | Pending | - | 2026-01-21 |
-| snjtoday.com | 1.0.0 | Pending | - | 2026-01-21 |
-| southphillyreview.com | 1.0.0 | Pending | - | 2026-01-21 |
-| sport-oesterreich.at | 1.0.0 | Pending | - | 2026-01-21 |
-| starnewsphilly.com | 1.0.0 | Pending | - | 2026-01-21 |
-| theroanokestar.com | 1.0.0 | Pending | - | 2026-01-21 |
+| lover.io | 1.0.0 | Active | - | 2026-01-16 |
+| bestdaily.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| betanews.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| centraljersey.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| countryqueer.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| culture.org | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| dotesports.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| esports.gg | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| europeangaming.eu | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| godisageek.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| iogames.space | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| lowerbuckstimes.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| management.org | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| metrotimes.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| mrracy.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| newgamenetwork.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| ostexperte.de | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| philadelphiaweekly.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| pokerology.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| pokertube.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| silvergames.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| snjtoday.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| southphillyreview.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| sport-oesterreich.at | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| starnewsphilly.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| theroanokestar.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| thesunpapers.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| topdocumentaryfilms.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| warcraftmovies.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
 
 ---
 
 ## Changelog by Domain
 
-### hudsonreporter.com
+### Bulk Update - 28 Domains (2026-01-21)
 
-#### v1.1.0 (2026-01-21)
-**Type:** Feature Update
-**ClickUp Task:** [86aeprpck](https://app.clickup.com/t/86aeprpck) (Sub-task of 86aepf7r3)
+**ClickUp Task:** [86aepuk2b](https://app.clickup.com/t/86aepuk2b)
+**Type:** Conversion Tracking
 **Assignees:** Joshua, Malcolm
+
+**Domains Updated:**
+- bestdaily.com
+- betanews.com
+- centraljersey.com
+- countryqueer.com
+- culture.org
+- dotesports.com
+- esports.gg
+- europeangaming.eu
+- godisageek.com
+- iogames.space
+- lowerbuckstimes.com
+- management.org
+- metrotimes.com
+- mrracy.com
+- newgamenetwork.com
+- ostexperte.de
+- philadelphiaweekly.com
+- pokerology.com
+- pokertube.com
+- silvergames.com
+- snjtoday.com
+- southphillyreview.com
+- sport-oesterreich.at
+- starnewsphilly.com
+- theroanokestar.com
+- thesunpapers.com
+- topdocumentaryfilms.com
+- warcraftmovies.com
 
 **Changes:**
 - Added enhanced conversion tracking (5 types)
@@ -63,39 +95,54 @@ This changelog tracks all commits, versions, and updates across all domains in t
   - Affiliate Click tracking
   - Article Completion tracking
   - Return Visit tracking
-- Created `conversion-tracker.js` (550 lines)
-- Updated `posthog-full-tracking.php` with WordPress integration
+- Created `conversion-tracker.js` (28KB each)
+- Created `posthog-full-tracking.php` with WordPress integration
 - Created `DEPLOYMENT_GUIDE.md` with SQL queries for conversion rates
 
-**Files Added/Modified:**
-| File | Action | Description |
-|------|--------|-------------|
-| `conversion-tracker.js` | Added | Enhanced conversion tracking (5 types) |
-| `posthog-full-tracking.php` | Updated | WordPress integration with all trackers |
-| `DEPLOYMENT_GUIDE.md` | Added | Deployment instructions and HogQL queries |
-
 ---
+
+### hudsonreporter.com
+
+#### v1.1.0 (2026-01-21)
+**Type:** Feature Update
+**ClickUp Task:** [86aeprpck](https://app.clickup.com/t/86aeprpck) (Sub-task of 86aepf7r3)
+**Git Commit:** `eda7350`
+
+**Changes:**
+- Added enhanced conversion tracking (5 types)
+- Created `conversion-tracker.js`
+- Created `posthog-full-tracking.php`
+- Created `DEPLOYMENT_GUIDE.md`
 
 #### v1.0.0 (2026-01-21)
 **Type:** Initial Setup
 **ClickUp Task:** [86aepf7r3](https://app.clickup.com/t/86aepf7r3)
-**Assignees:** Joshua, Malcolm
 
 **Changes:**
 - Initial PostHog NavBoost integration
-- Created navboost-tracker.js with engagement tracking
-- Created posthog-functions.php for WordPress
-- Created dashboard queries and cohort definitions
 
-**Files Added:**
-| File | Action | Description |
-|------|--------|-------------|
-| `navboost-tracker.js` | Added | NavBoost engagement tracking |
-| `posthog-functions.php` | Added | WordPress integration |
-| `dashboard-queries.sql` | Added | HogQL dashboard queries |
-| `cohorts-funnels.json` | Added | Cohort and funnel definitions |
-| `README.md` | Added | Setup documentation |
-| `RELEASE_NOTES.md` | Added | Release notes |
+---
+
+### northeasttimes.com
+
+#### v1.1.0 (2026-01-21)
+**Type:** Feature Update
+**ClickUp Task:** [86aeptbq3](https://app.clickup.com/t/86aeptbq3) (Sub-task of 86aepf41p)
+**Git Commit:** `aeba50ef`
+
+**Changes:**
+- Added enhanced conversion tracking (5 types)
+- Created `conversion-tracker.js`
+- Created `posthog-full-tracking.php`
+- Created `DEPLOYMENT_GUIDE.md`
+
+#### v1.0.0 (2026-01-16)
+**Type:** Initial Setup
+**Status:** Deployed
+
+**Changes:**
+- Initial PostHog NavBoost integration
+- Daily cron report configured (09:05)
 
 ---
 
@@ -111,79 +158,16 @@ This changelog tracks all commits, versions, and updates across all domains in t
 
 ---
 
-### northeasttimes.com
-
-#### v1.1.0 (2026-01-21)
-**Type:** Feature Update
-**ClickUp Task:** [86aeptbq3](https://app.clickup.com/t/86aeptbq3) (Sub-task of 86aepf41p)
-**Assignees:** Joshua, Malcolm
-
-**Changes:**
-- Added enhanced conversion tracking (5 types)
-  - Newsletter Signup tracking
-  - Ad Click tracking
-  - Affiliate Click tracking
-  - Article Completion tracking
-  - Return Visit tracking
-- Created `conversion-tracker.js` (28KB)
-- Created `posthog-full-tracking.php` with WordPress integration
-- Created `DEPLOYMENT_GUIDE.md` with SQL queries for conversion rates
-
-**Files Added/Modified:**
-| File | Action | Description |
-|------|--------|-------------|
-| `conversion-tracker.js` | Added | Enhanced conversion tracking (5 types) |
-| `posthog-full-tracking.php` | Added | WordPress integration with all trackers |
-| `DEPLOYMENT_GUIDE.md` | Added | Deployment instructions and HogQL queries |
-| `RELEASE_NOTES.md` | Added | Version history |
-
----
-
-#### v1.0.0 (2026-01-16)
-**Type:** Initial Setup
-**Status:** Deployed
-
-**Changes:**
-- Initial PostHog NavBoost integration
-- Daily cron report configured (09:05)
-
----
-
-### pokerology.com
-
-#### v1.0.0 (2026-01-16)
-**Type:** Initial Setup
-**Status:** Pending Deployment
-
-**Changes:**
-- Initial PostHog NavBoost integration configured
-- Awaiting deployment
-
----
-
-### europeangaming.eu
-
-#### v1.0.0 (2026-01-16)
-**Type:** Initial Setup
-**Status:** Pending Deployment
-
-**Changes:**
-- Initial PostHog NavBoost integration configured
-- Awaiting deployment
-
----
-
 ## Commit Log
 
 | Date | Domain | Version | Commit Message | Author |
 |------|--------|---------|----------------|--------|
+| 2026-01-21 | 28 domains | 1.1.0 | Bulk add conversion tracking | Virtual ATeam |
 | 2026-01-21 | northeasttimes.com | 1.1.0 | Add conversion tracking (5 types) | Virtual ATeam |
 | 2026-01-21 | hudsonreporter.com | 1.1.0 | Add conversion tracking (5 types) | Virtual ATeam |
 | 2026-01-21 | hudsonreporter.com | 1.0.0 | Initial PostHog NavBoost setup | Virtual ATeam |
 | 2026-01-16 | lover.io | 1.0.0 | Initial PostHog NavBoost setup | Virtual ATeam |
 | 2026-01-16 | northeasttimes.com | 1.0.0 | Initial PostHog NavBoost setup | Virtual ATeam |
-| 2026-01-16 | pokerology.com | 1.0.0 | Initial PostHog NavBoost setup | Virtual ATeam |
-| 2026-01-16 | europeangaming.eu | 1.0.0 | Initial PostHog NavBoost setup | Virtual ATeam |
 
 ---
 
@@ -206,9 +190,11 @@ This changelog tracks all commits, versions, and updates across all domains in t
 
 ## ClickUp Task Reference
 
-| Domain | Parent Task | Sub-Tasks |
-|--------|-------------|-----------|
-| hudsonreporter.com | [86aepf7r3](https://app.clickup.com/t/86aepf7r3) | [86aepf7u5](https://app.clickup.com/t/86aepf7u5) Release Notes, [86aepf7v6](https://app.clickup.com/t/86aepf7v6) Deploy Code, [86aeprpck](https://app.clickup.com/t/86aeprpck) Conversion Tracking |
+| Scope | Task ID | Description |
+|-------|---------|-------------|
+| Bulk (28 domains) | [86aepuk2b](https://app.clickup.com/t/86aepuk2b) | Add Conversion Tracking to 28 Domains |
+| hudsonreporter.com | [86aepf7r3](https://app.clickup.com/t/86aepf7r3) | PostHog Configuration |
+| northeasttimes.com | [86aepf41p](https://app.clickup.com/t/86aepf41p) | PostHog Configuration |
 
 ---
 
@@ -227,22 +213,15 @@ This changelog tracks all commits, versions, and updates across all domains in t
 ```
 posthog-integration/
 ├── CHANGELOG.md              # This file
-├── PROJECT_BRIEF.md          # Project overview
-├── NAVBOOST_KPI_FRAMEWORK.md # KPI definitions
-├── posthog-navboost-all-sites/
-│   └── [domain]/
-│       ├── navboost-tracker.js
-│       ├── conversion-tracker.js     # v1.1.0+
-│       ├── posthog-functions.php
-│       ├── posthog-full-tracking.php # v1.1.0+
-│       ├── dashboard-queries.sql
-│       ├── cohorts-funnels.json
-│       ├── README.md
-│       ├── RELEASE_NOTES.md
-│       └── DEPLOYMENT_GUIDE.md       # v1.1.0+
-└── reports/
-    └── all_projects/
-        └── [domain]_report_[date].md
+├── [domain]/
+│   ├── navboost-tracker.js
+│   ├── conversion-tracker.js     # v1.1.0+
+│   ├── posthog-functions.php
+│   ├── posthog-full-tracking.php # v1.1.0+
+│   ├── dashboard-queries.sql
+│   ├── cohorts-funnels.json
+│   ├── README.md
+│   └── DEPLOYMENT_GUIDE.md       # v1.1.0+
 ```
 
 ---
