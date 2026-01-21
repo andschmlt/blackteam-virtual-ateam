@@ -1,166 +1,153 @@
-# Release Notes - PostHog NavBoost Integration
+# Release Notes - PostHog Integration
 
 ## hudsonreporter.com
 
-**Release Date:** 2026-01-21
-**Version:** 1.0.0
+**Current Version:** 1.1.0
 **PostHog Project ID:** 295222
 **Site Type:** News/Media (Local News)
-**GitHub Repo:** ParadiseMediaOrg/hudsonreporter.com
+**ClickUp Task:** [86aepf7r3](https://app.clickup.com/t/86aepf7r3)
 
 ---
 
-## Summary
+## Version History
 
-PostHog analytics with NavBoost user engagement tracking has been configured for hudsonreporter.com. This integration enables tracking of Google's NavBoost ranking signals to optimize SEO performance.
+### v1.1.0 (2026-01-21) - Conversion Tracking
+**ClickUp Sub-task:** [86aeprpck](https://app.clickup.com/t/86aeprpck)
+**Git Commit:** `eda7350`
+
+**Added:**
+- Enhanced conversion tracking with 5 conversion types
+- Complete WordPress integration file (`posthog-full-tracking.php`)
+- Deployment guide with HogQL queries
+
+**Conversion Types:**
+| Type | Event Name | Trigger | Value |
+|------|------------|---------|-------|
+| Newsletter Signup | `conversion:newsletter_signup` | Form submit | 5 |
+| Ad Click | `conversion:ad_click` | Ad unit click | 1 |
+| Affiliate Click | `conversion:affiliate_click` | Affiliate link click | 3-10 |
+| Article Completion | `conversion:article_completion` | 90%+ scroll | 2 |
+| Return Visit | `conversion:return_visit` | Return after 24h | 1-3 |
 
 ---
 
-## What's Included
+### v1.0.0 (2026-01-21) - Initial Setup
+**ClickUp Task:** [86aepf7r3](https://app.clickup.com/t/86aepf7r3)
 
-### 1. NavBoost Tracker Script
-**File:** `navboost-tracker.js`
-**Location:** `/wp-content/themes/[theme]/js/`
+**Added:**
+- PostHog SDK initialization
+- NavBoost engagement tracking
+- WordPress integration
 
-**Events Tracked:**
+**NavBoost Events:**
 | Event | Description |
 |-------|-------------|
-| `navboost:session_start` | Landing detection with Google referrer identification |
-| `navboost:session_end` | Dwell time calculation and pogo detection |
-| `navboost:scroll_zone` | Scroll depth milestones (25%, 50%, 75%, 100%) |
-| `navboost:cta_visible` | CTA visibility tracking via Intersection Observer |
+| `navboost:session_start` | Landing detection with Google referrer |
+| `navboost:session_end` | Dwell time and pogo detection |
+| `navboost:scroll_zone` | Scroll depth (25%, 50%, 75%, 100%) |
+| `navboost:cta_visible` | CTA visibility tracking |
 | `navboost:cta_click` | CTA click tracking |
-| `navboost:outbound_click` | External/affiliate link tracking |
-
-### 2. WordPress Integration
-**File:** `posthog-functions.php`
-**Action:** Add to theme's functions.php or create custom plugin
-
-**Features:**
-- PostHog JS initialization
-- NavBoost tracker enqueue
-- Page template detection
-- Article metadata tracking (categories, tags, author, word count)
-
-### 3. Dashboard Configuration
-**File:** `dashboard-queries.sql`
-
-**Queries Included:**
-1. NavBoost Event Check
-2. Pogo Rate Analysis
-3. Dwell Time Distribution
-4. Scroll Depth Funnel
-5. CTA Performance
-6. Good Abandonment Rate
-7. Engagement Score Calculation
-8. Pogo Rate by Page Template
-9. Daily NavBoost Trend
-10. Top CTA Clicks
-11. Outbound Click Destinations
-12. Device Performance Comparison
-
-### 4. Cohorts & Funnels
-**File:** `cohorts-funnels.json`
-
-**Cohorts:**
-- Google Organic Users
-- High Engagement Users
-- Pogo Users
-- Converters
-- Deep Scrollers
-- Newsletter Subscribers
-- Article Readers
-- Mobile Users
-- Return Visitors
-- Social Sharers
-
-**Funnels:**
-- Good Abandonment Funnel
-- Pogo Detection Funnel
-- Scroll Engagement Funnel
-- CTA Conversion Funnel
-- Newsletter Signup Funnel
-- Article Engagement Funnel
+| `navboost:outbound_click` | External link tracking |
 
 ---
 
-## Target Metrics (News/Media)
+## Files Included
+
+| File | Size | Description |
+|------|------|-------------|
+| `navboost-tracker.js` | 22KB | NavBoost engagement tracking |
+| `conversion-tracker.js` | 28KB | Enhanced conversion tracking (5 types) |
+| `posthog-functions.php` | 6KB | Basic WordPress integration |
+| `posthog-full-tracking.php` | 5KB | Complete WordPress integration (recommended) |
+| `DEPLOYMENT_GUIDE.md` | 8KB | Step-by-step deployment instructions |
+| `README.md` | 3KB | Setup documentation |
+
+---
+
+## Deployment
+
+### Quick Start (Recommended)
+
+1. Install "Code Snippets" plugin in WordPress
+2. Add new snippet (Run in Header)
+3. Paste code from `DEPLOYMENT_GUIDE.md`
+
+### Alternative Methods
+
+- **Theme functions.php**: Add contents of `posthog-full-tracking.php`
+- **Custom Plugin**: Create plugin with `posthog-full-tracking.php`
+
+### Verification
+
+1. Open browser DevTools (F12) → Console
+2. Look for:
+   - `[PostHog] Loaded for hudsonreporter.com`
+   - `[NavBoost] Session started`
+   - `[ConversionTracker] Enhanced Conversion Tracker fully initialized`
+3. Check PostHog Live Events for events
+
+---
+
+## Target Metrics
 
 | Metric | Target | Critical |
 |--------|--------|----------|
 | Pogo Rate | < 20% | > 25% |
 | Dwell Time | > 60s | < 30s |
-| CTA CTR | > 3% | < 1% |
-| Engagement Score | > 65 | < 50 |
-| Good Abandonment | > 10% | < 5% |
+| Scroll Depth | > 50% | < 25% |
+| Conversion Rate | > 2% | < 0.5% |
+| Newsletter Signup | > 1% | < 0.2% |
 
 ---
 
-## Deployment Steps
+## PostHog Queries
 
-1. **Clone GitHub Repository**
-   ```bash
-   git clone git@github.com:ParadiseMediaOrg/hudsonreporter.com.git
-   cd hudsonreporter.com
-   ```
-
-2. **Upload NavBoost Tracker**
-   - Copy `navboost-tracker.js` to theme's `/js/` folder
-
-3. **Add WordPress Integration**
-   - Add code from `posthog-functions.php` to theme's `functions.php`
-   - OR create a custom plugin
-
-4. **Commit and Push**
-   ```bash
-   git add .
-   git commit -m "Add PostHog NavBoost integration"
-   git push origin main
-   ```
-
-5. **Clear Caches**
-   - Clear all WordPress caches
-   - Clear CDN cache if applicable
-
-6. **Verify Installation**
-   - Open browser DevTools (F12) → Console
-   - Look for `[NavBoost]` log messages
-   - Check PostHog Live Events for `navboost:*` events
-
----
-
-## Setup Files Location
-
+### Conversion Rate
+```sql
+SELECT
+    round(count(DISTINCT CASE WHEN event LIKE 'conversion:%' THEN properties.$session_id END) * 100.0 /
+          nullIf(count(DISTINCT properties.$session_id), 0), 2) as conversion_rate
+FROM events
+WHERE timestamp >= now() - INTERVAL 7 DAY
 ```
-/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/setup/hudsonreporter.com/
-├── navboost-tracker.js
-├── posthog-functions.php
-├── dashboard-queries.sql
-├── cohorts-funnels.json
-├── README.md
-└── RELEASE_NOTES.md
+
+### Conversion by Type
+```sql
+SELECT
+    event as conversion_type,
+    count() as conversions,
+    uniqExact(distinct_id) as unique_users
+FROM events
+WHERE event LIKE 'conversion:%'
+AND timestamp >= now() - INTERVAL 7 DAY
+GROUP BY event
+ORDER BY conversions DESC
 ```
 
 ---
 
-## Next Steps After Deployment
+## File Locations
 
-1. Wait 24-48 hours for data collection
-2. Create PostHog dashboard using provided HogQL queries
-3. Set up cohorts in PostHog UI
-4. Configure alerts for critical thresholds
-5. Monitor initial metrics against targets
+**Git Repository:**
+```
+/home/andre/projects/posthog-integration/hudsonreporter.com/
+```
+
+**BlackTeam Archive:**
+```
+/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/posthog-navboost-all-sites/hudsonreporter.com/
+```
 
 ---
 
 ## Support
 
-- **NavBoost KPI Framework:** See NAVBOOST_KPI_FRAMEWORK.md
+- **NavBoost KPI Framework:** See `NAVBOOST_KPI_FRAMEWORK.md`
 - **PostHog Docs:** https://posthog.com/docs
-- **Contact:** Virtual ATeam - Head of Product
+- **ClickUp Task:** https://app.clickup.com/t/86aepf7r3
 
 ---
 
-**Generated by:** /posthog_setup
-**Team:** Virtual ATeam - BlackTeam
-**Date:** 2026-01-21
+**Generated by:** Virtual ATeam - BlackTeam
+**Commands:** `/posthog_setup`, `/posthog_update`
+**Last Updated:** 2026-01-21

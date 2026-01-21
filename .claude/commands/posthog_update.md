@@ -58,7 +58,7 @@ See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Ru
 │ PHASE 2: Generate Update Files          │
 │ - Create/update tracking scripts        │
 │ - Generate deployment instructions      │
-│ - Save to setup directory               │
+│ - Save to BlackTeam directory           │
 └─────────────────────────────────────────┘
         │
         ▼
@@ -72,9 +72,19 @@ See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Ru
         │
         ▼
 ┌─────────────────────────────────────────┐
-│ PHASE 4: Notification & Summary         │
+│ PHASE 4: Git Commit Workflow            │
+│ - Copy files to git repo                │
+│ - Update RELEASE_NOTES.md               │
+│ - Update CHANGELOG.md                   │
+│ - Commit with descriptive message       │
+└─────────────────────────────────────────┘
+        │
+        ▼
+┌─────────────────────────────────────────┐
+│ PHASE 5: Notification & Summary         │
 │ - Output task links                     │
 │ - List files updated                    │
+│ - Git commit hash                       │
 │ - Deployment instructions               │
 └─────────────────────────────────────────┘
 ```
@@ -237,7 +247,109 @@ def add_attachment(task_id, file_path, filename):
 
 ---
 
-## Phase 4: Notification & Summary
+## Phase 4: Git Commit Workflow
+
+### Directory Structure
+
+```
+/home/andre/projects/posthog-integration/
+├── CHANGELOG.md                    # Project-wide changelog
+└── [domain]/
+    ├── navboost-tracker.js
+    ├── conversion-tracker.js
+    ├── posthog-functions.php
+    ├── posthog-full-tracking.php
+    ├── DEPLOYMENT_GUIDE.md
+    ├── README.md
+    └── RELEASE_NOTES.md            # Domain-specific release notes
+```
+
+### Step 1: Copy Files to Git Repo
+
+```bash
+# Create domain directory if not exists
+mkdir -p /home/andre/projects/posthog-integration/[domain]
+
+# Copy all tracking files
+cp "/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/posthog-navboost-all-sites/[domain]/"*.js \
+   "/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/posthog-navboost-all-sites/[domain]/"*.php \
+   "/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/posthog-navboost-all-sites/[domain]/"*.md \
+   /home/andre/projects/posthog-integration/[domain]/
+```
+
+### Step 2: Update RELEASE_NOTES.md
+
+Update the domain's RELEASE_NOTES.md with:
+- New version number (increment minor for features, patch for fixes)
+- ClickUp sub-task ID
+- Git commit hash (after commit)
+- List of changes/additions
+- Files included with sizes
+
+**Template:**
+```markdown
+### v[X.Y.Z] (YYYY-MM-DD) - [Update Title]
+**ClickUp Sub-task:** [task_id](https://app.clickup.com/t/[task_id])
+**Git Commit:** `[hash]`
+
+**Added/Changed:**
+- [Description of changes]
+
+**Files:**
+| File | Size | Description |
+|------|------|-------------|
+| [filename] | [size] | [description] |
+```
+
+### Step 3: Update CHANGELOG.md
+
+Add entry to `/home/andre/projects/posthog-integration/CHANGELOG.md`:
+- Update Domain Status Summary table
+- Add new version entry under domain section
+- Add to Commit Log table
+
+### Step 4: Git Commit
+
+```bash
+cd /home/andre
+
+# Stage files
+git add projects/posthog-integration/[domain]/ projects/posthog-integration/CHANGELOG.md
+
+# Commit with descriptive message
+git commit -m "$(cat <<'EOF'
+Add [update_type] tracking for [domain]
+
+- [List of changes]
+- ClickUp Task: [task_id]
+- Version: [X.Y.Z]
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+EOF
+)"
+```
+
+### Commit Message Format
+
+```
+[Action] [domain] PostHog [update_type]
+
+- [Change 1]
+- [Change 2]
+- ClickUp Task: [task_id]
+- Version: [X.Y.Z]
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+```
+
+**Examples:**
+- `Add hudsonreporter.com PostHog conversion tracking`
+- `Update lover.io PostHog NavBoost configuration`
+- `Fix northeasttimes.com PostHog event naming`
+
+---
+
+## Phase 5: Notification & Summary
 
 ### Output Format
 
@@ -245,12 +357,17 @@ def add_attachment(task_id, file_path, filename):
 ## PostHog Update Complete
 
 ### Domain: [domain.com]
+### Version: [X.Y.Z]
 ### Update Type: [type]
 
-### Task Action:
-- [Created sub-task under existing parent / Created new Update PostHog task]
+### ClickUp Task:
+- Action: [Created sub-task under existing parent / Created new task]
 - Task ID: [id]
-- Task URL: [url]
+- Task URL: https://app.clickup.com/t/[task_id]
+
+### Git Commit:
+- Hash: [commit_hash]
+- Files: [count] files changed
 
 ### Files Updated:
 | File | Description |
@@ -258,14 +375,17 @@ def add_attachment(task_id, file_path, filename):
 | conversion-tracker.js | 5 conversion types |
 | posthog-full-tracking.php | WordPress integration |
 | DEPLOYMENT_GUIDE.md | Installation instructions |
+| RELEASE_NOTES.md | Version history |
+| CHANGELOG.md | Project changelog |
 
 ### Deployment Steps:
 1. Download attached files from ClickUp task
 2. Follow DEPLOYMENT_GUIDE.md
 3. Verify events in PostHog dashboard
 
-### ClickUp Task:
-https://app.clickup.com/t/[task_id]
+### Links:
+- ClickUp: https://app.clickup.com/t/[task_id]
+- Git Repo: /home/andre/projects/posthog-integration/[domain]/
 ```
 
 ---
@@ -490,8 +610,37 @@ if __name__ == "__main__":
 
 ---
 
-## Files
+## Files & Locations
 
-- API Keys: `/home/andre/.keys/.env`
-- ClickUp Config: `/home/andre/.claude/clickup_config.json`
-- Setup Files: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/posthog-navboost-all-sites/[domain]/`
+| Location | Path | Purpose |
+|----------|------|---------|
+| Git Repository | `/home/andre/projects/posthog-integration/` | Version-controlled files |
+| BlackTeam Archive | `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/posthog-navboost-all-sites/` | Working files |
+| CHANGELOG | `/home/andre/projects/posthog-integration/CHANGELOG.md` | Project changelog |
+| API Keys | `/home/andre/.keys/.env` | Credentials |
+| ClickUp Config | `/home/andre/.claude/clickup_config.json` | ClickUp settings |
+
+---
+
+## Version Numbering
+
+| Change Type | Version Bump | Example |
+|-------------|--------------|---------|
+| Initial setup | 1.0.0 | New domain |
+| New feature (conversion tracking) | 1.X.0 | Add conversion tracking |
+| Bug fix / minor update | 1.0.X | Fix event names |
+| Breaking change | X.0.0 | Complete rewrite |
+
+---
+
+## Checklist
+
+Before completing `/posthog_update`:
+
+- [ ] Files generated in BlackTeam directory
+- [ ] ClickUp task/sub-task created with attachments
+- [ ] Files copied to git repo
+- [ ] RELEASE_NOTES.md updated with new version
+- [ ] CHANGELOG.md updated
+- [ ] Git commit made with descriptive message
+- [ ] Summary output provided to user
