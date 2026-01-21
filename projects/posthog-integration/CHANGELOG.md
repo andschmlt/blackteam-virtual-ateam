@@ -18,7 +18,7 @@ This changelog tracks all commits, versions, and updates across all domains in t
 |--------|---------|--------|------------|-------------|
 | hudsonreporter.com | 1.1.0 | Active | 295222 | 2026-01-21 |
 | lover.io | 1.0.0 | Active | - | 2026-01-16 |
-| northeasttimes.com | 1.0.0 | Active | - | 2026-01-16 |
+| northeasttimes.com | 1.1.0 | Active | - | 2026-01-21 |
 | pokerology.com | 1.0.0 | Pending | - | 2026-01-16 |
 | europeangaming.eu | 1.0.0 | Pending | - | 2026-01-16 |
 | bestdaily.com | 1.0.0 | Pending | - | 2026-01-21 |
@@ -113,6 +113,32 @@ This changelog tracks all commits, versions, and updates across all domains in t
 
 ### northeasttimes.com
 
+#### v1.1.0 (2026-01-21)
+**Type:** Feature Update
+**ClickUp Task:** [86aeptbq3](https://app.clickup.com/t/86aeptbq3) (Sub-task of 86aepf41p)
+**Assignees:** Joshua, Malcolm
+
+**Changes:**
+- Added enhanced conversion tracking (5 types)
+  - Newsletter Signup tracking
+  - Ad Click tracking
+  - Affiliate Click tracking
+  - Article Completion tracking
+  - Return Visit tracking
+- Created `conversion-tracker.js` (28KB)
+- Created `posthog-full-tracking.php` with WordPress integration
+- Created `DEPLOYMENT_GUIDE.md` with SQL queries for conversion rates
+
+**Files Added/Modified:**
+| File | Action | Description |
+|------|--------|-------------|
+| `conversion-tracker.js` | Added | Enhanced conversion tracking (5 types) |
+| `posthog-full-tracking.php` | Added | WordPress integration with all trackers |
+| `DEPLOYMENT_GUIDE.md` | Added | Deployment instructions and HogQL queries |
+| `RELEASE_NOTES.md` | Added | Version history |
+
+---
+
 #### v1.0.0 (2026-01-16)
 **Type:** Initial Setup
 **Status:** Deployed
@@ -151,6 +177,7 @@ This changelog tracks all commits, versions, and updates across all domains in t
 
 | Date | Domain | Version | Commit Message | Author |
 |------|--------|---------|----------------|--------|
+| 2026-01-21 | northeasttimes.com | 1.1.0 | Add conversion tracking (5 types) | Virtual ATeam |
 | 2026-01-21 | hudsonreporter.com | 1.1.0 | Add conversion tracking (5 types) | Virtual ATeam |
 | 2026-01-21 | hudsonreporter.com | 1.0.0 | Initial PostHog NavBoost setup | Virtual ATeam |
 | 2026-01-16 | lover.io | 1.0.0 | Initial PostHog NavBoost setup | Virtual ATeam |
