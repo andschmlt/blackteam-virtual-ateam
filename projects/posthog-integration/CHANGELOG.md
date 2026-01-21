@@ -14,39 +14,44 @@ This changelog tracks all commits, versions, and updates across all domains in t
 
 ## Domain Status Summary
 
-| Domain | Version | Status | PostHog ID | Last Update |
-|--------|---------|--------|------------|-------------|
-| hudsonreporter.com | 1.1.0 | Active | 295222 | 2026-01-21 |
-| northeasttimes.com | 1.1.0 | Active | - | 2026-01-21 |
+| Domain | Version | Status | Branch | Last Update |
+|--------|---------|--------|--------|-------------|
+| hudsonreporter.com | 1.1.0 | Active | main | 2026-01-21 |
+| northeasttimes.com | 1.1.0 | Pushed | main | 2026-01-21 |
 | lover.io | 1.0.0 | Active | - | 2026-01-16 |
-| bestdaily.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| betanews.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| centraljersey.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| countryqueer.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| culture.org | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| dotesports.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| esports.gg | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| europeangaming.eu | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| godisageek.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| iogames.space | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| lowerbuckstimes.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| management.org | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| metrotimes.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| mrracy.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| newgamenetwork.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| ostexperte.de | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| philadelphiaweekly.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| pokerology.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| pokertube.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| silvergames.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| snjtoday.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| southphillyreview.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| sport-oesterreich.at | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| starnewsphilly.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| theroanokestar.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| thesunpapers.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| topdocumentaryfilms.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
-| warcraftmovies.com | 1.1.0 | Pending Deploy | - | 2026-01-21 |
+| bestdaily.com | 1.1.0 | Pushed | main | 2026-01-21 |
+| betanews.com | 1.1.0 | Pushed | main | 2026-01-21 |
+| centraljersey.com | 1.1.0 | Pushed | master | 2026-01-21 |
+| countryqueer.com | 1.1.0 | Pushed | main | 2026-01-21 |
+| culture.org | 1.1.0 | Pushed | staging | 2026-01-21 |
+| dotesports.com | 1.1.0 | Pushed | staging | 2026-01-21 |
+| esports.gg | 1.1.0 | Pushed | migration-staging | 2026-01-21 |
+| europeangaming.eu | 1.1.0 | Pushed | main | 2026-01-21 |
+| godisageek.com | 1.1.0 | Pushed | main | 2026-01-21 |
+| iogames.space | 1.1.0 | Pushed | master | 2026-01-21 |
+| lowerbuckstimes.com | 1.1.0 | Pushed | main | 2026-01-21 |
+| management.org | 1.1.0 | Pushed | main | 2026-01-21 |
+| metrotimes.com | 1.1.0 | No Repo | - | 2026-01-21 |
+| mrracy.com | 1.1.0 | Pushed | main | 2026-01-21 |
+| newgamenetwork.com | 1.1.0 | Pushed | staging | 2026-01-21 |
+| ostexperte.de | 1.1.0 | Pushed | main | 2026-01-21 |
+| philadelphiaweekly.com | 1.1.0 | No Repo | - | 2026-01-21 |
+| pokerology.com | 1.1.0 | Pushed | staging | 2026-01-21 |
+| pokertube.com | 1.1.0 | Pushed | staging | 2026-01-21 |
+| silvergames.com | 1.1.0 | No Repo | - | 2026-01-21 |
+| snjtoday.com | 1.1.0 | Pushed | main | 2026-01-21 |
+| southphillyreview.com | 1.1.0 | Pushed | main | 2026-01-21 |
+| sport-oesterreich.at | 1.1.0 | Pushed | staging | 2026-01-21 |
+| starnewsphilly.com | 1.1.0 | Pushed | main | 2026-01-21 |
+| theroanokestar.com | 1.1.0 | Pushed | staging | 2026-01-21 |
+| thesunpapers.com | 1.1.0 | Pushed | staging | 2026-01-21 |
+| topdocumentaryfilms.com | 1.1.0 | Pushed | main | 2026-01-21 |
+| warcraftmovies.com | 1.1.0 | Pushed | main | 2026-01-21 |
+
+### GitHub Repos Not Found (3)
+- metrotimes.com
+- philadelphiaweekly.com
+- silvergames.com
 
 ---
 
