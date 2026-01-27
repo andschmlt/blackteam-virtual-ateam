@@ -2,7 +2,7 @@
 
 **Organization:** Paradise Media Group
 **Team Name:** BlackTeam
-**Version:** 2.0
+**Version:** 2.1
 **Created:** 2026-01-12
 **Updated:** 2026-01-27
 
@@ -12,7 +12,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              BLACKTEAM v2.0                                  │
+│                              BLACKTEAM v2.1                                  │
 │                   Virtual AI, Data & BI Strike Force                        │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
@@ -33,7 +33,7 @@
 │ │DataViz│  │DataFrg│  ├─────────────────────┤ │         │     │            │
 │ └───────┘  │RelMgr │  │SEO Mgr→WH,GH,BH    │ │         │     │            │
 │            └───────┘  │ProdMgr→PixelPerfect│ │         │     │            │
-│                       │HOC→ContentMgr       │ │         │     │            │
+│                       │HOC→CM→CA,RS,CQA    │ │         │     │            │
 │                       │PPM                  │ │         │     │            │
 │                       └─────────────────────┘ │         │     │            │
 │                                                                              │
@@ -59,7 +59,7 @@
 
 ---
 
-## Team Roster (20 Personas)
+## Team Roster (23 Personas)
 
 ### Leadership Track (6 Heads)
 
@@ -99,6 +99,9 @@
 | PP | PixelPerfect | UX/UI Designer | Product Manager | Doer |
 | HOC | Head of Content | Head of Content | Head of SEO | Decision Maker |
 | CM | Content Manager | Content Manager | Head of Content | Doer |
+| CA | Content Architect | Content Architect | Content Manager | Doer |
+| RS | Research Specialist | Research Specialist | Content Manager | Doer |
+| CQA | Content QA Analyst | Content QA Analyst | Content Manager | Doer |
 | PPM | Post Production Manager | Post Production Manager | Head of SEO | Doer |
 
 ---
@@ -128,6 +131,9 @@ ANDRE (Stakeholder)
     │   │   └── PixelPerfect (UX/UI Designer)
     │   ├── Head of Content (HOC)
     │   │   └── Content Manager (CM)
+    │   │       ├── Content Architect (CA)
+    │   │       ├── Research Specialist (RS)
+    │   │       └── Content QA Analyst (CQA)
     │   └── Post Production Manager (PPM)
     │
     ├── HEAD OF ASSET STRATEGY (HAS) - Advisory, Solo
@@ -158,6 +164,9 @@ ANDRE (Stakeholder)
 | UX/UI Design | PixelPerfect | Product Manager | - |
 | Content Strategy | Head of Content | Head of SEO | - |
 | Content Production | Content Manager | Head of Content | - |
+| Template Design | Content Architect | Content Manager | - |
+| Content Research | Research Specialist | Content Manager | - |
+| Content QA | Content QA Analyst | Content Manager | Post Production Mgr |
 | Publishing/QC | Post Production Mgr | Head of Content | - |
 | Asset Strategy | Head of Asset Strategy | Head of SEO | - |
 | Affiliate Strategy | Head of Affiliates | Director | - |
@@ -248,9 +257,18 @@ ROUTING_RULES = {
     "writing": ["Content Manager"],
     "editorial": ["Head of Content"],
     "brief": ["Head of Content"],
+    "template": ["Content Architect"],
+    "content type": ["Content Architect"],
+    "schema": ["Content Architect", "White-hat Analyst"],
+    "research": ["Research Specialist"],
+    "serp analysis": ["Research Specialist"],
+    "fact check": ["Research Specialist"],
+    "data gathering": ["Research Specialist"],
+    "content validation": ["Content QA Analyst"],
+    "content review": ["Content QA Analyst"],
     "publish": ["Post Production Manager"],
-    "qa": ["Post Production Manager"],
-    "qc": ["Post Production Manager"],
+    "qa": ["Content QA Analyst", "Post Production Manager"],
+    "qc": ["Content QA Analyst", "Post Production Manager"],
 
     # Advisory (solo roles)
     "asset": ["Head of Asset Strategy"],
@@ -274,6 +292,9 @@ ROUTING_RULES = {
 | SEO decisions | SEO Manager | Head of SEO | Head of SEO |
 | Grey/Black-hat approval | SEO Manager | Head of SEO | Head of SEO |
 | Content quality | Head of Content | Head of SEO | Head of SEO |
+| Template issues | Content Architect | Content Manager | Head of Content |
+| Research accuracy | Research Specialist | Content Manager | Head of Content |
+| Content QA blocks | Content QA Analyst | Content Manager | Head of Content |
 | Publishing issues | Post Production Mgr | Head of SEO | Head of SEO |
 | Data analysis | Insight | Head of Analytics | Head of Analytics |
 | Product decisions | Product Manager | Head of SEO | Head of SEO |
@@ -374,7 +395,14 @@ BlackTeam/
 | | | - PixelPerfect moved under Product Manager |
 | | | - Post Production Manager moved under Head of SEO |
 | | | - Full documentation for all 20 personas |
+| **2.1** | **2026-01-27** | **Content Team Expansion:** |
+| | | - Created Content Architect role (template/schema design) |
+| | | - Created Research Specialist role (data gathering/verification) |
+| | | - Created Content QA Analyst role (validation/quality gate) |
+| | | - All 3 new roles report to Content Manager |
+| | | - Updated routing rules and escalation matrix |
+| | | - Total personas: 23 |
 
 ---
 
-*BlackTeam v2.0 | Paradise Media Group | Updated 2026-01-27*
+*BlackTeam v2.1 | Paradise Media Group | Updated 2026-01-27*
