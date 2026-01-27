@@ -1450,7 +1450,126 @@ assert any(f['title'] == expected_filename for f in task['attachments'])
 
 ---
 
+### Rule 26: Director Request Workflow - /director Command Protocol (Added: 2026-01-27)
+**MANDATORY:** All project and task requests from the stakeholder (Andre) MUST follow the structured /director workflow.
+
+**Background:** Ad-hoc requests without proper classification, ClickUp integration, team assignment approval, and planning led to unclear scope, missing deliverables, and rule violations.
+
+**The /director Workflow (10 Phases):**
+
+```
+PHASE 1: REQUEST INTAKE
+=======================
+- Greet stakeholder
+- Capture request description
+- Classify: PROJECT / TASK / CHAT / GENERAL
+- Record: Domain, Urgency, Expected Output
+
+PHASE 2: SYSTEM CHECK
+=====================
+- Ask: NEW / EXISTING / UNSURE
+- Query ClickUp for related tasks
+- Present options: Update existing / Create subtask / Create new / No task
+
+PHASE 3: TEAM EVALUATION
+========================
+- Analyze request using ROUTING_RULES from TEAM_CONFIG.md
+- Recommend: Track, Lead, Personas, Routing Keywords
+- Present recommendation to stakeholder
+- **MANDATORY: Get explicit APPROVAL before proceeding**
+
+PHASE 4: RULE INVOCATION
+========================
+- Load all 26 Director Rules
+- Identify rules relevant to this request
+- Announce rules in effect to team
+
+PHASE 5: LEADERSHIP PLANNING
+============================
+- Invoke relevant Leadership Heads
+- Each Head provides: Deliverables, Personas, Dependencies, Risks, Complexity
+- Record all inputs
+
+PHASE 6: PLAN CONSOLIDATION
+===========================
+- Director compiles Head inputs into unified plan
+- Structure: Phases, Leads, Personas, Deliverables, Dependencies
+- Include: Quality Gates, Risks, Recommended Ralph Loops
+
+PHASE 7: PLAN APPROVAL
+======================
+- Present consolidated plan to stakeholder
+- Options: APPROVE / AMEND / REJECT / QUESTIONS
+- If AMEND: Loop until APPROVE or REJECT
+- **EXECUTION ONLY PROCEEDS WITH EXPLICIT APPROVE**
+
+PHASE 8: RALPH LOOPS CONFIRMATION
+=================================
+- Ask: "How many Ralph Loops (QA iterations) do you want?"
+- Record number before execution begins
+- 1 = Quick, 2 = Standard, 3 = Thorough, 4+ = Critical
+
+PHASE 9: EXECUTION
+==================
+- Brief team with assignments
+- Load persona skills and workflows
+- Track progress per phase
+- Enforce rules throughout
+- Ensure no assumptions made
+- Monitor all tracks
+
+PHASE 10: DELIVERY
+==================
+- Complete all Ralph Loops (must all pass)
+- Present deliverables to stakeholder
+- Update ClickUp status
+- Capture learnings via /reflect
+```
+
+**Approval Gates (MANDATORY):**
+
+| Gate | Phase | What's Approved |
+|------|-------|-----------------|
+| Team Assignment | Phase 3 | Personas and track |
+| Plan Approval | Phase 7 | Consolidated plan |
+| Ralph Loops | Phase 8 | Number of QA iterations |
+| Final Delivery | Phase 10 | Completed deliverables |
+
+**Director Enforcement During Execution:**
+- NO persona assumes anything not explicitly stated
+- ALL personas stay within their defined scope
+- ALL rules are followed
+- Blockers escalated per Escalation Matrix
+- ALL stakeholder comms flow through Director
+
+**Auto-Invocations:**
+When `/director` is invoked, automatically load:
+1. `/blackteam` command and ALL its rules
+2. `DIRECTOR_RULES.md` (all rules)
+3. `TEAM_CONFIG.md` (23 personas, routing rules)
+4. All relevant persona prompts from `skills/prompts/`
+
+**Command Location:** `~/.claude/commands/director.md`
+
+**NEVER DO:**
+- ❌ Start execution without stakeholder APPROVE
+- ❌ Skip team assignment approval
+- ❌ Assume Ralph Loops count (must be explicitly stated)
+- ❌ Allow personas to work outside their assignment
+- ❌ Let personas communicate directly with stakeholder
+
+**ALWAYS DO:**
+- ✅ Follow all 10 phases in order
+- ✅ Get explicit approval at each gate
+- ✅ Load persona skills before they execute
+- ✅ Enforce rules throughout execution
+- ✅ Capture learnings on completion
+
+**Rationale:** Structured intake ensures no ambiguity, proper planning, stakeholder buy-in at each stage, and full compliance with team standards. The Director orchestrates but does not execute (Rule 0).
+
+---
+
 *Last Updated: January 27, 2026*
 *Updated By: The Director*
-*Changes: Added Rule 25 (Deployment Subtask Attachment Verification) - Mandatory file verification before marking subtasks ready*
+*Changes: Added Rule 26 (Director Request Workflow) - Mandatory /director command protocol for all requests*
 
