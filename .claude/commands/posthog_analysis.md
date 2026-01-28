@@ -2,7 +2,9 @@
 
 Generate comprehensive PostHog analytics reports for Paradise Media properties.
 
-## MANDATORY: Head of Product Assignment (Director Rule 8)
+## HARD RULES (MANDATORY - NO EXCEPTIONS)
+
+### Director Rule 8: Head of Product Assignment
 **Head of Product MUST be involved in ALL PostHog analytics work.**
 
 When this command is invoked:
@@ -10,7 +12,48 @@ When this command is invoked:
 2. Analysis reports MUST include a "Product Insights" section
 3. HoP reviews metric interpretation and strategic implications
 
-See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Rule 8
+### Director Rule 1: PDF Output (MANDATORY)
+**All analysis reports MUST be generated as PDF in addition to markdown.**
+- Use ReportLab with Paradise Media branding (orange #f97316, black #1a1a1a)
+- Professional headers/footers with BlackTeam branding
+- Tables must use alternating row colors
+- Tables MUST NOT be split across pages (Rule 2)
+
+### Director Rule 18: Mandatory NavBoost Metrics (Updated: 2026-01-28)
+**HARD RULE - NO EXCEPTIONS:** ALL reports MUST include the complete 18-metric NavBoost inventory with Source column.
+
+**REFERENCE:** `~/virtual-ateam/BlackTeam/NAVBOOST_METRICS_MAP.md` - Full extraction queries
+
+**MANDATORY METRICS (18 Total) - EVERY REPORT MUST INCLUDE:**
+
+| # | Metric | Source Event | Source Property | Target |
+|---|--------|--------------|-----------------|--------|
+| 1 | Dwell Time (avg) | `navboost:session_end` | `properties.dwell_time_seconds` | >90s |
+| 2 | Pogo Rate | `navboost:session_end` | `properties.is_pogo` | <18% |
+| 3 | Scroll Depth (25%) | `navboost:scroll_zone` | count where depth=25 | - |
+| 4 | Scroll Depth (50%) | `navboost:scroll_zone` | count where depth=50 | - |
+| 5 | Scroll Depth (75%) | `navboost:scroll_zone` | count where depth=75 | - |
+| 6 | Scroll Depth (100%) | `navboost:scroll_zone` | count where depth=100 | - |
+| 7 | CTA Visible | `navboost:cta_visible` | event count | - |
+| 8 | CTA Clicks | `navboost:cta_click` | event count | - |
+| 9 | CTA CTR | Calculated | #8 / #7 * 100 | >5% |
+| 10 | Good Abandonment | `navboost:session_end` | `properties.is_good_abandonment` | >15% |
+| 11 | Session Starts | `navboost:session_start` | event count | - |
+| 12 | Session Ends | `navboost:session_end` | event count | - |
+| 13 | SERP Return Rate | `navboost:session_end` | = Pogo Rate (Google traffic) | <25% |
+| 14 | Engagement Score | Calculated | See NAVBOOST_METRICS_MAP.md | >70 |
+| 15 | Outbound Clicks | `navboost:session_end` | `properties.outbound_clicks` | - |
+| 16 | Heartbeat Events | `navboost:heartbeat` | event count | - |
+| 17 | Toplist Row Visible | `navboost:toplist_row_visible` | event count (if applicable) | N/A |
+| 18 | Session Time (avg) | `navboost:session_end` | = Dwell Time (#1) | >60s |
+
+**CRITICAL: Never show "NOT TRACKED" if data exists in event properties.**
+- Query event COUNTS first, then query PROPERTIES from session_end
+- Show "0" if metric tracked but no data, "N/A" if not applicable
+
+**Reports missing ANY metric are flagged as INCOMPLETE.**
+
+See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Rules 1, 8, 18
 
 ## Usage
 
@@ -24,15 +67,37 @@ See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Ru
 - **run** or **run all**: Generate reports for all 6 PostHog projects
 - **run [domain]**: Generate report for a specific domain (e.g., `run lover.io`, `run pokerology.com`)
 
-## Available Domains
+### Director Rule 27: PostHog Project Discovery (Added: 2026-01-28)
+**HARD RULE - NO EXCEPTIONS:** ALWAYS query PostHog API to discover projects. NEVER rely on the hardcoded list below.
+
+```bash
+# ALWAYS run this first to get current projects
+curl -s "https://us.i.posthog.com/api/projects/" \
+  -H "Authorization: Bearer $POSTHOG_PERSONAL_API_KEY" | python3 -c "
+import json,sys
+for p in json.load(sys.stdin):
+    print(f'ID: {p[\"id\"]} | Name: {p[\"name\"]}')"
+```
+
+## Known Projects (MAY BE OUTDATED - Always verify with API)
 | Domain | Project ID | Status |
 |--------|-----------|--------|
+| hudsonreporter.com | 295222 | Active (NavBoost v1.1.1) |
 | lover.io | 290016 | Active |
 | northeasttimes.com | 290039 | Active |
 | pokerology.com | 294549 | Active |
-| europeangaming.eu | 290042 | No Data |
-| esports.gg | 291582 | No Data |
-| dotesports.com | 291573 | No Data |
+| europeangaming.eu | 290042 | Project exists |
+| esports.gg | 291582 | Project exists |
+| dotesports.com | 291573 | Active (NavBoost) |
+| culture.org | 295239 | Active (NavBoost) |
+| pokertube.com | 295249 | Project exists |
+| bestdaily.com | 295235 | Project exists |
+| betanews.com | 295236 | Project exists |
+| centraljersey.com | 295237 | Project exists |
+| godisageek.com | 295240 | Project exists |
+| silvergames.com | 295250 | Project exists |
+| snjtoday.com | 295251 | Project exists |
+| *+ 15 more* | - | Query API for full list |
 
 ## Instructions
 
@@ -42,7 +107,33 @@ When this command is invoked:
 ```bash
 export POSTHOG_PERSONAL_API_KEY=$(grep POSTHOG_PERSONAL_API_KEY /home/andre/.keys/.env | cut -d'=' -f2)
 export CLICKUP_API_KEY=$(grep CLICKUP_API_KEY /home/andre/.keys/.env | cut -d'=' -f2 2>/dev/null || cat /home/andre/.claude/clickup_config.json | python3 -c "import json,sys; print(json.load(sys.stdin)['CLICKUP_API_KEY'])")
+export DATAFORSEO_LOGIN=$(grep DATAFORSEO_LOGIN /home/andre/.keys/.env | cut -d'=' -f2)
+export DATAFORSEO_PASSWORD=$(grep DATAFORSEO_PASSWORD /home/andre/.keys/.env | cut -d'=' -f2)
 ```
+
+### 1a. DataForSEO Integration (Metrics 12-14)
+**DataForSEO is the PRIMARY source for SERP metrics.**
+
+```python
+# Use the unified NavBoost metrics collector
+from lib.navboost_metrics import collect_navboost_metrics
+
+# Get all 18 metrics (PostHog + DataForSEO combined)
+metrics = collect_navboost_metrics("domain.com", project_id, days=7)
+
+# Access SERP metrics specifically
+serp_ctr = metrics["dataforseo_metrics"]["serp_ctr"]
+impressions = metrics["dataforseo_metrics"]["impressions"]
+avg_position = metrics["dataforseo_metrics"]["avg_position"]
+```
+
+**Library Location:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/lib/`
+- `dataforseo_client.py` - DataForSEO API client
+- `navboost_metrics.py` - Unified metrics collector (PostHog + DataForSEO)
+
+**Credentials:** Set in `/home/andre/.keys/.env`:
+- `DATAFORSEO_LOGIN` - Your DataForSEO account email
+- `DATAFORSEO_PASSWORD` - Your DataForSEO API password
 
 ### 2. Determine Scope
 - If argument is `run` or `run all` → Process ALL projects
@@ -52,6 +143,7 @@ export CLICKUP_API_KEY=$(grep CLICKUP_API_KEY /home/andre/.keys/.env | cut -d'='
 ### 3. Project Mapping
 ```python
 PROJECTS = {
+    "hudsonreporter.com": {"id": 295222, "name": "HudsonReporter.com"},
     "lover.io": {"id": 290016, "name": "lover.io"},
     "northeasttimes.com": {"id": 290039, "name": "Northeastimes.com"},
     "pokerology.com": {"id": 294549, "name": "Pokerology.com"},
@@ -298,21 +390,17 @@ Report saved to: pokerology_com_report_20260116.md
 - **API Key Location:** /home/andre/.keys/.env (POSTHOG_PERSONAL_API_KEY)
 - **Organization:** PM (Paradise Media)
 
-## Director Rule: PDF Output (MANDATORY)
-**All analysis reports MUST be generated as PDF in addition to markdown.**
-
-Per Director Rules (2026-01-16): Reports with data/metrics must be converted to PDF format for professional, shareable deliverables.
-
 ## NavBoost Tracker Deployment Status
 
-| Domain | Tracker Status | Setup Files | Next Action |
-|--------|----------------|-------------|-------------|
-| lover.io | NOT DEPLOYED | Not Created | Run /posthog_setup |
-| northeasttimes.com | NOT DEPLOYED | READY | Deploy to WordPress |
-| pokerology.com | NOT DEPLOYED | READY | Deploy to WordPress |
-| europeangaming.eu | NOT DEPLOYED | READY | Deploy to WordPress |
-| esports.gg | NOT DEPLOYED | Not Created | Run /posthog_setup |
-| dotesports.com | NOT DEPLOYED | Not Created | Run /posthog_setup |
+| Domain | Tracker Status | Version | Setup Files | Next Action |
+|--------|----------------|---------|-------------|-------------|
+| hudsonreporter.com | DEPLOYED | v1.1.1 | READY | Deploy v1.1.2 fix |
+| lover.io | NOT DEPLOYED | - | Not Created | Run /posthog_setup |
+| northeasttimes.com | NOT DEPLOYED | - | READY | Deploy to WordPress |
+| pokerology.com | NOT DEPLOYED | - | READY | Deploy to WordPress |
+| europeangaming.eu | NOT DEPLOYED | - | READY | Deploy to WordPress |
+| esports.gg | NOT DEPLOYED | - | Not Created | Run /posthog_setup |
+| dotesports.com | NOT DEPLOYED | - | Not Created | Run /posthog_setup |
 
 **Setup Files Location:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/setup/[domain]/`
 

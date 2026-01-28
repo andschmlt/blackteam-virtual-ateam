@@ -58,10 +58,10 @@ Based on the persona name provided: $ARGUMENTS
 | codeguard | VIRTUAL_CODE_REVIEWER_PERSONA.md | learnings/CODEGUARD_SKILLS.md |
 | dataforge | Senior_Data_Engineer_Persona.md | learnings/DATAFORGE_SKILLS.md |
 | seo | Virtual_Head_of_SEO_Agent_Persona_v2.md | learnings/SEO_COMMANDER_SKILLS.md |
-| elias | Senior Principal ML Engineer & Chief Data Scientist.txt | learnings/ELIAS_THORNE_SKILLS.md |
-| content | Virtual_Head_of_Content_Persona.docx | learnings/HEAD_OF_CONTENT_SKILLS.md |
-| affiliate | Virtual_Affiliate_Manager_Persona.docx | learnings/AFFILIATE_MANAGER_SKILLS.md |
-| production | Virtual_Post_Production_Manager_Persona.docx | learnings/POST_PRODUCTION_MANAGER_SKILLS.md |
+| elias | ELIAS_THORNE_PERSONA.md | learnings/ELIAS_THORNE_SKILLS.md |
+| content | Virtual_Head_of_Content_Persona.md | learnings/HEAD_OF_CONTENT_SKILLS.md |
+| affiliate | Virtual_Affiliate_Manager_Persona.md | learnings/AFFILIATE_MANAGER_SKILLS.md |
+| production | Virtual_Post_Production_Manager_Persona.md | learnings/POST_PRODUCTION_MANAGER_SKILLS.md |
 
 ## Base Paths
 

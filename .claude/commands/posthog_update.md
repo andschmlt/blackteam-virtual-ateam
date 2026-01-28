@@ -14,6 +14,18 @@ See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Ru
 
 ---
 
+## HARD RULE: No Remote Push
+
+**NEVER commit or push to main/remote repositories.**
+
+- Save files locally only
+- Commit to local repository only (no `git push`)
+- Files are prepared for manual deployment by TechOps via ClickUp tasks
+
+This is a safety measure to prevent automated changes to production repositories.
+
+---
+
 ## Usage
 
 ```
@@ -54,7 +66,6 @@ See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Ru
 | ClickUp List for Tasks | 901324589525 | All PostHog deployment tasks go here |
 | ClickUp Workspace | 8553292 | Paradise Media workspace |
 | Andre User ID | 60332880 | ClickUp assignee |
-| Joshua User ID | 99970277 | ClickUp assignee |
 | Malcolm User ID | 82173399 | ClickUp assignee |
 
 ---
@@ -88,17 +99,16 @@ See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Ru
 │ - ALWAYS create sub-task under parent   │
 │ - Name: "Update - Deploy Posthog Code"  │
 │ - Attach updated files                  │
-│ - Assign to Joshua + Malcolm            │
+│ - Assign to Malcolm                     │
 └─────────────────────────────────────────┘
         │
         ▼
 ┌─────────────────────────────────────────┐
-│ PHASE 4: Git Commit & Push              │
-│ - Clone domain GitHub repo              │
-│ - Copy files to posthog/ folder         │
+│ PHASE 4: Local Save & Commit            │
+│ - Save files to local directories       │
 │ - Update RELEASE_NOTES.md               │
-│ - Commit with descriptive message       │
-│ - Push to correct branch                │
+│ - Commit locally (NO remote push)       │
+│ - TechOps deploys via ClickUp tasks     │
 └─────────────────────────────────────────┘
         │
         ▼
@@ -230,7 +240,7 @@ def create_deploy_subtask(parent_id, domain, branch, description):
     payload = {
         "name": "Update - Deploy Posthog Code",  # ALWAYS this exact name
         "description": description,
-        "assignees": [JOSHUA_ID, MALCOLM_ID],
+        "assignees": [MALCOLM_ID],
         "parent": parent_id,  # MUST have parent
         "status": "to do"
     }
@@ -268,22 +278,28 @@ def create_deploy_subtask(parent_id, domain, branch, description):
 
 ---
 
-## Phase 4: Git Commit & Push (MANDATORY)
+## Phase 4: Local Save & Commit (NO REMOTE PUSH)
 
-### ALWAYS Push to Domain's GitHub Repo
+### HARD RULE: Local Only
+
+**DO NOT push to remote repositories.** All files are saved locally and committed to the local repository only. TechOps will deploy manually via ClickUp tasks.
+
+### Save Files Locally
 
 ```bash
-# 1. Clone the domain's repo (not local repo)
-cd /tmp/posthog-push
-git clone --depth 1 https://github.com/ParadiseMediaOrg/[domain].git
+# 1. Save to BlackTeam directory
+BLACKTEAM_DIR="/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/posthog-navboost-all-sites"
+mkdir -p "$BLACKTEAM_DIR/[domain]"
+cp [source_files]/* "$BLACKTEAM_DIR/[domain]/"
 
-# 2. Create posthog folder and copy files
-cd [domain]
-mkdir -p posthog
-cp [source_files]/* posthog/
+# 2. Save to local posthog-integration repo
+LOCAL_REPO="/home/andre/projects/posthog-integration"
+mkdir -p "$LOCAL_REPO/[domain]"
+cp [source_files]/* "$LOCAL_REPO/[domain]/"
 
-# 3. Commit
-git add posthog/
+# 3. Commit locally only - NO PUSH
+cd "$LOCAL_REPO"
+git add [domain]/
 git commit -m "$(cat <<'EOF'
 Add PostHog [update_type] tracking (v[X.Y.Z])
 
@@ -297,11 +313,18 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 EOF
 )"
 
-# 4. Push to correct branch (from registry)
-git push origin [branch]  # main, master, staging, or migration-staging
+# DO NOT RUN: git push
+# Files will be deployed by TechOps via ClickUp tasks
 ```
 
-### Branch Reference (from Registry)
+### Why No Remote Push?
+
+1. **Safety**: Prevents automated changes to production repositories
+2. **Review**: TechOps can review files before deployment
+3. **Control**: Manual deployment ensures proper testing
+4. **Audit**: ClickUp tasks provide deployment tracking
+
+### Branch Reference (for TechOps deployment)
 
 | Branch Type | Domains |
 |-------------|---------|
@@ -329,7 +352,7 @@ After each update:
 1. **Domain Status Summary** - Update status/version
 2. **Changelog by Domain** - Add new entry
 
-### Commit Registry Changes
+### Commit Registry Changes (LOCAL ONLY)
 
 ```bash
 cd /home/andre/projects/posthog-integration
@@ -340,6 +363,9 @@ git commit -m "Update registry: [domain] v[X.Y.Z]
 - Commit: [hash]
 
 Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>"
+
+# DO NOT RUN: git push
+# Registry is local-only
 ```
 
 ---
@@ -359,10 +385,10 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>"
 - Parent Task: https://app.clickup.com/t/[parent_id]
 - Sub-task: https://app.clickup.com/t/[subtask_id]
 
-### GitHub:
-- Repository: ParadiseMediaOrg/[domain]
-- Branch: [branch]
-- Commit: [hash]
+### Git Status: LOCAL ONLY (no remote push)
+- Local Commit: [hash]
+- Target Repo: ParadiseMediaOrg/[domain]
+- Target Branch: [branch] (for TechOps deployment)
 
 ### Files Updated:
 | File | Description |
@@ -393,11 +419,13 @@ Before completing `/posthog_update`:
 - [ ] RELEASE_NOTES.md created/updated
 - [ ] ClickUp sub-task created as "Update - Deploy Posthog Code"
 - [ ] Sub-task attached to correct parent task
-- [ ] Files pushed to domain's GitHub repo
-- [ ] Pushed to correct branch (main/master/staging)
+- [ ] Files saved locally (NO remote push)
+- [ ] Committed to local repo only
 - [ ] POSTHOG_REGISTRY.md updated with sub-task ID and commit
 - [ ] CHANGELOG.md updated
 - [ ] Summary output provided to user
+
+**HARD RULE**: Never push to remote - TechOps deploys via ClickUp tasks
 
 ---
 

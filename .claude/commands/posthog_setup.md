@@ -15,6 +15,18 @@ See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Ru
 
 ---
 
+## HARD RULE: No Remote Push
+
+**NEVER commit or push to main/remote repositories.**
+
+- Save files locally only
+- Commit to local repository only (no `git push`)
+- Files are prepared for manual deployment by TechOps via ClickUp tasks
+
+This is a safety measure to prevent automated changes to production repositories.
+
+---
+
 ## Usage
 
 ```
@@ -35,7 +47,6 @@ See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Ru
 | Lucky7s O&O Folder | 90134211413 | Source folder for domain list |
 | PostHog Org ID | 019b2233-57a2-0000-3260-cfa42e906fc4 | For API project creation |
 | Andre User ID | 60332880 | ClickUp assignee |
-| Joshua User ID | 99970277 | ClickUp assignee |
 | Malcolm User ID | 82173399 | ClickUp assignee |
 
 ---
@@ -72,10 +83,10 @@ See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Ru
         │
         ▼
 ┌─────────────────────────────────────────┐
-│ PHASE 4: GitHub Integration             │
-│ - Push to respective GitHub repos       │
-│ - Create /posthog-integration/ folder   │
-│ - Commit with standardized message      │
+│ PHASE 4: Local Save & Commit            │
+│ - Save files to local setup directory   │
+│ - Commit locally (NO remote push)       │
+│ - TechOps deploys via ClickUp tasks     │
 └─────────────────────────────────────────┘
         │
         ▼
@@ -382,54 +393,68 @@ add_action('wp_enqueue_scripts', '[DOMAIN_SLUG]_navboost_tracker', 20);
 
 ---
 
-## Phase 4: GitHub Integration
+## Phase 4: Local Save & Commit (NO REMOTE PUSH)
 
-### Push to Repositories
+### HARD RULE: Local Only
+
+**DO NOT push to remote repositories.** All files are saved locally and committed to the local repository only. TechOps will deploy manually via ClickUp tasks.
+
+### Save Files Locally
 
 ```python
-import subprocess
 import os
+import shutil
 
 SETUP_DIR = "/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/setup"
+LOCAL_REPO = "/home/andre/projects/posthog-integration"
 
-def push_to_github(domain, repo_path):
-    """Push setup files to the domain's GitHub repository."""
+def save_locally(domain, repo_path):
+    """Save setup files locally - NO REMOTE PUSH."""
 
-    if domain in NO_GITHUB_REPOS:
-        print(f"Skipping {domain} - no GitHub repo")
-        return None
+    # Create domain directory in setup folder
+    domain_dir = os.path.join(SETUP_DIR, domain)
+    os.makedirs(domain_dir, exist_ok=True)
 
-    # Clone repo to temp location
-    temp_dir = f"/tmp/repos/{domain}"
-    os.makedirs(temp_dir, exist_ok=True)
+    # Files are already generated in Phase 3
+    # They are saved in: SETUP_DIR/[domain]/
 
-    subprocess.run([
-        "gh", "repo", "clone", repo_path, temp_dir, "--", "--depth=1"
-    ], check=True)
+    # Also copy to local posthog-integration repo
+    local_domain_dir = os.path.join(LOCAL_REPO, domain)
+    os.makedirs(local_domain_dir, exist_ok=True)
 
-    # Create posthog-integration folder
-    target_dir = os.path.join(temp_dir, "posthog-integration")
-    os.makedirs(target_dir, exist_ok=True)
-
-    # Copy setup files
-    source_dir = os.path.join(SETUP_DIR, domain)
     for filename in ["navboost-tracker.js", "posthog-functions.php", "README.md", "RELEASE_NOTES.md"]:
-        src = os.path.join(source_dir, filename)
-        dst = os.path.join(target_dir, filename)
+        src = os.path.join(domain_dir, filename)
+        dst = os.path.join(local_domain_dir, filename)
         if os.path.exists(src):
             shutil.copy2(src, dst)
 
-    # Git commit and push
-    os.chdir(temp_dir)
-    subprocess.run(["git", "add", "posthog-integration/"], check=True)
+    return domain_dir
+
+def commit_locally(domain):
+    """Commit changes to local repository only - NO PUSH."""
+    os.chdir(LOCAL_REPO)
+
+    # Stage files
+    subprocess.run(["git", "add", f"{domain}/"], check=True)
+
+    # Commit locally only - NO PUSH
     subprocess.run([
         "git", "commit", "-m",
-        f"Add PostHog NavBoost integration\n\nIncludes:\n- Full NavBoost KPI Framework tracking\n- Core Web Vitals\n- Conversions tracking\n- Session recording & heatmaps"
+        f"Add PostHog NavBoost setup for {domain}\n\nIncludes:\n- Full NavBoost KPI Framework tracking\n- Core Web Vitals\n- Conversions tracking\n- Session recording & heatmaps\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>"
     ], check=True)
-    subprocess.run(["git", "push", "origin", "main"], check=True)
 
-    return f"https://github.com/{repo_path}/tree/main/posthog-integration"
+    # DO NOT RUN: git push
+    # Files will be deployed by TechOps via ClickUp tasks
+
+    return "Committed locally (no remote push)"
 ```
+
+### Why No Remote Push?
+
+1. **Safety**: Prevents automated changes to production repositories
+2. **Review**: TechOps can review files before deployment
+3. **Control**: Manual deployment ensures proper testing
+4. **Audit**: ClickUp tasks provide deployment tracking
 
 ---
 
@@ -445,7 +470,6 @@ CLICKUP_CONFIG = {
     "LIST_ID": "901324589525",  # Centralized PostHog deployment list
     "ASSIGNEES": {
         "andre": 60332880,
-        "joshua": 99970277,
         "malcolm": 82173399
     }
 }
@@ -455,7 +479,7 @@ CLICKUP_CONFIG = {
 
 ```
 PostHog Configuration - [domain.com]  (Parent Task)
-├── Assignees: Joshua, Malcolm
+├── Assignee: Malcolm
 ├── Status: To Do
 ├── Attachments:
 │   ├── navboost-tracker.js
@@ -468,7 +492,7 @@ PostHog Configuration - [domain.com]  (Parent Task)
 │   └── Status: Complete (auto-marked)
 │
 └── Sub-task 2: "Deploy PostHog Code"
-    ├── Assignees: Joshua, Malcolm
+    ├── Assignee: Malcolm
     └── Status: To Do
 ```
 
@@ -484,7 +508,6 @@ LIST_ID = "901324589525"
 SETUP_DIR = "/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/setup"
 
 ANDRE_ID = 60332880
-JOSHUA_ID = 99970277
 MALCOLM_ID = 82173399
 
 HEADERS = {
@@ -564,7 +587,7 @@ def process_domain(domain, has_github_repo=True):
     parent_task = create_task(
         f"PostHog Configuration - {domain}",
         parent_desc,
-        [JOSHUA_ID, MALCOLM_ID]
+        [MALCOLM_ID]
     )
 
     if not parent_task:
@@ -618,7 +641,7 @@ def process_domain(domain, has_github_repo=True):
     subtask2 = create_task(
         "Deploy PostHog Code",
         subtask2_desc,
-        [JOSHUA_ID, MALCOLM_ID],
+        [MALCOLM_ID],
         parent_id
     )
 
@@ -667,18 +690,20 @@ After running `/posthog_setup`, output:
 
 ### Domains Processed: [COUNT]
 
-| Domain | PostHog ID | GitHub | ClickUp Task |
-|--------|------------|--------|--------------|
-| domain1.com | 12345 | ✓ Pushed | 86abc123 |
-| domain2.com | 12346 | ✓ Pushed | 86abc124 |
-| domain3.com | 12347 | ✗ No repo | 86abc125 |
+| Domain | PostHog ID | Local Files | ClickUp Task |
+|--------|------------|-------------|--------------|
+| domain1.com | 12345 | ✓ Saved | 86abc123 |
+| domain2.com | 12346 | ✓ Saved | 86abc124 |
+| domain3.com | 12347 | ✓ Saved | 86abc125 |
+
+### Git Status: LOCAL ONLY (no remote push)
 
 ### Task Structure (per domain):
 - Parent Task: "PostHog Configuration - {domain}"
-  - Assignees: Joshua, Malcolm
+  - Assignee: Malcolm
   - Attachments: navboost-tracker.js, posthog-functions.php, RELEASE_NOTES.md, README.md
 - Sub-task 1: "Add Release Notes" (Andre) - Auto-completed
-- Sub-task 2: "Deploy PostHog Code" (Joshua, Malcolm) - To Do
+- Sub-task 2: "Deploy PostHog Code" (Malcolm) - To Do
 
 ### ClickUp List
 https://app.clickup.com/8553292/v/l/li/901324589525

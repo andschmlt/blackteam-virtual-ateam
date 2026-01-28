@@ -2,7 +2,8 @@
 
 **Project:** PostHog NavBoost Integration
 **Maintained by:** Virtual ATeam - BlackTeam
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-01-28
+**Last Verified:** 2026-01-28 (PostHog API query)
 
 ---
 
@@ -12,161 +13,127 @@ This registry is the source of truth for all PostHog configurations across Parad
 - Domain configurations and versions
 - GitHub repositories and branches
 - ClickUp task references (parent and sub-tasks)
-- Release history and commits
+- **NEW: Actual deployment status verified against PostHog data**
 
-**Used by:** `/posthog_update` command
-
----
-
-## Domain Registry
-
-| Domain | Version | GitHub Repo | Branch | Parent Task | Sub-Tasks |
-|--------|---------|-------------|--------|-------------|-----------|
-| bestdaily.com | 1.1.0 | ParadiseMediaOrg/bestdaily.com | main | 86aepf1kz | 86aepvn90 |
-| betanews.com | 1.1.0 | ParadiseMediaOrg/betanews.com | main | 86aepf1nt | 86aepvna4 |
-| centraljersey.com | 1.1.0 | ParadiseMediaOrg/centraljersey.com | master | 86aepf1qd | 86aepvnb4 |
-| countryqueer.com | 1.1.0 | ParadiseMediaOrg/countryqueer.com | main | 86aepf1t9 | 86aepvnc7 |
-| culture.org | 1.1.0 | ParadiseMediaOrg/culture.org | staging | 86aepf1v4 | 86aepvnea |
-| dotesports.com | 1.1.0 | ParadiseMediaOrg/dotesports.com | staging | 86aepf23j | 86aepvnf9 |
-| esports.gg | 1.1.0 | ParadiseMediaOrg/esports.gg | migration-staging | 86aepf24b | 86aepvngq |
-| europeangaming.eu | 1.1.0 | ParadiseMediaOrg/europeangaming.eu | main | 86aepf25g | 86aepvnjb |
-| godisageek.com | 1.1.0 | ParadiseMediaOrg/godisageek.com | main | 86aepf27r | 86aepvnm0 |
-| hudsonreporter.com | 1.1.0 | ParadiseMediaOrg/hudsonreporter.com | main | 86aepf7r3 | 86aepvnn1 |
-| iogames.space | 1.1.0 | ParadiseMediaOrg/iogames.space | master | 86aepf2a9 | 86aepvnq5 |
-| lover.io | 1.0.0 | ryhats11/lover.io | main | - | - |
-| lowerbuckstimes.com | 1.1.0 | ParadiseMediaOrg/lowerbuckstimes.com | main | 86aepf3mc | 86aepvnr1 |
-| management.org | 1.1.0 | ParadiseMediaOrg/management.org | main | 86aepf3pg | 86aepvnte |
-| metrotimes.com | 1.1.0 | NO REPO | - | 86aepf7vx | - |
-| mrracy.com | 1.1.0 | ParadiseMediaOrg/mrracy.com | main | 86aepf3tn | 86aepvnuy |
-| newgamenetwork.com | 1.1.0 | ParadiseMediaOrg/newgamenetwork.com | staging | 86aepf3y2 | 86aepvnw2 |
-| northeasttimes.com | 1.1.0 | ParadiseMediaOrg/northeasttimes.com | main | 86aepf41p | 86aepvnxn |
-| ostexperte.de | 1.1.0 | ParadiseMediaOrg/ostexperte.de | main | 86aepf45e | 86aepvnyb |
-| philadelphiaweekly.com | 1.1.0 | NO REPO | - | 86aepf81y | - |
-| pokerology.com | 1.1.0 | ParadiseMediaOrg/pokerology.com | staging | 86aepf48h | 86aepvnzb |
-| pokertube.com | 1.1.0 | ParadiseMediaOrg/pokertube.com | staging | 86aepf4b4 | 86aepvp05 |
-| silvergames.com | 1.1.0 | NO REPO | - | 86aepf886 | - |
-| snjtoday.com | 1.1.0 | ParadiseMediaOrg/snjtoday.com | main | 86aepf4et | 86aepvp10 |
-| southphillyreview.com | 1.1.0 | ParadiseMediaOrg/southphillyreview.com | main | 86aepf4ht | 86aepvp20 |
-| sport-oesterreich.at | 1.1.0 | ParadiseMediaOrg/sport-oesterreich.at | staging | 86aepf4nc | 86aepvp2w |
-| starnewsphilly.com | 1.1.0 | ParadiseMediaOrg/starnewsphilly.com | main | 86aepf4rw | 86aepvp4d |
-| theroanokestar.com | 1.1.0 | ParadiseMediaOrg/theroanokestar.com | staging | 86aepf4xc | 86aepvp53 |
-| thesunpapers.com | 1.1.0 | ParadiseMediaOrg/thesunpapers.com | staging | 86aepf51u | 86aepvp61 |
-| topdocumentaryfilms.com | 1.1.0 | ParadiseMediaOrg/topdocumentaryfilms.com | main | 86aepf55v | 86aepvp6w |
-| warcraftmovies.com | 1.1.0 | ParadiseMediaOrg/warcraftmovies.com | main | 86aepf5b2 | 86aepvp82 |
+**Used by:** `/posthog_update` command, `/posthog_analysis`
 
 ---
 
-## Commit Log
+## CRITICAL: Deployment Status Legend
 
-| Date | Domain | Version | Commit Hash | Branch | Message |
-|------|--------|---------|-------------|--------|---------|
-| 2026-01-21 | bestdaily.com | 1.1.0 | be32900 | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | betanews.com | 1.1.0 | 833f7aa | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | centraljersey.com | 1.1.0 | 7f70617 | master | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | countryqueer.com | 1.1.0 | - | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | culture.org | 1.1.0 | 53a989da | staging | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | dotesports.com | 1.1.0 | 3c0dbb26 | staging | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | esports.gg | 1.1.0 | 11743b17 | migration-staging | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | europeangaming.eu | 1.1.0 | - | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | godisageek.com | 1.1.0 | - | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | hudsonreporter.com | 1.1.0 | eda7350 | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | iogames.space | 1.1.0 | 13c65eb | master | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | lowerbuckstimes.com | 1.1.0 | - | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | management.org | 1.1.0 | - | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | mrracy.com | 1.1.0 | - | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | newgamenetwork.com | 1.1.0 | e7e1bbc | staging | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | northeasttimes.com | 1.1.0 | aeba50ef | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | ostexperte.de | 1.1.0 | - | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | pokerology.com | 1.1.0 | af3414f4 | staging | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | pokertube.com | 1.1.0 | f034e69 | staging | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | snjtoday.com | 1.1.0 | - | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | southphillyreview.com | 1.1.0 | 429ae7f | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | sport-oesterreich.at | 1.1.0 | d931aa2 | staging | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | starnewsphilly.com | 1.1.0 | 154e10b | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | theroanokestar.com | 1.1.0 | 002cc58a | staging | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | thesunpapers.com | 1.1.0 | 6c83dc16 | staging | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | topdocumentaryfilms.com | 1.1.0 | 32d3d2b | main | Add PostHog conversion tracking (v1.1.0) |
-| 2026-01-21 | warcraftmovies.com | 1.1.0 | 2dd3d66 | main | Add PostHog conversion tracking (v1.1.0) |
+| Status | Meaning |
+|--------|---------|
+| ✅ LIVE | PostHog events confirmed in last 7 days |
+| 📦 PACKAGED | v1.2.0 package ready, awaiting TechOps deployment |
+| ⏳ COMMITTED | Code committed to GitHub, not yet deployed to production |
+| ❌ NO DATA | No PostHog events found (SDK may not be installed) |
 
 ---
 
-## ClickUp Task Reference
+## Domain Registry (with Verified Status)
 
-### Parent Tasks (PostHog Configuration)
+| Domain | Registry Ver | Prod Ver | PostHog SDK | NavBoost | Parent Task | v1.2.1 SubTask | Status |
+|--------|--------------|----------|-------------|----------|-------------|----------------|--------|
+| hudsonreporter.com | 1.2.1 | **1.2.0** | ✅ 5,315 pv | ✅ 8,431 | 86aepf7r3 | 86aewdj28 | ✅ LIVE |
+| dotesports.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf23j | 86aewrha9 | 📦 v1.2.1 READY |
+| culture.org | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf1v4 | 86aewrhe0 | 📦 v1.2.1 READY |
+| pokertube.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf4b4 | 86aewrhjm | 📦 v1.2.1 READY |
+| snjtoday.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf4et | 86aewrhp5 | 📦 v1.2.1 READY |
+| bestdaily.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf1kz | 86aewrhtu | 📦 v1.2.1 READY |
+| betanews.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf1nt | 86aewrhwz | 📦 v1.2.1 READY |
+| centraljersey.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf1qd | 86aewrhzk | 📦 v1.2.1 READY |
+| countryqueer.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf1t9 | 86aewrj32 | 📦 v1.2.1 READY |
+| esports.gg | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf24b | 86aewrj6f | 📦 v1.2.1 READY |
+| europeangaming.eu | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf25g | 86aewrj90 | 📦 v1.2.1 READY |
+| godisageek.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf27r | 86aewrjcc | 📦 v1.2.1 READY |
+| iogames.space | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf2a9 | 86aewrjgm | 📦 v1.2.1 READY |
+| lover.io | 1.0.0 | N/A | ❌ 0 | ❌ 0 | - | - | ❌ NO DATA |
+| lowerbuckstimes.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf3mc | 86aewrjnz | 📦 v1.2.1 READY |
+| management.org | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf3pg | 86aewrjvb | 📦 v1.2.1 READY |
+| metrotimes.com | 1.1.0 | N/A | ❌ 0 | ❌ 0 | 86aepf7vx | - | ❌ NO REPO |
+| mrracy.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf3tn | 86aewrjy9 | 📦 v1.2.1 READY |
+| newgamenetwork.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf3y2 | 86aewrk1r | 📦 v1.2.1 READY |
+| northeasttimes.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf41p | 86aewrk5f | 📦 v1.2.1 READY |
+| ostexperte.de | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf45e | 86aewrk99 | 📦 v1.2.1 READY |
+| philadelphiaweekly.com | 1.1.0 | N/A | ❌ 0 | ❌ 0 | 86aepf81y | - | ❌ NO REPO |
+| pokerology.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf48h | 86aewrkca | 📦 v1.2.1 READY |
+| silvergames.com | 1.1.0 | N/A | ❌ 0 | ❌ 0 | 86aepf886 | - | ❌ NO REPO |
+| southphillyreview.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf4ht | 86aewrkkb | 📦 v1.2.1 READY |
+| sport-oesterreich.at | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf4nc | 86aewrkpy | 📦 v1.2.1 READY |
+| starnewsphilly.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf4rw | 86aewrkuq | 📦 v1.2.1 READY |
+| theroanokestar.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf4xc | 86aewrkxn | 📦 v1.2.1 READY |
+| thesunpapers.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf51u | 86aewrm2b | 📦 v1.2.1 READY |
+| topdocumentaryfilms.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf55v | 86aewrm5c | 📦 v1.2.1 READY |
+| warcraftmovies.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf5b2 | 86aewrm9b | 📦 v1.2.1 READY |
 
-| Domain | Task ID | Task URL |
-|--------|---------|----------|
-| bestdaily.com | 86aepf1kz | https://app.clickup.com/t/86aepf1kz |
-| betanews.com | 86aepf1nt | https://app.clickup.com/t/86aepf1nt |
-| centraljersey.com | 86aepf1qd | https://app.clickup.com/t/86aepf1qd |
-| countryqueer.com | 86aepf1t9 | https://app.clickup.com/t/86aepf1t9 |
-| culture.org | 86aepf1v4 | https://app.clickup.com/t/86aepf1v4 |
-| dotesports.com | 86aepf23j | https://app.clickup.com/t/86aepf23j |
-| esports.gg | 86aepf24b | https://app.clickup.com/t/86aepf24b |
-| europeangaming.eu | 86aepf25g | https://app.clickup.com/t/86aepf25g |
-| godisageek.com | 86aepf27r | https://app.clickup.com/t/86aepf27r |
-| hudsonreporter.com | 86aepf7r3 | https://app.clickup.com/t/86aepf7r3 |
-| iogames.space | 86aepf2a9 | https://app.clickup.com/t/86aepf2a9 |
-| lowerbuckstimes.com | 86aepf3mc | https://app.clickup.com/t/86aepf3mc |
-| management.org | 86aepf3pg | https://app.clickup.com/t/86aepf3pg |
-| metrotimes.com | 86aepf7vx | https://app.clickup.com/t/86aepf7vx |
-| mrracy.com | 86aepf3tn | https://app.clickup.com/t/86aepf3tn |
-| newgamenetwork.com | 86aepf3y2 | https://app.clickup.com/t/86aepf3y2 |
-| northeasttimes.com | 86aepf41p | https://app.clickup.com/t/86aepf41p |
-| ostexperte.de | 86aepf45e | https://app.clickup.com/t/86aepf45e |
-| philadelphiaweekly.com | 86aepf81y | https://app.clickup.com/t/86aepf81y |
-| pokerology.com | 86aepf48h | https://app.clickup.com/t/86aepf48h |
-| pokertube.com | 86aepf4b4 | https://app.clickup.com/t/86aepf4b4 |
-| silvergames.com | 86aepf886 | https://app.clickup.com/t/86aepf886 |
-| snjtoday.com | 86aepf4et | https://app.clickup.com/t/86aepf4et |
-| southphillyreview.com | 86aepf4ht | https://app.clickup.com/t/86aepf4ht |
-| sport-oesterreich.at | 86aepf4nc | https://app.clickup.com/t/86aepf4nc |
-| starnewsphilly.com | 86aepf4rw | https://app.clickup.com/t/86aepf4rw |
-| theroanokestar.com | 86aepf4xc | https://app.clickup.com/t/86aepf4xc |
-| thesunpapers.com | 86aepf51u | https://app.clickup.com/t/86aepf51u |
-| topdocumentaryfilms.com | 86aepf55v | https://app.clickup.com/t/86aepf55v |
-| warcraftmovies.com | 86aepf5b2 | https://app.clickup.com/t/86aepf5b2 |
+---
 
-### Sub-Tasks (Update - Deploy Posthog Code)
+## Summary Statistics
 
-| Domain | Sub-Task ID | Sub-Task URL | Date |
-|--------|-------------|--------------|------|
-| bestdaily.com | 86aepvn90 | https://app.clickup.com/t/86aepvn90 | 2026-01-21 |
-| betanews.com | 86aepvna4 | https://app.clickup.com/t/86aepvna4 | 2026-01-21 |
-| centraljersey.com | 86aepvnb4 | https://app.clickup.com/t/86aepvnb4 | 2026-01-21 |
-| countryqueer.com | 86aepvnc7 | https://app.clickup.com/t/86aepvnc7 | 2026-01-21 |
-| culture.org | 86aepvnea | https://app.clickup.com/t/86aepvnea | 2026-01-21 |
-| dotesports.com | 86aepvnf9 | https://app.clickup.com/t/86aepvnf9 | 2026-01-21 |
-| esports.gg | 86aepvngq | https://app.clickup.com/t/86aepvngq | 2026-01-21 |
-| europeangaming.eu | 86aepvnjb | https://app.clickup.com/t/86aepvnjb | 2026-01-21 |
-| godisageek.com | 86aepvnm0 | https://app.clickup.com/t/86aepvnm0 | 2026-01-21 |
-| hudsonreporter.com | 86aepvnn1 | https://app.clickup.com/t/86aepvnn1 | 2026-01-21 |
-| iogames.space | 86aepvnq5 | https://app.clickup.com/t/86aepvnq5 | 2026-01-21 |
-| lowerbuckstimes.com | 86aepvnr1 | https://app.clickup.com/t/86aepvnr1 | 2026-01-21 |
-| management.org | 86aepvnte | https://app.clickup.com/t/86aepvnte | 2026-01-21 |
-| mrracy.com | 86aepvnuy | https://app.clickup.com/t/86aepvnuy | 2026-01-21 |
-| newgamenetwork.com | 86aepvnw2 | https://app.clickup.com/t/86aepvnw2 | 2026-01-21 |
-| northeasttimes.com | 86aepvnxn | https://app.clickup.com/t/86aepvnxn | 2026-01-21 |
-| ostexperte.de | 86aepvnyb | https://app.clickup.com/t/86aepvnyb | 2026-01-21 |
-| pokerology.com | 86aepvnzb | https://app.clickup.com/t/86aepvnzb | 2026-01-21 |
-| pokertube.com | 86aepvp05 | https://app.clickup.com/t/86aepvp05 | 2026-01-21 |
-| snjtoday.com | 86aepvp10 | https://app.clickup.com/t/86aepvp10 | 2026-01-21 |
-| southphillyreview.com | 86aepvp20 | https://app.clickup.com/t/86aepvp20 | 2026-01-21 |
-| sport-oesterreich.at | 86aepvp2w | https://app.clickup.com/t/86aepvp2w | 2026-01-21 |
-| starnewsphilly.com | 86aepvp4d | https://app.clickup.com/t/86aepvp4d | 2026-01-21 |
-| theroanokestar.com | 86aepvp53 | https://app.clickup.com/t/86aepvp53 | 2026-01-21 |
-| thesunpapers.com | 86aepvp61 | https://app.clickup.com/t/86aepvp61 | 2026-01-21 |
-| topdocumentaryfilms.com | 86aepvp6w | https://app.clickup.com/t/86aepvp6w | 2026-01-21 |
-| warcraftmovies.com | 86aepvp82 | https://app.clickup.com/t/86aepvp82 | 2026-01-21 |
+| Metric | Count |
+|--------|-------|
+| Total Domains in Registry | 29 |
+| ✅ LIVE (PostHog data confirmed) | **1** (hudsonreporter.com) |
+| 📦 v1.2.1 READY (complete package with attachments) | **26** |
+| ❌ NO DATA / NO REPO | **3** (lover.io, metrotimes, philadelphiaweekly, silvergames) |
+
+### v1.2.1 Update (2026-01-28)
+
+All 26 domains now have complete packages with:
+- PostHog SDK (`posthog-functions.php`)
+- NavBoost Tracker (`navboost-tracker-v1.2.1.js`)
+- Deployment Guide (`DEPLOYMENT_GUIDE_v1.2.1.md`)
+- Release Notes (`RELEASE_NOTES_v1.2.1.md`)
+
+**Files are ATTACHED to ClickUp subtasks** (not GitHub links)
+
+---
+
+## v1.2.0 Packages Ready for Deployment
+
+These packages are in `/home/andre/projects/posthog-integration/v1.2.0-source/` and attached to ClickUp subtasks:
+
+| Domain | CTA Template | Audit Status | SubTask ID | Files |
+|--------|--------------|--------------|------------|-------|
+| hudsonreporter.com | CTA_TEMPLATE_003 | ⏳ PENDING | 86aewdj28 | navboost-tracker-v1.2.0.js, RELEASE_NOTES |
+| dotesports.com | CTA_TEMPLATE_004 | ✅ VERIFIED | 86aewepp1 | navboost-tracker-v1.2.0.js, RELEASE_NOTES |
+| culture.org | CTA_TEMPLATE_002 | ⏳ PENDING | 86aewdnkz | navboost-tracker-v1.2.0.js, RELEASE_NOTES |
+| pokertube.com | CTA_TEMPLATE_005 | ⏳ PENDING | 86aewdntp | navboost-tracker-v1.2.0.js, RELEASE_NOTES |
+| snjtoday.com | CTA_TEMPLATE_006 | ✅ VERIFIED | 86aewkqxw | navboost-tracker-v1.2.0.js, RELEASE_NOTES |
+
+---
+
+## GitHub Repository Reference
+
+| Domain | GitHub Repo | Branch | Commit (v1.1.0) |
+|--------|-------------|--------|-----------------|
+| hudsonreporter.com | ParadiseMediaOrg/hudsonreporter.com | main | eda7350 |
+| dotesports.com | ParadiseMediaOrg/dotesports.com | staging | 3c0dbb26 |
+| culture.org | ParadiseMediaOrg/culture.org | staging | 53a989da |
+| pokertube.com | ParadiseMediaOrg/pokertube.com | staging | f034e69 |
+| snjtoday.com | ParadiseMediaOrg/snjtoday.com | main | - |
+| europeangaming.eu | ParadiseMediaOrg/europeangaming.eu | main | - |
+| northeasttimes.com | ParadiseMediaOrg/northeasttimes.com | main | aeba50ef |
+| lover.io | ryhats11/lover.io | main | - |
+
+---
+
+## Domains Without GitHub Repos
+
+These domains have ClickUp tasks but no GitHub repository:
+- metrotimes.com (Task: 86aepf7vx)
+- philadelphiaweekly.com (Task: 86aepf81y)
+- silvergames.com (Task: 86aepf886)
 
 ---
 
 ## Version History
 
-| Version | Date | Features | Domains |
-|---------|------|----------|---------|
+| Version | Date | Features | Domains Affected |
+|---------|------|----------|------------------|
 | 1.0.0 | 2026-01-16 | NavBoost tracking, WordPress integration | lover.io, northeasttimes.com |
-| 1.1.0 | 2026-01-21 | + Enhanced conversion tracking (5 types) | 27 domains |
+| 1.1.0 | 2026-01-21 | + Enhanced conversion tracking (5 types) | 27 domains (committed) |
+| 1.2.0 | 2026-01-28 | + CTA Template System, per-site selectors | 5 domains (packaged) |
 
 ### Version Features
 
@@ -187,32 +154,13 @@ This registry is the source of truth for all PostHog configurations across Parad
 - posthog-full-tracking.php with enhanced WordPress hooks
 - DEPLOYMENT_GUIDE.md with HogQL queries
 
----
-
-## Files Structure
-
-```
-posthog-integration/
-├── CHANGELOG.md              # Human-readable changelog
-├── POSTHOG_REGISTRY.md       # This file - source of truth
-└── [domain]/
-    ├── navboost-tracker.js       # v1.0.0+
-    ├── posthog-functions.php     # v1.0.0+
-    ├── conversion-tracker.js     # v1.1.0+
-    ├── posthog-full-tracking.php # v1.1.0+
-    ├── DEPLOYMENT_GUIDE.md       # v1.1.0+
-    ├── README.md
-    └── RELEASE_NOTES.md
-```
-
----
-
-## Domains Without GitHub Repos
-
-These domains have ClickUp tasks but no GitHub repository:
-- metrotimes.com (Task: 86aepf7vx)
-- philadelphiaweekly.com (Task: 86aepf81y)
-- silvergames.com (Task: 86aepf886)
+**v1.2.0 - CTA Template System**
+- Site-specific CTA selectors (6 templates)
+- Mandatory pre-release audit workflow
+- Affiliate link pattern detection
+- Heartbeat events (30s intervals)
+- Enhanced error logging
+- Template: CTA_TEMPLATES.md
 
 ---
 
@@ -226,5 +174,29 @@ These domains have ClickUp tasks but no GitHub repository:
 
 ---
 
+## Verification Queries
+
+Run these to verify deployment status:
+
+```sql
+-- Check PostHog SDK presence (should have $pageview events)
+SELECT properties.$host as domain, count() as pageviews
+FROM events
+WHERE event = '$pageview' AND timestamp >= now() - INTERVAL 7 DAY
+GROUP BY domain
+ORDER BY pageviews DESC
+
+-- Check NavBoost tracker version
+SELECT properties.$host as domain, properties.tracker_version as version, count()
+FROM events
+WHERE event = 'navboost:init_complete' AND timestamp >= now() - INTERVAL 7 DAY
+GROUP BY domain, version
+ORDER BY count() DESC
+```
+
+---
+
 *Generated by Virtual ATeam - BlackTeam*
-*Last Updated: 2026-01-21*
+*Head of Tech*
+*Last Updated: 2026-01-28*
+*Verified against PostHog project 295222*
