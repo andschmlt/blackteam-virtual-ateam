@@ -16,6 +16,75 @@ When `/director` is invoked, AUTOMATICALLY load:
 
 ---
 
+## RULE 0: KNOW YOUR TOOLS (SUPERSEDES ALL OTHER RULES)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ⛔ CRITICAL RULE 0 - MANDATORY BEFORE ANY ACTION               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  BEFORE claiming a capability doesn't exist, you MUST:          │
+│                                                                  │
+│  1. CHECK EXISTING INFRASTRUCTURE FIRST                         │
+│     ├── ~/.keys/           → Credentials, API keys, utilities   │
+│     ├── ~/.keys/.env       → SMTP, API configurations           │
+│     ├── ~/.keys/send_email.py → EMAIL UTILITY (ALWAYS EXISTS)   │
+│     ├── ~/secrets/         → Service account keys               │
+│     └── CLAUDE.md files    → Project-specific instructions      │
+│                                                                  │
+│  2. READ CLAUDE.md IN RELEVANT DIRECTORIES                      │
+│     These contain EXPLICIT instructions for available tools     │
+│                                                                  │
+│  3. SEARCH BEFORE SAYING "NOT AVAILABLE"                        │
+│     └── glob ~/.keys/* and ~/secrets/* FIRST                    │
+│                                                                  │
+│  ════════════════════════════════════════════════════════════   │
+│                                                                  │
+│  KNOWN INFRASTRUCTURE (ALWAYS AVAILABLE):                       │
+│                                                                  │
+│  EMAIL/SMTP:                                                     │
+│    └── python3 ~/.keys/send_email.py "to" "subject" "body"     │
+│    └── --attachment /path/to/file.pdf                          │
+│    └── Default: andre@paradisemedia.com                         │
+│                                                                  │
+│  SLACK:                                                          │
+│    └── MCP Tool: mcp__claude_ai_Slack__slack_send_message       │
+│    └── Andre's user_id: U05C3UJCK2T                             │
+│                                                                  │
+│  CLICKUP:                                                        │
+│    └── MCP Tools: mcp__claude_ai_ClickUp__*                     │
+│    └── Config: ~/.claude/clickup_config.json                    │
+│                                                                  │
+│  BIGQUERY:                                                       │
+│    └── SA Key: ~/secrets/paradisemedia-bi-sa.json               │
+│                                                                  │
+│  ════════════════════════════════════════════════════════════   │
+│                                                                  │
+│  ❌ NEVER say "I don't have email capability"                   │
+│  ❌ NEVER say "No tool available" without checking first        │
+│  ❌ NEVER claim infrastructure doesn't exist                    │
+│                                                                  │
+│  ✅ ALWAYS check ~/.keys/ first                                 │
+│  ✅ ALWAYS read CLAUDE.md files for instructions                │
+│  ✅ ALWAYS search before claiming unavailability                │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Email Quick Reference
+
+```bash
+# Send email with attachment (ALWAYS USE THIS)
+python3 ~/.keys/send_email.py "andre@paradisemedia.com" "Subject" "Body" --attachment /path/to/file.pdf
+
+# Python import
+import sys
+sys.path.insert(0, '/home/andre/.keys')
+from send_email import send_email, send_report, send_alert
+```
+
+---
+
 ## PHASE 0: DIRECTOR IDENTITY
 
 ```
