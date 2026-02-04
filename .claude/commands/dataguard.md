@@ -1,8 +1,142 @@
 # /dataguard - Data Terminology & Integrity Standards
 
-**Version:** 1.0
+**Version:** 2.1
 **Created:** 2026-01-28
-**Purpose:** Enforce consistent data terminology and calculation integrity across all analytics reports
+**Updated:** 2026-02-04
+**Purpose:** Enforce MASTER_LIST v1.0 compliance, data terminology, and calculation integrity
+
+---
+
+## MASTER_LIST v1.0 COMPLIANCE (MANDATORY - HIGHEST PRIORITY)
+
+**Reference:** `/home/andre/.claude/MASTER_LIST_v1.0.md`
+
+### APPROVED DATA SOURCES (USE ONLY THESE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  APPROVED SCHEMA: paradisemedia-bi.reporting ONLY               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  TABLE                    │ PURPOSE                              │
+│  ─────────────────────────┼──────────────────────────────────────│
+│  ARTICLE_PERFORMANCE      │ Revenue, FTDs, clicks per article    │
+│  ARTICLE_INFORMATION      │ Article metadata, status, keywords   │
+│  BRAND_PERFORMANCE        │ Brand-level metrics                  │
+│  FINANCIAL_REPORT         │ High-level financials (THE BIBLE)    │
+│  COSTS_INFORMATION        │ Costs by type, domain, article       │
+│  CLOAKING_TRAFFIC         │ Clickout/redirect data               │
+│  REPT_SEO_AHREFS          │ DR, backlinks, referring domains     │
+│  REPT_SEO_ACCURANKER      │ Rankings, positions, traffic         │
+│  ARTICLE_CHANGELOG        │ Production cycles, TAT               │
+│  DIM_BRAND                │ Brand dimension                      │
+│  DIM_VERTICAL             │ Vertical/Niche hierarchy             │
+│  DIM_DATE                 │ Date dimension                       │
+│  DIM_FIXED_FEE            │ Fixed fee agreements                 │
+│  DIM_PRODUCT              │ Domain/product dimension             │
+│  DIM_INVOICE              │ Invoice details                      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### FORBIDDEN DATA SOURCES (NEVER USE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  🚫 FORBIDDEN - AUTOMATIC FAILURE IF USED                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  SOURCE                   │ REASON                               │
+│  ─────────────────────────┼──────────────────────────────────────│
+│  bi_playground.*          │ Experimentation area - unstable      │
+│  lakehouse.*              │ Internal ETL - NOT for reporting     │
+│  analytics.*              │ ML/analytics only - not revenue      │
+│  testing.*                │ Development only                     │
+│  chatbot.*                │ Deprecated schema                    │
+│                                                                  │
+│  ANTI-PATTERNS:                                                  │
+│  • Matching by task NAME keywords (use TASK_ID = DYNAMIC)        │
+│  • Using FCT_* tables from lakehouse                             │
+│  • Summing at domain level for task ROI (use TASK_ID)            │
+│  • Linking DataForSEO keywords to revenue (NO JOIN EXISTS)       │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### CRITICAL JOIN RULES (MANDATORY)
+
+```sql
+-- Rule R9: Article join key
+ARTICLE_INFORMATION.TASK_ID = ARTICLE_PERFORMANCE.DYNAMIC
+
+-- Rule R12: Fixed fee join
+COSTS_INFORMATION.SOURCE = 'FIXED_FEES'
+COSTS_INFORMATION.LINK_FK = DIM_FIXED_FEE.FIXED_FEE_SK
+
+-- Rule R6: Date format
+DATE_ID = YYYYMMDD (integer, e.g., 20260204)
+
+-- Rule R11: Total revenue calculation
+Total Revenue = Commission + Fixed Fees
+```
+
+### COLUMN DEFINITIONS (MANDATORY)
+
+| Column | Table | Definition | Rule |
+|--------|-------|------------|------|
+| **GOALS** | ARTICLE_PERFORMANCE | FTDs (First Time Deposits) | R1 |
+| **FTD** | BRAND_PERFORMANCE | FTDs (same as GOALS) | R1 |
+| **DYNAMIC** | ARTICLE_PERFORMANCE | ClickUp Task ID | R2 |
+| **TASK_ID** | ARTICLE_INFORMATION | ClickUp Task ID | R2 |
+| **TOTAL_COMMISSION_USD** | Multiple | Total commission (NP + LP) | |
+| **TOTAL_COMMISSION_USD_NP** | ARTICLE_PERFORMANCE | New Player commission | R3 |
+| **TOTAL_COMMISSION_USD_LP** | ARTICLE_PERFORMANCE | Legacy Player commission | R4 |
+
+### PRE-QUERY VALIDATION CHECKLIST
+
+Before executing ANY BigQuery query:
+
+```
+☐ 1. SCHEMA CHECK
+   □ Using paradisemedia-bi.reporting.* tables ONLY
+   □ NOT using bi_playground, lakehouse, analytics, testing
+
+☐ 2. JOIN KEY CHECK
+   □ Using TASK_ID = DYNAMIC for article joins
+   □ NOT matching by task name or keywords
+
+☐ 3. COLUMN CHECK
+   □ FTDs = GOALS column (not SIGNUPS)
+   □ DATE_ID in YYYYMMDD format
+
+☐ 4. CALCULATION CHECK
+   □ EPC = TOTAL_COMMISSION_USD / CLICKS
+   □ EPF = TOTAL_COMMISSION_USD / GOALS
+   □ Total Revenue = Commission + Fixed Fees
+
+FAILURE TO COMPLY = AUTOMATIC TASK FAILURE
+```
+
+### DataForSEO Rules
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  DATAFORSEO USAGE RULES                                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ✅ ALLOWED:                                                     │
+│  • Live SERP rankings (/v3/serp/google/organic/live)            │
+│  • Search volume data (/v3/keywords_data/google/search_volume)  │
+│  • Backlink metrics (/v3/backlinks/summary/live)                │
+│  • On-page SEO audit (/v3/on_page/instant_pages)                │
+│                                                                  │
+│  🚫 FORBIDDEN (Rule R21):                                        │
+│  • Linking DataForSEO keywords to revenue data                  │
+│  • No join key exists between DataForSEO and BigQuery           │
+│  • Use only for SEO analysis, NOT revenue attribution           │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -225,9 +359,36 @@ All analytics reports MUST invoke DataGuard validation:
 ## Usage
 
 ```
+/dataguard                       # Show full compliance checklist
+/dataguard validate              # Run MASTER_LIST + terminology validation
+/dataguard schema                # Show approved tables (reporting only)
+/dataguard forbidden             # Show forbidden sources
 /dataguard check [report.pdf]    # Validate existing report
-/dataguard validate              # Run validation checklist
 /dataguard terms                 # Show terminology standards
+/dataguard query [sql]           # Pre-validate a SQL query
+```
+
+### Auto-Invocation Rule
+
+**CRITICAL:** DataGuard MUST be invoked automatically before:
+- Any BigQuery query execution
+- Any analytics report generation
+- Any data extraction for business questions
+- Any /tasks_ROI, /FTD_DEEPDIVE_ANALYSIS, or similar commands
+
+```python
+# Example auto-validation pattern
+def execute_query(sql):
+    # STEP 1: DataGuard validation
+    if "lakehouse" in sql.lower():
+        raise Error("FORBIDDEN: lakehouse schema not allowed")
+    if "bi_playground" in sql.lower():
+        raise Error("FORBIDDEN: bi_playground schema not allowed")
+    if "reporting." not in sql.lower():
+        raise Warning("Query should use reporting schema")
+
+    # STEP 2: Execute only if validation passes
+    return bigquery.execute(sql)
 ```
 
 ---
@@ -385,4 +546,29 @@ REQUIRED VERIFICATION PROCESS:
 
 ---
 
-**/dataguard v2.0 | BlackTeam Data Integrity | Paradise Media Group**
+**/dataguard v2.1 | MASTER_LIST v1.0 Enforcer | BlackTeam Data Integrity | Paradise Media Group**
+
+---
+
+## Compliance Certification
+
+Every data extraction or analysis report MUST include:
+
+```markdown
+## DataGuard v2.1 Compliance
+
+### MASTER_LIST v1.0 Verification
+☑ Schema: paradisemedia-bi.reporting ONLY
+☑ Forbidden sources: None used (bi_playground, lakehouse, etc.)
+☑ Join keys: TASK_ID = DYNAMIC (verified)
+☑ Column definitions: GOALS = FTDs (verified)
+
+### Terminology Verification
+☑ FTDs ≠ Signups (verified)
+☑ Direction words match math
+☑ Title matches data narrative
+
+### Sign-off
+Report generated: [DATE]
+DataGuard compliant: YES
+```
