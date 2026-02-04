@@ -2,58 +2,29 @@
 
 Generate comprehensive PostHog analytics reports for Paradise Media properties.
 
-## HARD RULES (MANDATORY - NO EXCEPTIONS)
+## PREFERRED: Use Full Analysis Script
 
-### Director Rule 8: Head of Product Assignment
-**Head of Product MUST be involved in ALL PostHog analytics work.**
+**Run the comprehensive analysis script for ALL metrics:**
+```bash
+python3 /home/andre/projects/posthog-integration/scripts/full_posthog_analysis.py
+```
 
-When this command is invoked:
-1. Head of Product is automatically assigned to the task
-2. Analysis reports MUST include a "Product Insights" section
-3. HoP reviews metric interpretation and strategic implications
+This script fetches ALL available PostHog metrics including:
+- Standard PostHog metrics (events, users, sessions, web vitals)
+- All 18 NavBoost KPIs (Director Rule 18 compliant)
+- Traffic, geographic, device, browser breakdowns
+- Engagement score and composite metrics
 
-### Director Rule 1: PDF Output (MANDATORY)
-**All analysis reports MUST be generated as PDF in addition to markdown.**
-- Use ReportLab with Paradise Media branding (orange #f97316, black #1a1a1a)
-- Professional headers/footers with BlackTeam branding
-- Tables must use alternating row colors
-- Tables MUST NOT be split across pages (Rule 2)
+## Quick Reference
 
-### Director Rule 18: Mandatory NavBoost Metrics (Updated: 2026-01-28)
-**HARD RULE - NO EXCEPTIONS:** ALL reports MUST include the complete 18-metric NavBoost inventory with Source column.
-
-**REFERENCE:** `~/virtual-ateam/BlackTeam/NAVBOOST_METRICS_MAP.md` - Full extraction queries
-
-**MANDATORY METRICS (18 Total) - EVERY REPORT MUST INCLUDE:**
-
-| # | Metric | Source Event | Source Property | Target |
-|---|--------|--------------|-----------------|--------|
-| 1 | Dwell Time (avg) | `navboost:session_end` | `properties.dwell_time_seconds` | >90s |
-| 2 | Pogo Rate | `navboost:session_end` | `properties.is_pogo` | <18% |
-| 3 | Scroll Depth (25%) | `navboost:scroll_zone` | count where depth=25 | - |
-| 4 | Scroll Depth (50%) | `navboost:scroll_zone` | count where depth=50 | - |
-| 5 | Scroll Depth (75%) | `navboost:scroll_zone` | count where depth=75 | - |
-| 6 | Scroll Depth (100%) | `navboost:scroll_zone` | count where depth=100 | - |
-| 7 | CTA Visible | `navboost:cta_visible` | event count | - |
-| 8 | CTA Clicks | `navboost:cta_click` | event count | - |
-| 9 | CTA CTR | Calculated | #8 / #7 * 100 | >5% |
-| 10 | Good Abandonment | `navboost:session_end` | `properties.is_good_abandonment` | >15% |
-| 11 | Session Starts | `navboost:session_start` | event count | - |
-| 12 | Session Ends | `navboost:session_end` | event count | - |
-| 13 | SERP Return Rate | `navboost:session_end` | = Pogo Rate (Google traffic) | <25% |
-| 14 | Engagement Score | Calculated | See NAVBOOST_METRICS_MAP.md | >70 |
-| 15 | Outbound Clicks | `navboost:session_end` | `properties.outbound_clicks` | - |
-| 16 | Heartbeat Events | `navboost:heartbeat` | event count | - |
-| 17 | Toplist Row Visible | `navboost:toplist_row_visible` | event count (if applicable) | N/A |
-| 18 | Session Time (avg) | `navboost:session_end` | = Dwell Time (#1) | >60s |
-
-**CRITICAL: Never show "NOT TRACKED" if data exists in event properties.**
-- Query event COUNTS first, then query PROPERTIES from session_end
-- Show "0" if metric tracked but no data, "N/A" if not applicable
-
-**Reports missing ANY metric are flagged as INCOMPLETE.**
-
-See: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md` - Rules 1, 8, 18
+| Rule | Requirement |
+|------|-------------|
+| R1 | PDF output with Paradise Media branding |
+| R2 | Tables must not split across pages |
+| R8 | Head of Product must be involved |
+| R18 | All 18 NavBoost metrics required |
+| R27 | Discover projects via API, not hardcoded list |
+| R32 | Use canonical query template |
 
 ## Usage
 
@@ -103,13 +74,33 @@ for p in json.load(sys.stdin):
 
 When this command is invoked:
 
-### 1. Load Configuration
-```bash
-export POSTHOG_PERSONAL_API_KEY=$(grep POSTHOG_PERSONAL_API_KEY /home/andre/.keys/.env | cut -d'=' -f2)
-export CLICKUP_API_KEY=$(grep CLICKUP_API_KEY /home/andre/.keys/.env | cut -d'=' -f2 2>/dev/null || cat /home/andre/.claude/clickup_config.json | python3 -c "import json,sys; print(json.load(sys.stdin)['CLICKUP_API_KEY'])")
-export DATAFORSEO_LOGIN=$(grep DATAFORSEO_LOGIN /home/andre/.keys/.env | cut -d'=' -f2)
-export DATAFORSEO_PASSWORD=$(grep DATAFORSEO_PASSWORD /home/andre/.keys/.env | cut -d'=' -f2)
+### 1. Load Configuration & Library (MANDATORY - Rule 32)
+
+**CRITICAL:** Always use the canonical PostHog metrics library:
+
+```python
+import sys
+sys.path.insert(0, '/home/andre/virtual-ateam/BlackTeam/projects/posthog-integration/lib')
+from posthog_metrics_lib import PostHogMetrics
+
+# Initialize metrics client (auto-loads API key from ~/.keys/.env)
+metrics = PostHogMetrics()
+
+# Get ALL metrics for a domain in one call
+data = metrics.get_complete_metrics(project_id=291573, days=7)
+
+# Or get specific metric groups:
+stats = metrics.get_overall_stats(project_id, days=7)
+web_vitals = metrics.get_web_vitals(project_id, days=7)
+navboost = metrics.get_all_navboost_metrics(project_id, days=7)
 ```
+
+**Canonical Files (MUST USE):**
+| File | Location | Purpose |
+|------|----------|---------|
+| Query Template | `~/virtual-ateam/BlackTeam/projects/posthog-integration/POSTHOG_QUERY_TEMPLATE.md` | All correct HogQL patterns |
+| Metrics Library | `~/virtual-ateam/BlackTeam/projects/posthog-integration/lib/posthog_metrics_lib.py` | Python extraction functions |
+| PDF Converter | `/tmp/claude/.../scratchpad/md_to_pdf_9domains_v2.py` | Rule-compliant PDF with page breaks |
 
 ### 1a. DataForSEO Integration (Metrics 12-14)
 **DataForSEO is the PRIMARY source for SERP metrics.**
@@ -127,11 +118,13 @@ impressions = metrics["dataforseo_metrics"]["impressions"]
 avg_position = metrics["dataforseo_metrics"]["avg_position"]
 ```
 
-**Library Location:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/lib/`
+**Library Location:** `/home/andre/virtual-ateam/BlackTeam/projects/posthog-integration/lib/`
+- `posthog_metrics_lib.py` - **CANONICAL** PostHog metrics extraction (Rule 32)
 - `dataforseo_client.py` - DataForSEO API client
 - `navboost_metrics.py` - Unified metrics collector (PostHog + DataForSEO)
 
 **Credentials:** Set in `/home/andre/.keys/.env`:
+- `POSTHOG_PERSONAL_API_KEY` - PostHog API key (auto-loaded by library)
 - `DATAFORSEO_LOGIN` - Your DataForSEO account email
 - `DATAFORSEO_PASSWORD` - Your DataForSEO API password
 
@@ -245,9 +238,35 @@ FROM events WHERE timestamp >= now() - INTERVAL 7 DAY
 GROUP BY date ORDER BY date DESC
 ```
 
-## NAVBOOST METRICS (MANDATORY)
+## NAVBOOST METRICS (MANDATORY - All 18 Required)
 
 **CRITICAL:** NavBoost metrics MUST be included in every report. If no data exists, report "NavBoost Tracker Not Deployed" status.
+
+### The 18 NavBoost Metrics (Director Rule 18)
+
+| # | Metric | Target | Query Source |
+|---|--------|--------|--------------|
+| 1 | Session Starts | - | navboost:session_start count |
+| 2 | Session Ends | - | navboost:session_end count |
+| 3 | Heartbeat Count | - | navboost:heartbeat count |
+| 4 | Pogo Rate | <18% | is_pogo=true / google_sessions |
+| 5 | Pogo Sessions | - | is_pogo=true count |
+| 6 | Avg Dwell Time | >90s | avg(dwell_time_seconds) |
+| 7 | Median Dwell Time | >60s | median(dwell_time_seconds) |
+| 8 | Dwell Distribution | - | countIf by range buckets |
+| 9 | Scroll 25% | - | scroll_depth_reached >= 25 |
+| 10 | Scroll 50% | >70% | scroll_depth_reached >= 50 |
+| 11 | Scroll 75% | >40% | scroll_depth_reached >= 75 |
+| 12 | Scroll 100% | - | scroll_depth_reached >= 100 |
+| 13 | Avg Scroll Depth | >50% | avg(scroll_depth_reached) |
+| 14 | CTA Visible | - | navboost:cta_visible count |
+| 15 | CTA Clicks | - | navboost:cta_click count |
+| 16 | CTA CTR | >5% | clicks / visible * 100 |
+| 17 | Good Abandonment Rate | >15% | is_good_abandonment=true / google |
+| 18 | Outbound Clicks | - | navboost:outbound_click count |
+
+**Composite Metric:**
+- **Engagement Score** (target >70): Weighted composite of dwell, pogo, scroll, CTA, abandonment
 
 ### NavBoost Event Check
 ```sql
@@ -286,15 +305,20 @@ AND timestamp >= now() - INTERVAL 7 DAY
 ```
 
 ### Scroll Depth (Target: 70% CTA Zone, 40% Below Fold)
+**CORRECT PROPERTY:** `scroll_depth_reached` (NOT scroll_depth_percent)
+
 ```sql
+-- Rule 32 compliant query
 SELECT
-    properties.scroll_depth_percent as depth,
-    count() as sessions
+    countIf(properties.scroll_depth_reached >= 25) as depth_25,
+    countIf(properties.scroll_depth_reached >= 50) as depth_50,
+    countIf(properties.scroll_depth_reached >= 75) as depth_75,
+    countIf(properties.scroll_depth_reached >= 100) as depth_100,
+    avg(properties.scroll_depth_reached) as avg_scroll,
+    count() as total_sessions
 FROM events
-WHERE event = 'navboost:scroll_zone'
+WHERE event = 'navboost:session_end'
 AND timestamp >= now() - INTERVAL 7 DAY
-GROUP BY depth
-ORDER BY depth
 ```
 
 ### CTA Performance (Target: > 5% CTR)
@@ -404,9 +428,52 @@ Report saved to: pokerology_com_report_20260116.md
 
 **Setup Files Location:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/setup/[domain]/`
 
+## PDF Generation (MANDATORY - Rule 1, Rule 2)
+
+**Every report MUST be generated as PDF with these requirements:**
+
+### PDF Rules Compliance
+| Rule | Requirement | Implementation |
+|------|-------------|----------------|
+| Rule 1 | Professional headers/footers | Paradise Media branding (orange #f97316) |
+| Rule 2 | Tables MUST NOT split across pages | Use KeepTogether wrapper |
+| - | Page breaks per domain | Each domain starts on new page |
+| - | Alternating row colors | Gray #f3f4f6 for even rows |
+
+### PDF Converter Location
+```
+~/virtual-ateam/BlackTeam/projects/posthog-integration/lib/md_to_pdf_posthog.py
+```
+
+### PDF Generation Command
+```python
+# After generating markdown report
+from md_to_pdf_posthog import create_pdf
+
+create_pdf(
+    md_path="/home/andre/reports/posthog_report.md",
+    pdf_path="/home/andre/reports/posthog_report.pdf"
+)
+```
+
+### PDF Features (Current Implementation)
+- Orange header bar with report title and timestamp
+- Gray footer with "BlackTeam | Paradise Media Group | Director Rule 18 Compliant"
+- Page numbers (Page X of Y)
+- Page break before each domain section
+- Tables with KeepTogether (no splitting)
+- Alternating row colors for readability
+
 ## Related
-- **NavBoost KPI Framework:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/NAVBOOST_KPI_FRAMEWORK.md`
-- Main report script: `/home/andre/posthog_all_projects_report.py`
-- Daily report script (lover.io): `/home/andre/lover.io/scripts/posthog_daily_report.py`
-- Director Rules: `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/DIRECTOR_RULES.md`
+
+### Canonical Reference Files (Rule 32 - MUST USE)
+| File | Location | Purpose |
+|------|----------|---------|
+| **Query Template** | `~/virtual-ateam/BlackTeam/projects/posthog-integration/POSTHOG_QUERY_TEMPLATE.md` | All correct HogQL patterns |
+| **Metrics Library** | `~/virtual-ateam/BlackTeam/projects/posthog-integration/lib/posthog_metrics_lib.py` | Python extraction functions |
+| **Director Rules** | `~/virtual-ateam/BlackTeam/DIRECTOR_RULES.md` | Rule 1, 2, 8, 18, 27, 32 |
+
+### Other References
+- **NavBoost KPI Framework:** `~/virtual-ateam/BlackTeam/projects/posthog-integration/NAVBOOST_KPI_FRAMEWORK.md`
+- **PostHog Registry:** `~/virtual-ateam/BlackTeam/projects/posthog-integration/POSTHOG_REGISTRY.md`
 - ClickUp Analytics Task: 86aeh5bp9
