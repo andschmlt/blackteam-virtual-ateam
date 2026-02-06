@@ -6,37 +6,24 @@
 
 ---
 
-## Phase 0: RAG Context Loading (MANDATORY)
-
-**Before ANY execution, load relevant context from the Virtual ATeam RAG system.**
-
-```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
-rag = VTeamRAG()
-
-# Load Director rules, learnings, and request-relevant knowledge
-context = rag.query("$ARGUMENTS", top_k=5)
-learnings = rag.query("$ARGUMENTS", collection_name="learnings", top_k=3)
-rules = rag.query("director rules validation accuracy", collection_name="rules", top_k=3)
-```
-
-**Checklist:**
-- [ ] RAG system accessible at `~/.claude/rag/virtual_team_v2/`
-- [ ] Director rules loaded (including R-DATA-07 numerical validation)
-- [ ] Relevant learnings and prior corrections loaded
-- [ ] Prior corrections loaded from `~/pitaya/knowledge/feedback_corrections.md`
-
-> Proceed to Automatic Invocations only after context is loaded.
-
----
-
 ## AUTOMATIC INVOCATIONS
 
 When `/director` is invoked, AUTOMATICALLY load:
 1. `/blackteam` command and ALL its rules
-2. `~/virtual-ateam/BlackTeam/DIRECTOR_RULES.md` (all 25 rules)
-3. `~/virtual-ateam/BlackTeam/TEAM_CONFIG.md` (23 personas, routing rules)
-4. All leadership persona prompts from `~/virtual-ateam/BlackTeam/skills/prompts/`
+2. `/home/andre/AS-Virtual_Team_System_v2/blackteam/rules/DIRECTOR_RULES.md` (all 33+ rules)
+3. `/home/andre/AS-Virtual_Team_System_v2/TEAM_CONFIG.md` (41 personas, routing rules)
+4. `/home/andre/AS-Virtual_Team_System_v2/RALPH_LOOPS_SPECIFICATION.md` (QA iteration criteria)
+5. All leadership persona prompts from `/home/andre/AS-Virtual_Team_System_v2/blackteam/skills/prompts/`
+6. **RAG Context (MANDATORY)** - Load relevant learnings from past sessions:
+   - Read recent files from `~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/` (last 5)
+   - Read recent files from `~/AS-Virtual_Team_System_v2/whiteteam/skills/learnings/` (last 5)
+   - Read `~/pitaya/knowledge/feedback_corrections.md` (user-approved patterns)
+   - Read relevant entries from `~/AS-Virtual_Team_System_v2/BUSINESS_QUESTIONS_RAG.md`
+   - Apply all applicable learnings, corrections, and patterns to current task
+
+**Path Reference:** See `/home/andre/.claude/PATH_MAPPINGS.md` for complete path mappings.
+
+**RAG Loading Rule:** The Director MUST read and apply RAG context BEFORE beginning any project intake or team consultation. Learnings from past sessions are critical for avoiding repeated mistakes and building on proven patterns. This closes the loop with `/capture_learnings` — knowledge captured at session end is now consumed at session start.
 
 ---
 
@@ -80,7 +67,7 @@ When `/director` is invoked, AUTOMATICALLY load:
 │    └── Config: ~/.claude/clickup_config.json                    │
 │                                                                  │
 │  BIGQUERY:                                                       │
-│    └── SA Key: ~/secrets/paradisemedia-bi-sa.json               │
+│    └── SA Key: ~/secrets/bi-chatbot-sa.json                     │
 │                                                                  │
 │  ════════════════════════════════════════════════════════════   │
 │                                                                  │
@@ -583,8 +570,8 @@ Enter number of Ralph Loops required: ___
 ### Step 8.2: Load Persona Skills & Workflows
 
 **For each assigned persona, Director ensures:**
-- Skills file loaded (`~/virtual-ateam/BlackTeam/skills/[PERSONA]_SKILLS.md`)
-- Prompt loaded (`~/virtual-ateam/BlackTeam/skills/prompts/[PERSONA]_PROMPT.md`)
+- Skills file loaded (`/home/andre/AS-Virtual_Team_System_v2/blackteam/skills/[PERSONA]_SKILLS.md`)
+- Prompt loaded (`/home/andre/AS-Virtual_Team_System_v2/blackteam/skills/prompts/[PERSONA]_PROMPT.md`)
 - Relevant rules highlighted
 - Deliverable expectations clear
 
@@ -759,14 +746,24 @@ Is there anything else you need, Andre?
 
 This command requires:
 ```
-~/virtual-ateam/BlackTeam/
-├── TEAM_CONFIG.md           # Team structure, routing rules
-├── DIRECTOR_RULES.md        # All 25 operational rules
-├── CONTENT_STANDARDS.md     # Content quality standards
-├── skills/                  # All persona skills files
-│   └── prompts/            # All persona prompts and sheets
-└── learnings/              # Team learnings for reference
+/home/andre/AS-Virtual_Team_System_v2/
+├── TEAM_CONFIG.md                    # Team structure, routing rules (41 personas)
+├── RALPH_LOOPS_SPECIFICATION.md      # QA iteration criteria
+├── PROJECT_REGISTRY.json             # Active projects
+├── blackteam/
+│   ├── rules/
+│   │   ├── DIRECTOR_RULES.md         # All 33+ operational rules
+│   │   └── CONTENT_STANDARDS.md      # Content quality standards
+│   ├── skills/                       # All persona skills files
+│   │   └── prompts/                  # All persona prompts and sheets
+│   └── frameworks/                   # Rule frameworks
+└── whiteteam/
+    └── rules/
+        └── WHITETEAM_RULES.md        # All 50 validation rules
 ```
+
+**Routing Guide:** `/home/andre/.claude/ROUTING_DECISION_TREE.md`
+**Standards:** `/home/andre/.claude/standards/`
 
 ---
 
@@ -777,6 +774,38 @@ This command requires:
 - Session logging to `~/virtual-ateam/BlackTeam/logs/`
 - Utilization tracking
 - Standard deliverable formats
+
+---
+
+## CONTENT TEAM TEMPLATES (REMINDER)
+
+When the user asks for **infographics** or **visual reports**, remind them:
+
+> **Template Available:** FTD Decline Infographic template is available for monthly sendouts.
+> Location: `/home/andre/AS-Virtual_Team_System_v2/blackteam/templates/content-team/FTD_DECLINE_INFOGRAPHIC_TEMPLATE.py`
+
+**Use this template for:**
+- Monthly FTD performance reports
+- SEO analysis visuals
+- Page decline analysis infographics
+
+**Template includes:**
+- DataForSEO metrics integration
+- SERP rankings display
+- Alarms section
+- Root cause analysis
+- Comparison bar chart
+- PixelPerfect QA checklist (5-point)
+
+**Review Chain Required:**
+```
+PixelPerfect (creates) -> Product Manager (reviews) -> Head of SEO -> Director
+```
+
+**Data Source Rules:**
+- Use `paradisemedia-bi.reporting.ARTICLE_PERFORMANCE` (GOALS field) for FTDs
+- Validate against Power BI Dashboard 18_iGaming_360v1.11
+- Always exclude Jan 1 from FTD trend analysis (backlog issue)
 
 ---
 
