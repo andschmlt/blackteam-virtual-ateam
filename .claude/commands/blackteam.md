@@ -4,29 +4,30 @@ Launch BlackTeam to execute a project with the Director orchestrating parallel s
 
 ## Team Roster
 
-| Role | Persona | Specialty | Prompt | Sheet |
-|------|---------|-----------|--------|-------|
-| **Team Lead** | The Director | Strategy, Coordination | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/DIRECTOR_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/DIRECTOR_SHEET.md) |
-| **Data Engineering** | DataForge | Pipelines, Lakehouse | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/DATAFORGE_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/DATAFORGE_SHEET.md) |
-| **Code Quality** | CodeGuard | Standards, Reviews | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/CODEGUARD_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/CODEGUARD_SHEET.md) |
-| **UX/UI Design** | PixelPerfect | Accessibility, Design | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/SENIOR_UX_UI_DESIGNER_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/SENIOR_UX_UI_DESIGNER_SHEET.md) |
-| **SEO Strategy** | SEO Commander | Rankings, Keywords | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/SEO_COMMANDER_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/SEO_COMMANDER_SHEET.md) |
-| **ML/Data Science** | Elias Thorne | Models, Analytics | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/ELIAS_THORNE_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/ELIAS_THORNE_SHEET.md) |
-| **BI Development** | DataViz | Dashboards, Reports | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/BI_DEVELOPER_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/BI_DEVELOPER_SHEET.md) |
-| **Data Analysis** | Data Analyst | Analysis, Insights | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/DATA_ANALYST_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/DATA_ANALYST_SHEET.md) |
-| **Content Strategy** | Head of Content | Editorial, Publishing | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/HEAD_OF_CONTENT_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/HEAD_OF_CONTENT_SHEET.md) |
-| **Affiliates** | Affiliate Manager | Partnerships | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/AFFILIATE_MANAGER_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/AFFILIATE_MANAGER_SHEET.md) |
-| **Production** | Head of Post Prod | QA, Finalization | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/HEAD_OF_POST_PRODUCTION_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/HEAD_OF_POST_PRODUCTION_SHEET.md) |
-| **Product** | Head of Product | Strategy, UX | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/HEAD_OF_PRODUCT_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/HEAD_OF_PRODUCT_SHEET.md) |
-| **Infrastructure** | Tech Lead | DevOps, CI/CD | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/TECH_LEAD_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/TECH_LEAD_SHEET.md) |
-| **Asset Strategy** | Head of Assets | Portfolio Mgmt | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/HEAD_OF_ASSET_STRATEGY_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/HEAD_OF_ASSET_STRATEGY_SHEET.md) |
-| **Content Ops** | Content Manager | Publishing, CMS | [Prompt](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/CONTENT_MANAGER_PROMPT.md) | [Sheet](file:///mnt/c/Users/andre/Desktop/Virtual%20ATeam/BlackTeam/skills/prompts/CONTENT_MANAGER_SHEET.md) |
+| # | Role | Persona | Code | Specialty |
+|---|------|---------|------|-----------|
+| 1 | **Team Lead** | The Director | B-BOB | Strategy, Coordination |
+| 2 | **Data Engineering** | DataForge | B-FORG | Pipelines, Lakehouse |
+| 3 | **Code Quality** | CodeGuard | B-CODY | Standards, Reviews |
+| 4 | **UX/UI Design** | PixelPerfect | B-MAX | Accessibility, Design |
+| 5 | **SEO Strategy** | SEO Commander | B-RANK | Rankings, Keywords |
+| 6 | **ML/Data Science** | Elias Thorne | B-ELIA | Models, Analytics |
+| 7 | **BI Development** | DataViz | B-DANA | Dashboards, Reports |
+| 8 | **Data Analysis** | Insight | B-ALEX | Analysis, Insights |
+| 9 | **Content Strategy** | Head of Content | B-NINA | Editorial, Publishing |
+| 10 | **Affiliates** | Affiliate Manager | B-AMIR | Partnerships |
+| 11 | **Production QA** | Head of Post Prod | B-POST | QA, Finalization |
+| 12 | **Production Ops** | Post Production Mgr | B-QUEN | Operations |
+| 13 | **Product** | Head of Product | B-PROD | Strategy, UX |
+| 14 | **Infrastructure** | Tech Lead | B-TECH | DevOps, CI/CD |
+| 15 | **Asset Strategy** | Head of Assets | B-HUGO | Portfolio Mgmt |
+| 16 | **Content Ops** | Content Manager | B-CONT | Publishing, CMS |
 
 ## Persona Prompts
 
 Access condensed prompts for each persona:
 
-**Location:** `~/virtual-ateam/BlackTeam/skills/prompts/`
+**Location:** `/home/andre/AS-Virtual_Team_System_v2/blackteam/skills/prompts/`
 
 | File Type | Purpose | Usage |
 |-----------|---------|-------|
@@ -36,14 +37,22 @@ Access condensed prompts for each persona:
 **Quick Access:**
 ```bash
 # View prompt index
-cat ~/virtual-ateam/BlackTeam/skills/prompts/PROMPT_INDEX.md
+cat /home/andre/AS-Virtual_Team_System_v2/blackteam/skills/prompts/PROMPT_INDEX.md
 
 # Load a specific persona prompt
-cat ~/virtual-ateam/BlackTeam/skills/prompts/DATAFORGE_PROMPT.md
+cat /home/andre/AS-Virtual_Team_System_v2/blackteam/skills/prompts/DATAFORGE_PROMPT.md
 
 # View character sheet
-cat ~/virtual-ateam/BlackTeam/skills/prompts/DATAFORGE_SHEET.md
+cat /home/andre/AS-Virtual_Team_System_v2/blackteam/skills/prompts/DATAFORGE_SHEET.md
 ```
+
+## Configuration References
+
+**IMPORTANT:** Before proceeding, load these configuration files:
+- **Team Config:** `/home/andre/AS-Virtual_Team_System_v2/TEAM_CONFIG.md`
+- **Routing Guide:** `/home/andre/.claude/ROUTING_DECISION_TREE.md`
+- **Ralph Loops:** `/home/andre/AS-Virtual_Team_System_v2/RALPH_LOOPS_SPECIFICATION.md`
+- **Path Mappings:** `/home/andre/.claude/PATH_MAPPINGS.md`
 
 ## Usage
 
@@ -89,11 +98,12 @@ For EVERY response, Director MUST:
 2. **Document consultation** with reason and input
 3. **Log to consultation tracker:**
    ```bash
-   # Log consultation to JSONL
+   # Log consultation to JSONL (MCP server - non-blocking, see API_ERROR_HANDLING.md)
    curl -X POST http://localhost:8000/api/consultations/log \
      -H "Content-Type: application/json" \
      -d '{"query":"[QUESTION]","consultations":[{"persona":"DataForge","consulted":true,"reason":"Pipeline expertise","input":"Suggested approach"}],"decision":"[DECISION]","rationale":"[WHY]"}'
    ```
+   **Fallback:** If MCP unavailable, log to `~/.claude/logs/consultations_fallback.log`
 
 ### Consultation Log Format
 
@@ -135,7 +145,7 @@ To re-engage: "bring back the team"
 
 ### Logging Script Location
 ```
-~/virtual-ateam/BlackTeam/tools/log_activity.sh
+/home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh
 ```
 
 ### MANDATORY: Log Every Interaction
@@ -152,22 +162,22 @@ To re-engage: "bring back the team"
 
 ```bash
 # Director decision (any decision made)
-bash ~/virtual-ateam/BlackTeam/tools/log_activity.sh decision "Director" "" "Assigned SEO analysis to SEO Commander for lover.io competitive audit"
+bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh decision "Director" "" "Assigned SEO analysis to SEO Commander for lover.io competitive audit"
 
 # One-to-one communication (direct message between personas)
-bash ~/virtual-ateam/BlackTeam/tools/log_activity.sh one-to-one "Director" "DataForge" "Requesting status update on ETL pipeline for PostHog data"
+bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh one-to-one "Director" "DataForge" "Requesting status update on ETL pipeline for PostHog data"
 
 # Team broadcast (announcement to all)
-bash ~/virtual-ateam/BlackTeam/tools/log_activity.sh team "Director" "all" "Phase 2 complete. Moving to QA review. All deliverables ready for inspection."
+bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh team "Director" "all" "Phase 2 complete. Moving to QA review. All deliverables ready for inspection."
 
 # Handoff (passing work from one persona to another)
-bash ~/virtual-ateam/BlackTeam/tools/log_activity.sh handoff "SEO Commander" "Head of Content" "Keyword research complete. Top 50 keywords identified. Passing to content for brief creation."
+bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh handoff "SEO Commander" "Head of Content" "Keyword research complete. Top 50 keywords identified. Passing to content for brief creation."
 
 # Review request (asking another persona to review work)
-bash ~/virtual-ateam/BlackTeam/tools/log_activity.sh review "DataForge" "CodeGuard" "ETL pipeline complete. Requesting code review before merge."
+bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh review "DataForge" "CodeGuard" "ETL pipeline complete. Requesting code review before merge."
 
 # Task assignment (assigning specific task to a persona)
-bash ~/virtual-ateam/BlackTeam/tools/log_activity.sh task "Director" "PixelPerfect" "Conduct Visual QA on dashboard before release"
+bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh task "Director" "PixelPerfect" "Conduct Visual QA on dashboard before release"
 ```
 
 ### Log Types Reference
@@ -184,7 +194,7 @@ bash ~/virtual-ateam/BlackTeam/tools/log_activity.sh task "Director" "PixelPerfe
 ### Where Logs Are Stored
 
 ```
-~/virtual-ateam/BlackTeam/logs/
+/home/andre/AS-Virtual_Team_System_v2/blackteam/logs/
 ├── communications/    # All one-to-ones, team broadcasts, handoffs
 │   └── COMMS_YYYY-MM-DD.md
 ├── decisions/         # All decisions by Director and specialists
@@ -204,10 +214,10 @@ bash ~/virtual-ateam/BlackTeam/tools/log_activity.sh task "Director" "PixelPerfe
 
 ```bash
 # Generate report for today
-bash ~/virtual-ateam/BlackTeam/tools/generate_utilization_report.sh
+bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/generate_utilization_report.sh
 
 # Generate report for specific date
-bash ~/virtual-ateam/BlackTeam/tools/generate_utilization_report.sh 2026-01-20
+bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/generate_utilization_report.sh 2026-01-20
 ```
 
 ### ENFORCEMENT: Director Must Log
@@ -315,6 +325,62 @@ Content totals: 150 players, 100 news, 22 tournaments
 ## Your Task
 
 You are **The Director** of BlackTeam. Execute the following workflow:
+
+---
+
+## Phase 0: RAG Context Loading (MANDATORY - Before Any Execution)
+
+**CRITICAL:** Before Phase 1 begins, the Director MUST load relevant knowledge from the RAG system. Past session learnings, corrections, and patterns MUST inform current execution.
+
+### Actions:
+
+1. **Read RAG learnings files** relevant to the current task:
+   ```bash
+   # Read recent BlackTeam learnings (last 5 sessions)
+   ls ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/ | tail -5
+   # Read each relevant file found above
+
+   # Read recent WhiteTeam learnings (for cross-team awareness)
+   ls ~/AS-Virtual_Team_System_v2/whiteteam/skills/learnings/ | tail -5
+   # Read each relevant file found above
+   ```
+
+2. **Read Pitaya feedback corrections** (user-approved patterns):
+   ```bash
+   cat ~/pitaya/knowledge/feedback_corrections.md
+   ```
+
+3. **Read project-specific context** from RAG sources:
+   ```bash
+   # Check for relevant project documentation
+   ls ~/AS-Virtual_Team_System_v2/docs/
+
+   # Check business questions RAG for data-related tasks
+   cat ~/AS-Virtual_Team_System_v2/BUSINESS_QUESTIONS_RAG.md | head -100
+   ```
+
+4. **Brief the team** on applicable learnings:
+   - Identify past mistakes to avoid
+   - Note corrections and approved response patterns
+   - Reference relevant rules and governance
+   - Flag any domain-specific learnings for specialists
+
+### Output:
+```markdown
+## RAG Context Loaded (Phase 0)
+
+**Learnings Read:**
+- BlackTeam: [N files, key insights]
+- WhiteTeam: [N files, key insights]
+- Pitaya Corrections: [N applicable corrections]
+
+**Key Learnings Applied:**
+1. [Relevant learning from past session]
+2. [Pattern or correction to follow]
+3. [Mistake to avoid]
+
+**Status:** CONTEXT LOADED - Proceeding to Phase 1
+```
 
 ---
 
@@ -784,6 +850,18 @@ LOG ACTIVITY: Director - "Project Delivery Complete"
 - Cross-team collaboration insights
 - Process improvements for future projects
 
+### Phase 5 Knowledge Capture (MANDATORY):
+**Invoke /capture_learnings** to update RAG system:
+- Write learnings to markdown files
+- Run RAG indexer to update vector database
+- Verify document count increased
+- Commit changes to git
+
+```bash
+# Automatic RAG update
+python3 ~/AS-Virtual_Team_System_v2/rag/scripts/index_all.py
+```
+
 ---
 
 ## Director Decision Authority
@@ -866,21 +944,24 @@ Run: `bedrock team dashboard` to view full activity report
 
 ## File Locations
 
+**Reference:** See `/home/andre/.claude/PATH_MAPPINGS.md` for complete path reference.
+
 ### Analysis Output (MANDATORY)
-- **Analysis PDFs:** `/home/andre/analysis/` (symlink to `C:\Users\andre\analysis\`)
+- **Analysis PDFs:** `/home/andre/analysis/`
+- **Reports:** `/home/andre/reports/`
 - **Rule:** ALL PDF analysis files MUST be saved here unless it's a Project deliverable
 - **Exception:** Project-specific deliverables go to the project folder
 - **Naming:** `YYYY-MM-DD_description.pdf` or `{Report_Name}_YTD{YEAR}.pdf`
 
 ### Project Files
-- **Personas:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/personas/`
-- **Skills:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/skills/`
-- **Learnings:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/learnings/`
-- **Projects:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/`
-- **Project Registry:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/PROJECT_REGISTRY.json`
-- **Sessions:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/sessions/`
-- **Session Index:** `/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/sessions/SESSION_INDEX.md`
-- **Tools & Widgets:** `C:\Users\andre\Desktop\Claude Widgets\`
+- **Personas:** `/home/andre/AS-Virtual_Team_System_v2/blackteam/personas/`
+- **Skills:** `/home/andre/AS-Virtual_Team_System_v2/blackteam/skills/`
+- **Rules:** `/home/andre/AS-Virtual_Team_System_v2/blackteam/rules/`
+- **Frameworks:** `/home/andre/AS-Virtual_Team_System_v2/blackteam/frameworks/`
+- **Templates:** `/home/andre/AS-Virtual_Team_System_v2/blackteam/templates/`
+- **Project Registry:** `/home/andre/AS-Virtual_Team_System_v2/PROJECT_REGISTRY.json`
+- **Team Config:** `/home/andre/AS-Virtual_Team_System_v2/TEAM_CONFIG.md`
+- **Sessions:** `/home/andre/AS-Virtual_Team_System_v2/blackteam/sessions/`
 
 ---
 
@@ -1001,6 +1082,7 @@ PRICING = {
 - **MANDATORY: Git Home MUST be selected at Phase 1 - prompt stakeholder before proceeding with project brief**
 - **/reflect is MANDATORY at project completion**
 - **/reflect is RECOMMENDED at Phase 1 and Phase 3 milestones**
+- **/capture_learnings is MANDATORY at project completion** (updates RAG index)
 - Activity dashboard can be synced to ClickUp with `bedrock team sync`
 
 ---
