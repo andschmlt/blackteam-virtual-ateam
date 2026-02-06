@@ -2,6 +2,19 @@
 
 Load a specific Virtual ATeam or BlackTeam persona for the current session.
 
+## Phase 0: RAG Context Loading
+
+**Load persona context from RAG before persona activation.**
+
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+persona_context = rag.query("$ARGUMENTS persona skills", collection_name="personas", top_k=3)
+learnings = rag.query("$ARGUMENTS corrections", collection_name="learnings", top_k=3)
+```
+
+---
+
 ## Usage
 
 `/persona [name]`

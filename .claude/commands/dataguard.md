@@ -7,6 +7,25 @@
 
 ---
 
+## Phase 0: RAG Context Loading (MANDATORY)
+
+**Load relevant context from the RAG system before enforcing standards.**
+
+Read these files for prior learnings and corrections:
+- `~/pitaya/knowledge/feedback_corrections.md` — Data accuracy rules, R-DATA-07 numerical validation
+- `~/.claude/standards/VALIDATION_STANDARDS.md` — Pre-response checklist
+
+**RAG Query:**
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+context = rag.query("data terminology integrity standards master list", top_k=5)
+learnings = rag.query("data accuracy corrections comparison validation", collection_name="learnings", top_k=3)
+rules = rag.query("dataguard master list compliance", collection_name="rules", top_k=3)
+```
+
+---
+
 ## MASTER_LIST v1.0 COMPLIANCE (MANDATORY - HIGHEST PRIORITY)
 
 **Reference:** `/home/andre/.claude/MASTER_LIST_v1.0.md`

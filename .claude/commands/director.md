@@ -6,6 +6,30 @@
 
 ---
 
+## Phase 0: RAG Context Loading (MANDATORY)
+
+**Before ANY execution, load relevant context from the Virtual ATeam RAG system.**
+
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+
+# Load Director rules, learnings, and request-relevant knowledge
+context = rag.query("$ARGUMENTS", top_k=5)
+learnings = rag.query("$ARGUMENTS", collection_name="learnings", top_k=3)
+rules = rag.query("director rules validation accuracy", collection_name="rules", top_k=3)
+```
+
+**Checklist:**
+- [ ] RAG system accessible at `~/.claude/rag/virtual_team_v2/`
+- [ ] Director rules loaded (including R-DATA-07 numerical validation)
+- [ ] Relevant learnings and prior corrections loaded
+- [ ] Prior corrections loaded from `~/pitaya/knowledge/feedback_corrections.md`
+
+> Proceed to Automatic Invocations only after context is loaded.
+
+---
+
 ## AUTOMATIC INVOCATIONS
 
 When `/director` is invoked, AUTOMATICALLY load:

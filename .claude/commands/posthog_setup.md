@@ -2,6 +2,24 @@
 
 Complete PostHog analytics setup with NavBoost user engagement tracking for any domain or batch of domains.
 
+## Phase 0: RAG Context Loading (MANDATORY)
+
+**Load relevant context from the RAG system before PostHog setup.**
+
+Read these files for prior learnings:
+- `~/pitaya/knowledge/feedback_corrections.md` — Data accuracy rules
+- `~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/` — Latest team learnings
+
+**RAG Query:**
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+context = rag.query("posthog setup navboost integration", top_k=5)
+learnings = rag.query("posthog setup corrections", collection_name="learnings", top_k=3)
+```
+
+---
+
 ## MANDATORY: Head of Product Assignment (Director Rule 8)
 **Head of Product MUST be involved in ALL PostHog setup work.**
 

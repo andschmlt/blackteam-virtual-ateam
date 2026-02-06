@@ -7,6 +7,26 @@
 
 ---
 
+## Phase 0: RAG Context Loading (MANDATORY)
+
+**Load relevant context from the RAG system before analysis.**
+
+Read these files for prior learnings and corrections:
+- `~/pitaya/knowledge/feedback_corrections.md` — Data accuracy rules, R-DATA-07 numerical validation
+- `~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/` — Latest team learnings
+- `~/.claude/standards/VALIDATION_STANDARDS.md` — Pre-response checklist
+
+**RAG Query:**
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+context = rag.query("FTD analysis deep dive revenue", top_k=5)
+learnings = rag.query("FTD data accuracy numerical validation", collection_name="learnings", top_k=3)
+rules = rag.query("data sanity checks comparison validation", collection_name="rules", top_k=3)
+```
+
+---
+
 ## CRITICAL: THIS FRAMEWORK IS LOCKED
 
 ```
@@ -21,13 +41,13 @@
 │  ❌ DO NOT summarize sections - include FULL detail             │
 │  ❌ DO NOT omit Parts A, B, C, D from theories                  │
 │  ❌ DO NOT reduce table rows to "top N" unless specified        │
-│  ❌ DO NOT hallucinate data - validate against Power BI         │
+│  ❌ DO NOT hallucinate data - validate against BigQuery         │
 │                                                                  │
 │  ✅ ALWAYS include all 19+ sections                             │
 │  ✅ ALWAYS include per-domain breakdowns                        │
 │  ✅ ALWAYS include URL-level analysis                           │
 │  ✅ ALWAYS include specialist findings                          │
-│  ✅ ALWAYS validate against Power BI 18_iGaming_360v1.11        │
+│  ✅ ALWAYS validate against BigQuery ARTICLE_PERFORMANCE        │
 │                                                                  │
 │  FAILURE TO COMPLY = REPORT REJECTED                            │
 │                                                                  │
@@ -40,11 +60,29 @@
 
 Before generating ANY data in this report:
 
-1. **Source of Truth**: Power BI Dashboard `18_iGaming_360v1.11`
-2. **FTDs**: Use GOALS/CONVERSIONS field (NOT Signups)
-3. **Signups**: Use NRC/REGISTRATIONS field
-4. **Revenue**: Validate against Power BI totals
-5. **Cross-check**: If variance >5% from Power BI, STOP and investigate
+1. **Source of Truth**: BigQuery `paradisemedia-bi.reporting.ARTICLE_PERFORMANCE`
+2. **FTDs**: Use GOALS column (NOT SIGNUPS!)
+3. **Signups**: Use SIGNUPS column (typically 3-5x higher than FTDs)
+4. **Revenue**: Use TOTAL_COMMISSION_USD column
+5. **Cross-check**: Validate row counts and totals before reporting
+
+### BigQuery Configuration (MANDATORY)
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/home/andre/secrets/bi-chatbot-sa.json
+# Account: andre-claude@paradisemedia-bi.iam.gserviceaccount.com
+```
+
+**DO NOT USE:** `/home/andre/secrets/paradisemedia-bi-sa.json` (papaya-drive-uploader - NO BigQuery access)
+
+### Primary Tables
+
+| Table | Purpose |
+|-------|---------|
+| `reporting.ARTICLE_PERFORMANCE` | FTDs (GOALS), Signups, Commission |
+| `reporting.ARTICLE_INFORMATION` | Article metadata, TASK_ID, LIVE_URL |
+| `reporting.REPT_SEO_ACCURANKER` | Rankings, keyword positions |
+| `reporting.REPT_SEO_AHREFS` | DR, backlinks, referring domains |
 
 ### Metric Definitions (MEMORIZE)
 
@@ -66,7 +104,7 @@ The report MUST contain ALL of the following sections in order:
 - Report title: "FTD DEEP DIVE ANALYSIS"
 - Subtitle: "iGaming Vertical - O&O Domains Only"
 - Analysis period
-- Data sources (Power BI primary, BigQuery, DataForSEO)
+- Data sources (BigQuery primary, DataForSEO)
 - Version number
 - Lead Analyst: Elias Thorne
 - BlackTeam consultation status
@@ -202,7 +240,7 @@ The report MUST contain ALL of the following sections in order:
 - Sign-off block
 
 ### APPENDIX A: SOURCE DATA VALIDATION
-- Power BI confirmation table
+- BigQuery source validation table
 - Report metadata
 
 ---
@@ -252,7 +290,7 @@ Before delivering the report, verify:
 □ Quick win opportunities included
 □ Content refresh queue included
 □ Professional charts (not ASCII)
-□ Data validated against Power BI
+□ Data validated against BigQuery ARTICLE_PERFORMANCE
 □ FTDs ≠ Signups verified
 □ DataGuard certification complete
 ```
@@ -276,7 +314,7 @@ This framework ensures the complete report is delivered every time.
 |--------|----------------|----------------|
 | "Total FTDs" | 68,803 | 17,895 |
 | Actual metric | Signups | FTDs |
-| Source | BigQuery (wrong field) | Power BI |
+| Source | BigQuery SIGNUPS (wrong) | BigQuery GOALS (correct) |
 
 ---
 

@@ -2,6 +2,19 @@
 
 Capture and consolidate learnings, skills, and insights from this session for the Virtual ATeam personas.
 
+## Phase 0: RAG Context Loading (MANDATORY)
+
+**Load existing learnings from RAG before capturing new ones.**
+
+**RAG Query:**
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+learnings = rag.query("session learnings corrections", collection_name="learnings", top_k=5)
+```
+
+---
+
 ## Team Locations
 
 | Team | Local Path | System v2 Path |

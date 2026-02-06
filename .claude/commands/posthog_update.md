@@ -2,6 +2,24 @@
 
 Update existing PostHog configurations with new features, fixes, or enhancements for any domain.
 
+## Phase 0: RAG Context Loading (MANDATORY)
+
+**Load relevant context from the RAG system before PostHog updates.**
+
+Read these files for prior learnings:
+- `~/pitaya/knowledge/feedback_corrections.md` — Data accuracy rules
+- `~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/` — Latest team learnings
+
+**RAG Query:**
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+context = rag.query("posthog update configuration", top_k=5)
+learnings = rag.query("posthog configuration corrections", collection_name="learnings", top_k=3)
+```
+
+---
+
 ## MANDATORY: Head of Product Assignment (Director Rule 8)
 **Head of Product MUST be involved in ALL PostHog update work.**
 

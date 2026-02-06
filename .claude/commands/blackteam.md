@@ -2,6 +2,30 @@
 
 Launch BlackTeam to execute a project with the Director orchestrating parallel specialists.
 
+## Phase 0: RAG Context Loading (MANDATORY)
+
+**Before ANY execution, load relevant context from the Virtual ATeam RAG system.**
+
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+
+# Load BlackTeam rules, learnings, and task-relevant knowledge
+context = rag.query("$ARGUMENTS", top_k=5)
+learnings = rag.query("$ARGUMENTS", collection_name="learnings", top_k=3)
+rules = rag.query("blackteam director rules data accuracy", collection_name="rules", top_k=3)
+```
+
+**Checklist:**
+- [ ] RAG system accessible at `~/.claude/rag/virtual_team_v2/`
+- [ ] BlackTeam rules loaded (including R-DATA-07 numerical validation)
+- [ ] Relevant learnings loaded for the current task
+- [ ] Prior corrections loaded from `~/pitaya/knowledge/feedback_corrections.md`
+
+> Proceed to Team Roster only after context is loaded.
+
+---
+
 ## Team Roster
 
 | Role | Persona | Specialty | Prompt | Sheet |

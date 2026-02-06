@@ -2,6 +2,23 @@
 
 Multi-project news aggregation system for all bedrock_agent sports verticals with Ralph Loops quality assurance.
 
+## Phase 0: RAG Context Loading (MANDATORY)
+
+**Load relevant context from the RAG system before news updates.**
+
+Read these files for prior learnings:
+- `~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/` — Latest team learnings
+
+**RAG Query:**
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+context = rag.query("news update agent sports content", top_k=5)
+learnings = rag.query("news content quality corrections", collection_name="learnings", top_k=3)
+```
+
+---
+
 ## Usage
 
 ```

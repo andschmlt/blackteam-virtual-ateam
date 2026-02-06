@@ -2,6 +2,24 @@
 
 Execute CodeGuard workflows for continuous code quality monitoring and human feedback integration.
 
+## Phase 0: RAG Context Loading (MANDATORY)
+
+**Load relevant context from the RAG system before code review.**
+
+Read these files for prior learnings and corrections:
+- `~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/` — Latest team learnings
+- `~/.claude/standards/VALIDATION_STANDARDS.md` — Pre-response checklist
+
+**RAG Query:**
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+context = rag.query("codeguard code review standards", top_k=5)
+learnings = rag.query("code quality corrections", collection_name="learnings", top_k=3)
+```
+
+---
+
 ## Available Workflows
 
 | Command | Description |

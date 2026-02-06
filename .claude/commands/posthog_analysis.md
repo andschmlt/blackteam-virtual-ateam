@@ -2,6 +2,25 @@
 
 Generate comprehensive PostHog analytics reports for Paradise Media properties.
 
+## Phase 0: RAG Context Loading (MANDATORY)
+
+**Load relevant context from the RAG system before generating reports.**
+
+Read these files for prior learnings and corrections:
+- `~/pitaya/knowledge/feedback_corrections.md` — Data accuracy rules, R-DATA-07 numerical validation
+- `~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/` — Latest team learnings
+- `~/.claude/standards/VALIDATION_STANDARDS.md` — Pre-response checklist
+
+**RAG Query:**
+```python
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+rag = VTeamRAG()
+context = rag.query("posthog analytics navboost", top_k=5)
+learnings = rag.query("posthog report corrections", collection_name="learnings", top_k=3)
+```
+
+---
+
 ## PREFERRED: Use Full Analysis Script
 
 **Run the comprehensive analysis script for ALL metrics:**
@@ -56,7 +75,7 @@ for p in json.load(sys.stdin):
 | hudsonreporter.com | 295222 | Active (NavBoost v1.1.1) |
 | lover.io | 290016 | Active |
 | northeasttimes.com | 290039 | Active |
-| pokerology.com | 294549 | Active |
+| pokerology.com | 266520 | Active (NavBoost) - NOTE: 294549 is EMPTY duplicate |
 | europeangaming.eu | 290042 | Project exists |
 | esports.gg | 291582 | Project exists |
 | dotesports.com | 291573 | Active (NavBoost) |
@@ -139,7 +158,7 @@ PROJECTS = {
     "hudsonreporter.com": {"id": 295222, "name": "HudsonReporter.com"},
     "lover.io": {"id": 290016, "name": "lover.io"},
     "northeasttimes.com": {"id": 290039, "name": "Northeastimes.com"},
-    "pokerology.com": {"id": 294549, "name": "Pokerology.com"},
+    "pokerology.com": {"id": 266520, "name": "Pokerology.com"},  # CORRECT ID (294549 is empty duplicate)
     "europeangaming.eu": {"id": 290042, "name": "europeangaming.eu"},
     "esports.gg": {"id": 291582, "name": "Esports.gg"},
     "dotesports.com": {"id": 291573, "name": "Dotesports.com"},
