@@ -90,6 +90,9 @@ Before finalizing ANY response, verify:
 - [ ] Rule compliance verified
 - [ ] All numerical comparisons arithmetically verified (R-DATA-07)
 - [ ] All "above/below" language matches actual math direction
+- [ ] No hardcoded API keys in any generated code (R-SEC-01)
+- [ ] All credentials loaded from os.getenv() or import.meta.env
+- [ ] Post-deployment security audit completed (R-DEPLOY-01)
 ```
 
 ---
@@ -144,6 +147,27 @@ Before using ANY comparative language (above/below/higher/lower/exceeds/trails/o
 - **Pitaya/Agents:** Pre-response math check is MANDATORY
 
 **Failure = AUTOMATIC REVISION** — any response with inverted comparison language must be corrected immediately.
+
+### Rule V6: Post-Deployment Security Audit (R-DEPLOY-01) — MANDATORY
+**Added:** 2026-02-08 | **Severity:** P0 (Critical) | **Applies to:** ALL deployments to Cloud Run, Cloud Functions, or any production environment
+
+After EVERY deployment, the following security checks MUST be performed:
+
+| Step | Check | Command/Method |
+|------|-------|----------------|
+| **1. IAM Policy** | No `allUsers` or `allAuthenticatedUsers` bindings | `gcloud run services get-iam-policy SERVICE` |
+| **2. Endpoint Auth** | All endpoints return 403 for unauthenticated requests | `curl -s -o /dev/null -w "%{http_code}" URL` |
+| **3. R-SEC-01 Scan** | No hardcoded API keys in deployed code | Grep for `phx_\|phc_\|pk_\|sk-\|ntn_\|AIzaSy\|xoxb-` |
+| **4. Secrets** | All sensitive values loaded from Secret Manager or env | Check `valueFrom.secretKeyRef` in service config |
+| **5. Info Leakage** | No tokens/keys/credentials in API responses | Inspect health and diagnostic endpoint responses |
+| **6. Network** | Service not publicly accessible without auth (unless intended) | Verify ingress settings |
+
+**Enforcement:**
+- **W-GARD** (Security Guardian) owns this checklist
+- **W-FLUX** (Code Auditor) validates source code compliance
+- **B-BOB** must request audit; **W-WOL** must approve release
+
+**Failure = DEPLOYMENT BLOCKED** — no deployment is considered complete until this audit passes.
 
 ### Rule V4: Unit Clarity
 Always specify:
