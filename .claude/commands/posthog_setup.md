@@ -136,7 +136,10 @@ Fetch domains from ClickUp folders:
 ```python
 import requests
 
-CLICKUP_API_KEY = "pk_60332880_BFGB37OGS3728SKRG41AB9EPIKK5O3GY"
+import os
+from dotenv import load_dotenv
+load_dotenv(os.path.expanduser("~/.keys/.env"))
+CLICKUP_API_KEY = os.environ["CLICKUP_API_KEY"]
 FOLDERS = ["90090340968", "90134211413"]  # iGaming + Lucky7s
 
 def fetch_all_domains():
@@ -484,7 +487,7 @@ def commit_locally(domain):
 
 ```python
 CLICKUP_CONFIG = {
-    "API_KEY": "pk_60332880_BFGB37OGS3728SKRG41AB9EPIKK5O3GY",
+    "API_KEY": os.environ["CLICKUP_API_KEY"],  # Loaded from ~/.keys/.env
     "LIST_ID": "901324589525",  # Centralized PostHog deployment list
     "ASSIGNEES": {
         "andre": 60332880,
@@ -521,7 +524,7 @@ import requests
 import os
 import time
 
-CLICKUP_API_KEY = "pk_60332880_BFGB37OGS3728SKRG41AB9EPIKK5O3GY"
+CLICKUP_API_KEY = os.environ["CLICKUP_API_KEY"]  # Loaded from ~/.keys/.env
 LIST_ID = "901324589525"
 SETUP_DIR = "/mnt/c/Users/andre/Desktop/Virtual ATeam/BlackTeam/projects/posthog-integration/setup"
 

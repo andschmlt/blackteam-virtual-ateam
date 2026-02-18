@@ -138,7 +138,7 @@ git push origin main
 
 ```bash
 # MUST be set for GCS sync to work
-export GOOGLE_APPLICATION_CREDENTIALS=/home/andre/secrets/bi-chatbot-sa.json
+export GOOGLE_APPLICATION_CREDENTIALS=~/secrets/bi-chatbot-sa.json
 export GCS_BUCKET=virtual-ateam-rag
 ```
 
@@ -155,7 +155,7 @@ export GCS_BUCKET=virtual-ateam-rag
 
 ```bash
 # ALWAYS use this command to ensure GCS sync works
-GOOGLE_APPLICATION_CREDENTIALS=/home/andre/secrets/bi-chatbot-sa.json \
+GOOGLE_APPLICATION_CREDENTIALS=~/secrets/bi-chatbot-sa.json \
 GCS_BUCKET=virtual-ateam-rag \
 python3 ~/AS-Virtual_Team_System_v2/rag/scripts/index_all.py
 ```

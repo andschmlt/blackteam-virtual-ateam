@@ -396,7 +396,7 @@ curl -X POST "https://api.clickup.com/api/v2/task/{TASK_ID}/comment" \
 ### Service Account (Required)
 ```bash
 # CORRECT - Use this for BigQuery access
-export GOOGLE_APPLICATION_CREDENTIALS=/home/andre/secrets/bi-chatbot-sa.json
+export GOOGLE_APPLICATION_CREDENTIALS=~/secrets/bi-chatbot-sa.json
 # Account: andre-claude@paradisemedia-bi.iam.gserviceaccount.com
 ```
 

@@ -69,7 +69,7 @@ Before generating ANY data in this report:
 ### BigQuery Configuration (MANDATORY)
 
 ```bash
-export GOOGLE_APPLICATION_CREDENTIALS=/home/andre/secrets/bi-chatbot-sa.json
+export GOOGLE_APPLICATION_CREDENTIALS=~/secrets/bi-chatbot-sa.json
 # Account: andre-claude@paradisemedia-bi.iam.gserviceaccount.com
 ```
 

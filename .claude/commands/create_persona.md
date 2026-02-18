@@ -48,7 +48,7 @@ Parse the arguments to extract:
 2. **If not found in registry**, search ClickUp API:
    ```
    GET https://api.clickup.com/api/v2/team
-   Header: Authorization: pk_60332880_4Y8QWS67B6FSWEQM47DEK9B9TD0PJ910
+   Header: Authorization: $CLICKUP_API_KEY
    ```
    - Search through team members for matching name/email
    - Extract user ID
@@ -103,7 +103,7 @@ Options:
 
 Use the ClickUp API to gather comprehensive data about the human's activities.
 
-**API Key:** `pk_60332880_4Y8QWS67B6FSWEQM47DEK9B9TD0PJ910`
+**API Key:** `$CLICKUP_API_KEY`
 **Workspace ID:** `8553292`
 
 #### Loop 1: Task Collection
