@@ -11,42 +11,51 @@ Arguments: $ARGUMENTS
 ## Team Overview
 
 ```
-                    VIRTUAL ATEAM
-         ================================
+                         VIRTUAL ATEAM
+              ================================
 
-    BLACKTEAM (Execution)     WHITETEAM (Validation)
-    ==================        ====================
-    B-BOB (Director)    <-->  W-WOL (Director)
-         |                         |
-    16 Specialists           25 Validators
-         |                         |
-         v                         v
-    [Build & Create]  --->  [Review & Approve]
+    BLACKTEAM (Execution)     WHITETEAM (Validation)     REDTEAM (Challenge)
+    ==================        ====================        ===================
+    B-BOB (Director)    <-->  W-WOL (Director)    ---->  R-REX (Director)
+         |                         |                          |
+    16 Specialists           25 Validators              29 Challengers
+         |                         |                          |
+         v                         v                          v
+    [Build & Create]  --->  [Review & Approve]  --->  [Challenge & Certify]
+                                                              |
+                                                         if FLAGGED:
+                                                              |
+                                                         Back to BT
 ```
 
-**Total Team Size:** 41+ personas working in concert
+**Total Team Size:** 70+ personas working in concert (16 BT + 25 WT + 29 RT)
 
 ---
 
 ## How It Works
 
-### Dual-Team Workflow
+### Triple-Team Ribbon Workflow
 
 1. **BlackTeam executes** - Creates, builds, and delivers
 2. **WhiteTeam validates** - Reviews, audits, and approves
-3. **Loop until approved** - Revisions handled collaboratively
-4. **Release** - Only after both teams sign off
+3. **RedTeam challenges** - Adversarial testing of approved deliverables
+4. **Loop if flagged** - Max 2 ribbon cycles, then escalate
+5. **Release** - Only after triple sign-off (B-BOB + W-WOL + R-REX)
 
 ```
-[Request] --> [BlackTeam Executes] --> [WhiteTeam Validates]
-                      ^                        |
-                      |                        v
-                      +--- [NEEDS_REVISION] ---+
-                                               |
-                                          [APPROVED]
-                                               |
-                                               v
-                                          [RELEASE]
+[Request] --> [BlackTeam Executes] --> [WhiteTeam Validates] --> [RedTeam Challenges]
+                      ^                        ^                        |
+                      |                        |                   CERTIFIED?
+                      |                        |                   /        \
+                      +--- [NEEDS_REVISION] ---+              YES          NO
+                      |                                        |        (FLAGGED)
+                      +----------------------------------------+           |
+                                                               |           v
+                                                          [CERTIFIED]  Back to BT
+                                                               |     (max 2 cycles)
+                                                               v
+                                                          [RELEASE]
+                                                     (Triple Sign-Off)
 ```
 
 ---
@@ -180,6 +189,14 @@ Arguments: $ARGUMENTS
 
 ---
 
+### Phase 0.5: Log Session Start (MANDATORY)
+
+```bash
+python3 /home/andre/.claude/scripts/log_to_db.py --persona B-BOB --action execute --summary "Started /A_Virtual_Team session" --username $(whoami) --command A_Virtual_Team
+```
+
+---
+
 ### Phase 1: Joint Intake
 
 **Both Directors consulted:**
@@ -237,18 +254,52 @@ WhiteTeam validators review in parallel with execution:
 - `NEEDS_REVISION` - Returns to BlackTeam with specific feedback
 - `REJECTED` - Requires significant rework
 
+### Phase 3.5: Red Team Challenge
+
+After WhiteTeam issues `APPROVED` status, deliverables enter the Red Team challenge phase:
+
+1. **W-WOL submits T18 Challenge Request** to R-REX with deliverable package
+2. **R-REX assigns Red Gate leads** and sets challenge timeline
+3. **Seven Red Gates execute** (RG-1 through RG-7) in parallel stages
+4. **R-REX issues T19 Challenge Report** with CERTIFIED / FLAGGED / ESCALATED
+
+```
+WhiteTeam APPROVED
+        ↓
+R-REX receives T18
+        ↓
+┌───────┼───────┐───────┐───────┐
+RG-1   RG-2   RG-3   RG-4   RG-5
+        ↓
+┌───────┼───────┐
+RG-6          RG-7
+        ↓
+T19 Challenge Report
+        ↓
+CERTIFIED / FLAGGED / ESCALATED
+```
+
+**Challenge Outcomes:**
+- `CERTIFIED` - All 7 Red Gates passed, release authorized with triple sign-off
+- `FLAGGED` - Issues found that WT missed, return to BlackTeam with R-FINDINGS
+- `ESCALATED` - Systemic or process issue, stakeholder review required
+
+**Cycle Limit:** Max 2 ribbon cycles (BT→WT→RT). After 2 flagged cycles, escalate to Stakeholder.
+
+---
+
 ### Phase 4: Iteration (if needed)
 
-If `NEEDS_REVISION`:
+If `NEEDS_REVISION` or `FLAGGED`:
 
 1. WhiteTeam provides specific, actionable feedback
 2. BlackTeam addresses each item
 3. Re-submit for validation
 4. Repeat until `APPROVED`
 
-### Phase 5: Joint Sign-Off & Release
+### Phase 5: Triple Sign-Off & Release
 
-**Both Directors must approve:**
+**All three Directors must approve (Triple Sign-Off):**
 
 ```markdown
 ## Virtual ATeam Release Authorization
@@ -269,17 +320,26 @@ If `NEEDS_REVISION`:
 **Validations Passed:**
 - [List of passed validations]
 
-### Joint Authorization
-- [ ] All quality gates passed
-- [ ] All validations approved
+### RedTeam Sign-Off
+**Director:** R-REX
+**Status:** CERTIFIED
+**Challenge Report:** T19-[ID]
+**Red Gates Passed:**
+- [List of passed Red Gates with scores]
+
+### Triple Authorization
+- [ ] All quality gates passed (BlackTeam)
+- [ ] All validations approved (WhiteTeam)
+- [ ] All 7 Red Gates passed (RedTeam)
 - [ ] Release notes complete
 - [ ] Stakeholder confirmation received
 
 **AUTHORIZED FOR RELEASE:** YES/NO
 
 ---
-B-BOB Signature: _________________ | Date: _________
-W-WOL Signature: _________________ | Date: _________
+B-BOB Signature: _________________ | APPROVED    | Date: _________
+W-WOL Signature: _________________ | APPROVED    | Date: _________
+R-REX Signature: _________________ | CERTIFIED   | Date: _________
 ```
 
 ---
@@ -306,8 +366,25 @@ W-WOL Signature: _________________ | Date: _________
 - [ ] No auto-generated comparison phrases accepted without math proof
 - [ ] Pre-Response Math Check: Extract → Compare → Language → Verify
 
+### Deep Audit Gate (R-AUDIT-01) — MANDATORY FOR ALL AUDITS/REVIEWS
+- [ ] User requests audit because real issues exist — NEVER dismiss or surface-check
+- [ ] Verify ACTUAL asset content matches claimed content (e.g., fetch image IDs to confirm what they show)
+- [ ] Check ALL metadata (alt text, descriptions) for fabrication/hallucination
+- [ ] Identify ALL duplicates across entire project, not spot-checks
+- [ ] Report includes specific file paths, actual vs expected, severity ratings
+- [ ] Audit depth: source-level verification, not just "does it load?"
+
+### RedTeam Gates (7 Red Gates)
+- [ ] RG-1: Validation Integrity — WT validated what they claimed (100% required)
+- [ ] RG-2: Adversarial Edge Cases — empty inputs, boundaries, encoding (95% required)
+- [ ] RG-3: Regression & Drift — change does not break existing work (100% required)
+- [ ] RG-4: Systemic Bias — no hidden bias in content/data/algo (95% required)
+- [ ] RG-5: Security Penetration — no active exploits found (100% required)
+- [ ] RG-6: Integration Stress — API resilience, failure cascade (90% required)
+- [ ] RG-7: Root Cause & Pattern — no known anti-pattern repetition (100% required)
+
 ### Joint Gates
-- [ ] Both Directors approve
+- [ ] All three Directors approve (B-BOB, W-WOL, R-REX)
 - [ ] All cross-team handoffs documented
 - [ ] Activity logs complete
 - [ ] ClickUp updated
@@ -352,6 +429,14 @@ bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh decis
 - **Prompts:** `/home/andre/AS-Virtual_Team_System_v2/whiteteam/skills/prompts/`
 - **Rules:** `/home/andre/AS-Virtual_Team_System_v2/whiteteam/rules/`
 
+### RedTeam
+- **Personas:** `/home/andre/AS-Virtual_Team_System_v2/redteam/personas/`
+- **Skills:** `/home/andre/AS-Virtual_Team_System_v2/redteam/skills/`
+- **Prompts:** `/home/andre/AS-Virtual_Team_System_v2/redteam/skills/prompts/`
+- **Rules:** `/home/andre/AS-Virtual_Team_System_v2/redteam/rules/`
+- **Frameworks:** `/home/andre/AS-Virtual_Team_System_v2/redteam/frameworks/`
+- **Anti-Patterns:** `/home/andre/AS-Virtual_Team_System_v2/redteam/anti-patterns/`
+
 ### Shared Configuration
 - **Team Config:** `/home/andre/AS-Virtual_Team_System_v2/TEAM_CONFIG.md`
 - **Ralph Loops:** `/home/andre/AS-Virtual_Team_System_v2/RALPH_LOOPS_SPECIFICATION.md`
@@ -385,7 +470,7 @@ When `/A_Virtual_Team` is invoked:
 
 ### Project: [Name]
 **Status:** [Complete/Partial/Blocked]
-**Teams Engaged:** BlackTeam (16) + WhiteTeam (25)
+**Teams Engaged:** BlackTeam (16) + WhiteTeam (25) + RedTeam (29)
 
 ### Execution Summary (BlackTeam)
 - Specialists activated: [Count]
@@ -397,10 +482,16 @@ When `/A_Virtual_Team` is invoked:
 - Reviews completed: [Count]
 - Final status: [All APPROVED]
 
+### Challenge Summary (RedTeam)
+- Red Gates executed: [Count]/7
+- Findings: [Count]
+- Challenge status: [CERTIFIED/FLAGGED/ESCALATED]
+
 ### Cross-Team Metrics
 - Handoffs: [Count]
 - Revision cycles: [Count]
-- Time to approval: [Duration]
+- Ribbon cycles: [Count]/2 max
+- Time to certification: [Duration]
 
 ### Deliverables
 [List of final deliverables]
@@ -412,6 +503,7 @@ When `/A_Virtual_Team` is invoked:
 ---
 **BlackTeam Director (B-BOB):** APPROVED
 **WhiteTeam Director (W-WOL):** APPROVED
+**RedTeam Director (R-REX):** CERTIFIED
 
 *Full activity log available at ~/virtual-ateam/BlackTeam/logs/*
 ```
@@ -424,9 +516,10 @@ When `/A_Virtual_Team` is invoked:
 |---------|------|---------|
 | `/blackteam` | BlackTeam only | Execution without validation |
 | `/whiteteam` | WhiteTeam only | Validation of existing work |
-| `/A_Virtual_Team` | Both teams | Full execution + validation |
+| `/redteam` | RedTeam only | Adversarial challenge of approved work |
+| `/A_Virtual_Team` | All three teams | Full execution + validation + challenge |
 | `/persona [name]` | Single persona | Load specific specialist |
-| `/reflect` | Both teams | Capture learnings |
+| `/reflect` | All teams | Capture learnings |
 
 ---
 
@@ -451,4 +544,12 @@ This ensures:
 
 ---
 
-**Virtual ATeam Motto:** *"Build with excellence. Validate with rigor. Ship with confidence."*
+### Final: Log Session Completion
+
+```bash
+python3 /home/andre/.claude/scripts/log_to_db.py --persona B-BOB --action complete --summary "Completed /A_Virtual_Team session" --username $(whoami) --command A_Virtual_Team
+```
+
+---
+
+**Virtual ATeam Motto:** *"Build with excellence. Validate with rigor. Challenge with adversity. Ship with confidence."*

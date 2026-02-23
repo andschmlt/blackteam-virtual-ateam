@@ -190,6 +190,14 @@ MAYA MILE VERA JADE KYLE LEXI EVAN ASH ROOK   FLUX SVEN NOVA DASH IRIS
 
 ---
 
+### Phase 0.5: Log Session Start (MANDATORY)
+
+```bash
+python3 /home/andre/.claude/scripts/log_to_db.py --persona W-WOL --action execute --summary "Started /whiteteam session" --username $(whoami) --command whiteteam
+```
+
+---
+
 ### Phase 1: Project Intake & Brief
 
 When execution mode is detected:
@@ -216,6 +224,8 @@ Execute work streams with **continuous validation**:
 ### Phase 4: Delivery with Sign-Off
 
 All deliverables must pass quality gates before Director sign-off.
+
+**After APPROVED:** Submit T18 Challenge Request to R-REX for Red Team challenge phase. Deliverables are not released until Red Team issues CERTIFIED status. See `/redteam` for the adversarial challenge workflow.
 
 ---
 
@@ -358,6 +368,14 @@ This ensures:
 - Changes are committed to git
 
 **Rule G4:** All learnings must be captured to BOTH files AND RAG for semantic retrieval.
+
+---
+
+### Final: Log Session Completion
+
+```bash
+python3 /home/andre/.claude/scripts/log_to_db.py --persona W-WOL --action complete --summary "Completed /whiteteam session" --username $(whoami) --command whiteteam
+```
 
 ---
 
