@@ -4,6 +4,50 @@ Create and manage content verticals using The_Agent framework.
 
 ---
 
+## Main Menu (MANDATORY FIRST STEP)
+
+**Before doing anything else**, present this menu using `AskUserQuestion`:
+
+```
+BEDROCK AGENT — WHAT WOULD YOU LIKE TO DO?
+════════════════════════════════════════════════════════════════
+
+  1. New domain
+     → Create a brand-new content vertical from scratch
+     → Uses full /bedrock_agent wizard, rules & Astro deployment
+
+  2. New article in an existing domain
+     → Add new content pages to an existing bedrock_agent project
+     → Uses full /bedrock_agent rules & quality gates
+
+  3. Update an existing domain
+     → Refresh or add articles to a site you already own
+     → Matches the site's existing style, CSS & layout 100%
+     → Routes to /bedrock_agent_update
+
+  4. Update an existing article
+     → Rewrite or refresh a single article on an existing site
+     → Precision style matching for one page
+     → Routes to /bedrock_agent_update
+
+════════════════════════════════════════════════════════════════
+```
+
+### Menu Routing
+
+- **Option 1 (New domain)** → Continue with `/bedrock_agent new` workflow below (full wizard + 5 Ralph Loops + Astro + Vercel)
+- **Option 2 (New article)** → Continue with `/bedrock_agent generate [project]` workflow below (full quality gates apply)
+- **Option 3 (Update existing domain)** → Hand off to `/bedrock_agent_update` command (style-locked mode, 3 Fidelity Gates)
+- **Option 4 (Update existing article)** → Hand off to `/bedrock_agent_update` command (style-locked mode, 3 Fidelity Gates)
+
+**Key distinction:**
+- Options 1-2 = **"New" mode** — Full bedrock_agent rules, templates, scaffolding, deployment pipeline
+- Options 3-4 = **"Existing" mode** — The live site IS the style guide. No scaffold rules. Match everything 100%.
+
+When user selects **Option 3 or 4**, invoke `/bedrock_agent_update` with the user's arguments and stop processing this command.
+
+---
+
 ## Phase 0: RAG Context Loading (MANDATORY)
 
 **Load relevant context from the RAG system before content generation.**
@@ -11,6 +55,8 @@ Create and manage content verticals using The_Agent framework.
 Read these files for prior learnings and corrections:
 - `~/pitaya/knowledge/feedback_corrections.md` — Data accuracy rules, R-DATA-07 numerical validation
 - `~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/` — Latest team learnings
+- `~/.claude/standards/IMAGE_OPTIMIZATION_RULES.md` — **R-IMG-01: Google Image Optimization (MANDATORY)**
+- `~/.claude/standards/ASTRO_TECHNICAL_SEO_RULES.md` — **R-SEO-03: Astro Technical SEO Rules (MANDATORY)**
 
 **RAG Query:**
 ```python
@@ -20,6 +66,24 @@ context = rag.query("bedrock agent content vertical", top_k=5)
 learnings = rag.query("content generation corrections", collection_name="learnings", top_k=3)
 rules = rag.query("content standards quality gates", collection_name="rules", top_k=3)
 ```
+
+---
+
+## Phase 0.5: Log Session Start (MANDATORY)
+
+```bash
+python3 /home/andre/.claude/scripts/log_to_db.py --persona B-BOB --action execute --summary "Started /bedrock_agent session" --username $(whoami) --command bedrock_agent
+```
+
+## Phase 0.6: Save Palm Bridge Session (AUTOMATIC)
+
+When working with a specific project, save the session for `/content_palm` Mode B integration:
+
+```bash
+python3 /home/andre/.claude/scripts/bedrock_palm_bridge.py save --project {PROJECT_NAME}
+```
+
+This enables `/content_palm` to automatically load bedrock variables (title→topic, country→geo, vertical→content_type) without manual re-entry. Session saved to `~/.bedrock_session.json`.
 
 ---
 
@@ -54,11 +118,11 @@ Before executing ANY bedrock_agent command, you MUST follow this workflow. Skipp
 │                                                                             │
 │  STEP 3: 5 RALPH LOOPS QA (MANDATORY)                                       │
 │  ────────────────────────────────────                                       │
-│  • Loop 1: Content Quality (Head of Content) - 85+ to pass                  │
-│  • Loop 2: SEO Optimization (SEO Commander) - 85+ to pass                   │
-│  • Loop 3: Technical QA (Post Production) - 90+ to pass                     │
-│  • Loop 4: UX/UI Review (PixelPerfect) - 85+ to pass                        │
-│  • Loop 5: Data Validation (Elias + Insight) - 85+ to pass                  │
+│  • Loop 1: Content Quality (Head of Content) - 92+ to pass                  │
+│  • Loop 2: SEO Optimization (SEO Commander) - 92+ to pass                   │
+│  • Loop 3: Technical QA (Post Production) - 92+ to pass                     │
+│  • Loop 4: UX/UI Review (PixelPerfect) - 92+ to pass                        │
+│  • Loop 5: Data Validation (Elias + Insight) - 92+ to pass                  │
 │                                                                             │
 │  STEP 4: RELEASE APPROVAL (MANDATORY)                                       │
 │  ────────────────────────────────────                                       │
@@ -92,22 +156,32 @@ PRE-EXECUTION CHECKLIST
 ☐ All team personas assigned to work streams
 ☐ User approved the brief before execution
 ☐ Content generated following team standards
-☐ Loop 1 passed: Content Quality (85+)
-☐ Loop 2 passed: SEO Optimization (85+)
-☐ Loop 3 passed: Technical QA (90+)
-☐ Loop 4 passed: UX/UI Review (85+)
-☐ Loop 5 passed: Data Validation (85+)
+☐ Loop 1 passed: Content Quality (92+)
+☐ Loop 2 passed: SEO Optimization (92+)
+☐ Loop 3 passed: Technical QA (92+)
+☐ Loop 4 passed: UX/UI Review (92+)
+☐ Loop 5 passed: Data Validation (92+)
 ☐ Release Notes generated and approved
 ☐ Director final approval obtained
 ☐ Git committed and pushed to GitHub
 ☐ Astro version created
 ☐ Deployed to Vercel
 ☐ /reflect invoked to capture learnings
+☐ R-SEO-03a: trailingSlash configured in astro.config.mjs
+☐ R-SEO-03b: No external hotlinked images in production
+☐ R-SEO-03c: All metaTitles + suffix <= 60 chars
+☐ R-SEO-03d: Every page type has unique meta description
+☐ R-SEO-03e: OG type correct per page type (article vs website)
+☐ R-SEO-03f: No nav section exceeds 20 direct links
+☐ R-SEO-03g: Schema.org types match entity types
+☐ R-SEO-03h: Sitemap filters match page template filters
+☐ R-SEO-03i: No thin content (< 200 words) without noindex
 ═══════════════════════════════════════════════════════════════════════════════
 
 ⚠️  IF ANY CHECKBOX IS UNCHECKED, DO NOT PROCEED TO NEXT STEP
 ⚠️  IF USER REQUESTS TO SKIP STEPS, EXPLAIN WHY THIS IS NOT ALLOWED
 ⚠️  QUALITY OVER SPEED - ALWAYS
+⚠️  ALL AUDITS MUST BE DEEP — NEVER SURFACE-LEVEL (R-AUDIT-01)
 ```
 
 ### Why This Matters
@@ -123,12 +197,46 @@ PRE-EXECUTION CHECKLIST
 
 ## Project Reference
 
-- **Project ID:** BT-2026-004
+- **Command ID:** BT-2026-004
 - **Base Path:** `/home/andre/BI-AI_Agents_REPO/bedrock_agent/`
 - **Framework:** `bedrock_agent/The_Agent/`
 - **Docs:** `bedrock_agent/The_Agent/docs/`
-- **Reference:** WC_2026_Project (3,523 files)
 - **GitHub:** [ParadiseMediaOrg/BI-AI_Agents_REPO](https://github.com/ParadiseMediaOrg/BI-AI_Agents_REPO/tree/main/bedrock_agent)
+
+### Reference Projects (Use as Templates)
+
+| Project | ID | Type | Files | Astro | Vercel URL |
+|---------|-----|------|-------|-------|------------|
+| **Australian Sports Hub** | BT-2026-005 | Multi-sport (5 sports) | 287 content, 324 pages | `Australian_Sports_Hub_Astro/` | `australian-sports-hub.vercel.app` |
+| WC 2026 | BT-2026-001 | Single tournament | 3,523 files | `WC_2026_Astro_V2/` | `wc-2026.vercel.app` |
+| Italian Serie A | BT-2026-002 | Single league | 348 files | `Italian_Serie_A_Astro/` | `italian-serie-a.vercel.app` |
+| Bundesliga | BT-2026-003 | Single league | ~300 files | `Bundesliga_2025-26_Astro_V2/` | — |
+| Premier League | — | Single league | ~300 files | `Premier_League_2025-26_Astro/` | — |
+| F1 2026 | — | Single championship | ~200 files | `F1_2026_Astro/` | `f1-2026.vercel.app` |
+| Six Nations | — | Single tournament | ~100 files | `Six_Nations_2026_Astro/` | — |
+| Tennis Grand Slams | — | Multi-tournament | ~100 files | `Tennis_Grand_Slams_Astro/` | — |
+| Ligue 1 | — | Single league | ~200 files | `Ligue_1_2025-26_Astro/` | — |
+
+### Australian Sports Hub Reference (RECOMMENDED for multi-sport projects)
+
+**Full reference doc:** `bedrock_agent/Australian_Sports_Hub_Astro/PROJECT_REFERENCE.md`
+
+This is the most comprehensive bedrock_agent project to date:
+- **5 sports** in a single Astro site (AFL, NRL, Cricket/BBL, A-League, NBL)
+- **11 content collections** with 3 Zod schemas (LeagueTeamSchema, PlayerSchema, NewsSchema)
+- **287 content files** (66 teams, 202 players, 19 news)
+- **324 static pages** built in 4.61s
+- **Sport-specific CSS theming** via CSS variables
+- **Custom sitemap.xml.ts** with per-page priorities
+- **Pagefind search** indexing 5,864 words
+- **~78 factual errors** caught and fixed via web search verification
+- **Coming Soon stubs** (8 additional sports) with noindex meta tags
+
+**Key patterns established:**
+1. Multi-collection schema design — single schema works across multiple sports
+2. Sport-specific page directories with identical template structure
+3. Fact-checking workflow — parallel agents per sport, WhiteTeam validation sampling
+4. `@astrojs/sitemap` conflicts with custom `sitemap.xml.ts` — use custom only
 
 ---
 
@@ -159,13 +267,15 @@ Vertical (Category)     → Sports, Politics, Gaming, Entertainment
 ## Commands
 
 ```
-/bedrock_agent new                      # Create new project (interactive wizard)
+/bedrock_agent                          # Show main menu (4 options)
+/bedrock_agent new                      # Option 1: Create new project (interactive wizard)
 /bedrock_agent configure [project]      # Edit existing project config
-/bedrock_agent generate [project]       # Generate content & HTML website
+/bedrock_agent generate [project]       # Option 2: Generate content & HTML website
 /bedrock_agent status [project]         # Check progress & file counts
 /bedrock_agent qa [project]             # Run quality checks
 /bedrock_agent version [project]        # Create archived version
 /bedrock_agent list                     # List all projects
+/bedrock_agent_update                   # Options 3-4: Update existing site/article (style-locked)
 ```
 
 **Arguments:** $ARGUMENTS
@@ -259,6 +369,11 @@ What is the geographic scope?
 │ National      │ US Open (Tennis), FA Cup               │
 │               │ Country-wide but not single league     │
 ├───────────────┼────────────────────────────────────────┤
+│ National Hub  │ Australian Sports Hub (5 sports)       │
+│               │ Multiple sports, single country        │
+│               │ Uses multi-collection Astro template   │
+│               │ Reference: Australian_Sports_Hub_Astro │
+├───────────────┼────────────────────────────────────────┤
 │ International │ FIFA World Cup, Olympics               │
 │               │ Champions League, Grand Slams          │
 │               │ Multiple countries participating       │
@@ -351,15 +466,17 @@ Do you want an automated News Section?
 ```
 How much content do you want to create?
 
-┌─────────────┬─────────┬─────────┬──────────────────────────┐
-│ Size        │ Players │ Teams   │ Best for                 │
-├─────────────┼─────────┼─────────┼──────────────────────────┤
-│ Starter     │ 20      │ 10      │ Quick MVP, testing       │
-│ Standard    │ 50      │ 20      │ Single tournament/league │
-│ Complete    │ 100     │ 32      │ Full coverage            │
-│ Enterprise  │ 150+    │ 48+     │ WC 2026 scale            │
-│ Custom      │ ?       │ ?       │ You specify              │
-└─────────────┴─────────┴─────────┴──────────────────────────┘
+┌─────────────┬─────────┬─────────┬──────────────────────────────────────┐
+│ Size        │ Players │ Teams   │ Best for                             │
+├─────────────┼─────────┼─────────┼──────────────────────────────────────┤
+│ Starter     │ 20      │ 10      │ Quick MVP, testing                   │
+│ Standard    │ 50      │ 20      │ Single tournament/league             │
+│ Complete    │ 100     │ 32      │ Full coverage                        │
+│ Enterprise  │ 150+    │ 48+     │ WC 2026 scale                        │
+│ Hub         │ 200+    │ 60+     │ Multi-sport hub (Australian Sports   │
+│             │         │         │ Hub scale: 202 players, 66 teams)    │
+│ Custom      │ ?       │ ?       │ You specify                          │
+└─────────────┴─────────┴─────────┴──────────────────────────────────────┘
 ```
 
 ---
@@ -572,16 +689,21 @@ List all projects:
 /bedrock_agent list
 
 Bedrock Agent Projects
-═══════════════════════════════════════════════════════════════════════════
-│ Project             │ Vertical         │ Scope         │ News │ Files │
-├─────────────────────┼──────────────────┼───────────────┼──────┼───────┤
-│ WC_2026_Project     │ Sports/Football  │ International │ ✓    │ 3,523 │
-│ Serie_A_2025-26     │ Sports/Football  │ Local (IT)    │ ✓    │ 352   │
-│ Italian_Serie_A     │ Sports/Football  │ Local (IT)    │ ✓    │ 348   │
-│ Tennis_Grand_Slams  │ Sports/Tennis    │ International │ ✗    │ 37    │
-═══════════════════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════════════════════════════
+│ Project                  │ Vertical            │ Scope         │ News │ Pages │
+├──────────────────────────┼─────────────────────┼───────────────┼──────┼───────┤
+│ Australian_Sports_Hub    │ Sports/Multi (5)    │ National (AU) │ ✓    │ 324   │
+│ WC_2026_Project          │ Sports/Football     │ International │ ✓    │ 3,523 │
+│ Premier_League_2025-26   │ Sports/Football     │ Local (GB)    │ ✓    │ ~300  │
+│ Italian_Serie_A          │ Sports/Football     │ Local (IT)    │ ✓    │ 348   │
+│ Bundesliga_2025-26       │ Sports/Football     │ Local (DE)    │ ✓    │ ~300  │
+│ Ligue_1_2025-26          │ Sports/Football     │ Local (FR)    │ ✓    │ ~200  │
+│ F1_2026                  │ Sports/F1           │ International │ ✓    │ ~200  │
+│ Six_Nations_2026         │ Sports/Rugby        │ International │ ✓    │ ~100  │
+│ Tennis_Grand_Slams       │ Sports/Tennis       │ International │ ✓    │ ~100  │
+═══════════════════════════════════════════════════════════════════════════════════════
 
-Framework: The_Agent (14 Python modules)
+Framework: The_Agent (14 Python modules) + Astro 4.x
 Docs: bedrock_agent/The_Agent/docs/
 ```
 
@@ -792,7 +914,7 @@ CHECKLIST:
 ☐ Quotes properly attributed
 ☐ No duplicate content
 
-SCORE: ___/100 | PASS: 85+ required
+SCORE: ___/100 | PASS: 92+ required
 COMMENTS: [Head of Content provides detailed feedback]
 ```
 
@@ -823,7 +945,7 @@ KEYWORD RESEARCH REQUIREMENTS:
 - Include long-tail variations
 - Monitor trending topics for news content
 
-SCORE: ___/100 | PASS: 85+ required
+SCORE: ___/100 | PASS: 92+ required
 COMMENTS: [SEO Commander provides detailed feedback]
 ```
 
@@ -859,7 +981,7 @@ CHECKLIST - CONTENT:
 ☐ Special characters display correctly
 ☐ Mobile responsive layout works
 
-SCORE: ___/100 | PASS: 90+ required
+SCORE: ___/100 | PASS: 92+ required
 COMMENTS: [Post Production Manager provides detailed feedback]
 ```
 
@@ -908,7 +1030,7 @@ CHECKLIST - COMPARISON TOOL:
 ☐ Side-by-side comparison renders properly
 ☐ Charts/graphs display correctly
 
-SCORE: ___/100 | PASS: 85+ required
+SCORE: ___/100 | PASS: 92+ required
 COMMENTS: [PixelPerfect provides detailed feedback]
 ```
 
@@ -945,7 +1067,7 @@ CHECKLIST - NEWS PIPELINE (if enabled):
 ☐ Content formatting correct
 ☐ Attribution and sources included
 
-SCORE: ___/100 | PASS: 85+ required
+SCORE: ___/100 | PASS: 92+ required
 COMMENTS: [Elias Thorne + Insight provide detailed feedback]
 ```
 
@@ -973,7 +1095,7 @@ After `/bedrock_agent generate` completes:
 4. RUN RALPH LOOPS (PARALLEL EXECUTION)
    ┌─────────────────────────────────────────────────────────────┐
    │ Loop 1: Content Quality (Head of Content) - SEQUENTIAL     │
-   │         Must pass FIRST (85+ score)                        │
+   │         Must pass FIRST (92+ score)                        │
    └────────────────────────┬────────────────────────────────────┘
                             │ PASS
           ┌─────────────────┼─────────────────┐
@@ -981,7 +1103,7 @@ After `/bedrock_agent generate` completes:
    ┌──────┴──────┐   ┌──────┴──────┐   ┌──────┴──────┐
    │   Loop 2    │   │   Loop 3    │   │   Loop 4    │
    │    SEO      │   │  Technical  │   │   UX/UI     │
-   │  (85+)      │   │   (90+)     │   │   (85+)     │
+   │  (92+)      │   │   (92+)     │   │   (92+)     │
    │ IN PARALLEL │   │ IN PARALLEL │   │ IN PARALLEL │
    └──────┬──────┘   └──────┬──────┘   └──────┬──────┘
           │                 │                 │
@@ -989,7 +1111,7 @@ After `/bedrock_agent generate` completes:
                             │ ALL PASS
    ┌────────────────────────┴────────────────────────────────────┐
    │ Loop 5: Data & ML Validation (Elias + Insight) - SEQUENTIAL │
-   │         Final validation (85+ score)                        │
+   │         Final validation (92+ score)                        │
    └─────────────────────────────────────────────────────────────┘
 
 5. COLLECT FEEDBACK
@@ -1018,7 +1140,7 @@ After `/bedrock_agent generate` completes:
 
 1. **Loop 1 (Director/Content) runs FIRST:**
    - Validates source/facts integrity
-   - Must score 85+ to proceed
+   - Must score 92+ to proceed
    - If fails, fix and re-run before continuing
 
 2. **After Loop 1 passes, launch Loops 2, 3, 4 IN PARALLEL:**
@@ -1035,9 +1157,9 @@ After `/bedrock_agent generate` completes:
 3. **Aggregation Gate:**
    - Wait for ALL three parallel loops to complete
    - ALL must pass their threshold:
-     - Loop 2: 85+
-     - Loop 3: 90+ (highest standard)
-     - Loop 4: 85+
+     - Loop 2: 92+
+     - Loop 3: 92+
+     - Loop 4: 92+
    - If ANY fails, proceed to fix phase
 
 4. **Re-run Efficiency:**
@@ -1050,7 +1172,7 @@ After `/bedrock_agent generate` completes:
 5. **Proceed to Loop 5:**
    - Only when ALL of Loops 2, 3, 4 pass
    - Loop 5 (Elias + Insight) validates final data quality
-   - Must score 85+ for approval
+   - Must score 92+ for approval
 
 ### Benefits
 
@@ -1169,11 +1291,11 @@ QUALITY GATES STATUS
 ═════════════════════════════════════════════════════════════
 │ Gate                    │ Owner            │ Threshold │ Status │
 ├─────────────────────────┼──────────────────┼───────────┼────────┤
-│ Content Quality         │ Head of Content  │ 85/100    │ ☐      │
-│ SEO Optimization        │ SEO Commander    │ 85/100    │ ☐      │
-│ Technical QA            │ Post Production  │ 90/100    │ ☐      │
-│ UX/UI Review            │ PixelPerfect     │ 85/100    │ ☐      │
-│ Data/ML Validation      │ Elias + Insight  │ 85/100    │ ☐      │
+│ Content Quality         │ Head of Content  │ 92/100    │ ☐      │
+│ SEO Optimization        │ SEO Commander    │ 92/100    │ ☐      │
+│ Technical QA            │ Post Production  │ 92/100    │ ☐      │
+│ UX/UI Review            │ PixelPerfect     │ 92/100    │ ☐      │
+│ Data/ML Validation      │ Elias + Insight  │ 92/100    │ ☐      │
 ├─────────────────────────┼──────────────────┼───────────┼────────┤
 │ ALL GATES PASSED        │ Director         │ 5/5       │ ☐      │
 └─────────────────────────┴──────────────────┴───────────┴────────┘
@@ -1306,6 +1428,7 @@ Examples:
 ---
 
 *BlackTeam BT-2026-004 - Content Vertical Generator with Full QA Integration*
+*Latest Reference: Australian Sports Hub (BT-2026-005) — 5 sports, 287 content files, 324 pages*
 
 ---
 
@@ -1900,9 +2023,11 @@ ASTRO TEMPLATE COMPLIANCE MATRIX
 
 REFERENCE TEMPLATES
 ────────────────────────────────────────────────────────────────────────────────
-├── WC_2026_Astro_V2/       # World Cup 2026 (Reference Standard)
-├── Italian_Serie_A_Astro/  # Serie A (Football League)
-└── F1_2026_Astro/          # Formula 1 (Racing)
+├── Australian_Sports_Hub_Astro/  # Multi-sport hub (RECOMMENDED for multi-vertical)
+│   └── PROJECT_REFERENCE.md      # Full architecture & learnings doc
+├── WC_2026_Astro_V2/             # World Cup 2026 (Single tournament reference)
+├── Italian_Serie_A_Astro/        # Serie A (Single league reference)
+└── F1_2026_Astro/                # Formula 1 (Racing reference)
 
 REQUIRED FILE STRUCTURE
 ────────────────────────────────────────────────────────────────────────────────
@@ -2145,15 +2270,15 @@ CONTENT GENERATION
 
 5 RALPH LOOPS QA
 ────────────────────────────────────────────────────────────────────────────────
-☐ Loop 1: Content Quality (Head of Content) - 85+ PASS
+☐ Loop 1: Content Quality (Head of Content) - 92+ PASS
    └── Historical verification checklist completed
-☐ Loop 2: SEO Optimization (SEO Commander) - 85+ PASS
+☐ Loop 2: SEO Optimization (SEO Commander) - 92+ PASS
    └── All meta tags present, keywords optimized
-☐ Loop 3: Technical QA (Post Production) - 90+ PASS
+☐ Loop 3: Technical QA (Post Production) - 92+ PASS
    └── Zero 404 errors, all assets load
-☐ Loop 4: UX/UI Review (PixelPerfect) - 85+ PASS
+☐ Loop 4: UX/UI Review (PixelPerfect) - 92+ PASS
    └── WCAG 2.1 AA compliant, text visible
-☐ Loop 5: Data Validation (Elias + Insight) - 85+ PASS
+☐ Loop 5: Data Validation (Elias + Insight) - 92+ PASS
    └── All data within valid ranges
 
 ASTRO TEMPLATE COMPLIANCE
@@ -2195,3 +2320,11 @@ Date: _________________
 ---
 
 *End of Comprehensive Persona Checklists - All personas MUST complete their assigned checklists before release approval.*
+
+---
+
+### Final: Log Session Completion
+
+```bash
+python3 /home/andre/.claude/scripts/log_to_db.py --persona B-BOB --action complete --summary "Completed /bedrock_agent session" --username $(whoami) --command bedrock_agent
+```

@@ -93,6 +93,21 @@ Before finalizing ANY response, verify:
 - [ ] No hardcoded API keys in any generated code (R-SEC-01)
 - [ ] All credentials loaded from os.getenv() or import.meta.env
 - [ ] Post-deployment security audit completed (R-DEPLOY-01)
+- [ ] astro-seo component used in all Astro layouts (R-SEO-02)
+- [ ] OG tags + Twitter Cards present on all public pages (R-SEO-02)
+- [ ] noindex pages excluded from sitemap (R-SEO-02)
+- [ ] Audit requests investigated at source level, not surface checks (R-AUDIT-01)
+- [ ] All image/asset IDs verified to match claimed content (R-AUDIT-01)
+- [ ] All alt text verified against actual asset content (R-AUDIT-01)
+- [ ] All duplicates identified across entire project (R-AUDIT-01)
+- [ ] trailingSlash set to 'always' or 'never' in astro.config.mjs (R-SEO-03a)
+- [ ] No external hotlinked images in production (R-SEO-03b)
+- [ ] All metaTitles + suffix <= 60 characters (R-SEO-03c)
+- [ ] Every page type has a unique meta description (R-SEO-03d)
+- [ ] OG type differentiated: "article" for content, "website" for hubs (R-SEO-03e)
+- [ ] No nav section exceeds 20 direct links (R-SEO-03f)
+- [ ] Schema.org types match entity types (R-SEO-03g)
+- [ ] Sitemap filters match page template filters — no ghost URLs (R-SEO-03h)
 ```
 
 ---
