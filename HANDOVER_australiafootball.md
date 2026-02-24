@@ -239,7 +239,7 @@ Live on australiafootball.com in ~60 seconds
 | GCP Project | paradisemedia-bi |
 | Schedule | Every hour (`0 * * * *`), Sydney timezone |
 | Articles per run | 1 |
-| Daily cap | 20 articles |
+| Daily cap | 5 articles (reduced from 20 on 2026-02-24) |
 | Jitter | 0-25 minutes random delay |
 
 ### Key Files
@@ -256,7 +256,7 @@ Live on australiafootball.com in ~60 seconds
 
 ```
 NEWS_PER_RUN=1
-NEWS_MAX_DAILY=20
+NEWS_MAX_DAILY=5
 NEWS_JITTER_MAX=1500        # seconds (25 min max)
 NEWS_GIT_PUSH=true
 NEWS_DRY_RUN=false
@@ -493,6 +493,9 @@ Pattern: `Action verb + what changed + (rule reference if applicable)`
 | 2 | [#2](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/2) | **Add CI/CD pipeline** — GitHub Actions: `npm run build` on every PR. Phase 2: seo-toolkit static audit. | `{name}/add-github-actions` |
 | 3 | [#3](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/3) | **Fix Twitter image fallback** — No `twitter:image` when no image prop in Layout.astro. Fallback to `/images/og-default.png`. | `{name}/fix-twitter-image` |
 | 4 | [#4](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/4) | **CSP hardening** — Add `object-src 'none'; base-uri 'self'; form-action 'self'` + `frame-src https://www.youtube.com` in `vercel.json`. | `{name}/harden-csp` |
+| 13 | [#13](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/13) | **Broken links audit** — Full crawl of 928+ pages. Check internal, external, images, anchors. Fix all. | `{name}/fix-broken-links` |
+| 14 | [#14](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/14) | **Wrong images audit** — Verify actual image content matches page topic (R-AUDIT-01). Check Unsplash IDs, duplicates. | `{name}/audit-fix-images` |
+| 15 | [#15](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/15) | **Reduce site scope** — Focus on AFL + 3 core sports (Cricket, NRL, A-League). Deprioritize rest in nav + news automation. | `{name}/reduce-sport-scope` |
 
 ### Priority 2 — This Sprint
 
@@ -502,6 +505,10 @@ Pattern: `Action verb + what changed + (rule reference if applicable)`
 | 6 | [#6](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/6) | **NPL state data centralization** — 3 files hardcode states. Extract to single `npl-states.ts`. | `{name}/centralize-npl-states` |
 | 7 | [#7](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/7) | **Remove unused `sport` prop** — Layout accepts it but never uses it. Remove from interface + all callers. | `{name}/cleanup-sport-prop` |
 | 8 | [#8](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/8) | **News image fallback** — RSS images may 404. `ImageWithFallback` component with sport-specific placeholders. | `{name}/news-image-fallback` |
+| 16 | [#16](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/16) | **Betting money page in ClickUp** — Track best-betting-sites-australia in ClickUp with keywords, rankings, update schedule. | N/A (ClickUp task) |
+| 17 | [#17](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/17) | **Casino money page** — Create /casino/ section via Palm v3. "Best Online Casinos in Australia" + ACMA compliance. ClickUp brand lineup. | `{name}/casino-money-page` |
+| 18 | [#18](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/18) | **Casino content links** — Write 5-10 sport articles with natural casino references (R-CONTENT-03 pattern). No nav menu link. | `{name}/casino-content-links` |
+| 19 | [#19](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/19) | **Ranking monitoring** — Set up Ahrefs + AccuRanker for money pages, core sport keywords, brand terms. Weekly report template. | N/A (external tools) |
 
 ### Priority 3 — Nice to Have
 
@@ -661,7 +668,12 @@ gh pr create --title "Your PR title" --body "What you changed and why"
 
 | # | Date Added | Requirement | Priority | Assigned To | Status |
 |---|-----------|-------------|----------|-------------|--------|
-| | | | | | |
+| R1 | 2026-02-24 | Reduce news daily cap from 20 to 5 | P1 | Andre | Done |
+| R2 | 2026-02-24 | Focus site on AFL + 3 core sports (see #15) | P1 | TBD | Open |
+| R3 | 2026-02-24 | Casino money page + content links (see #17, #18) | P2 | TBD | Open |
+| R4 | 2026-02-24 | Set up Ahrefs + AccuRanker monitoring (see #19) | P2 | TBD | Open |
+| R5 | 2026-02-24 | Add betting money page to ClickUp tracking (see #16) | P2 | TBD | Open |
+| R6 | 2026-02-24 | Replace raw affiliate links with Dragon cloaked links (ClickUp 86afp6hge) | P1 | Andre | Done |
 
 ### In Progress
 
