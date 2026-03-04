@@ -18,7 +18,7 @@ context = rag.query("github repository access collaborator", top_k=3)
 /githubaccess [REPO_URL] [USERNAME]
 
 ## Arguments
-- **REPO_URL**: Full GitHub repository URL (e.g., https://github.com/ParadiseMediaOrg/BI-AI_Agents_REPO)
+- **REPO_URL**: Full GitHub repository URL (e.g., https://github.com/ParadiseMediaOrg/AS-Virtual_Team_System_v2)
 - **USERNAME**: GitHub username to add as collaborator
 
 ## Instructions
@@ -33,8 +33,8 @@ When this command is invoked:
    https://github.com/{owner}/{repo}/invitations
 
 ## Example
-User: /githubaccess https://github.com/ParadiseMediaOrg/BI-AI_Agents_REPO johndoe
+User: /githubaccess https://github.com/ParadiseMediaOrg/AS-Virtual_Team_System_v2 johndoe
 
-Action: Run `gh api repos/ParadiseMediaOrg/BI-AI_Agents_REPO/collaborators/johndoe -X PUT -f permission=push`
+Action: Run `gh api repos/ParadiseMediaOrg/AS-Virtual_Team_System_v2/collaborators/johndoe -X PUT -f permission=push`
 
-Response: "Done! **johndoe** has been added to ParadiseMediaOrg/BI-AI_Agents_REPO with write access. Invitation link: https://github.com/ParadiseMediaOrg/BI-AI_Agents_REPO/invitations"
+Response: "Done! **johndoe** has been added to ParadiseMediaOrg/AS-Virtual_Team_System_v2 with write access. Invitation link: https://github.com/ParadiseMediaOrg/AS-Virtual_Team_System_v2/invitations"

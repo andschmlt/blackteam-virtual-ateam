@@ -54,6 +54,23 @@ cat /home/andre/AS-Virtual_Team_System_v2/blackteam/skills/prompts/DATAFORGE_SHE
 - **Ralph Loops:** `/home/andre/AS-Virtual_Team_System_v2/RALPH_LOOPS_SPECIFICATION.md`
 - **Path Mappings:** `/home/andre/.claude/PATH_MAPPINGS.md`
 
+## Security Rules Gate (MANDATORY — W-GARD Enforced)
+
+ALL BlackTeam execution MUST comply with these security standards:
+
+| Rule | Enforcement | Spec |
+|------|-------------|------|
+| R-SEC-01 | No hardcoded keys in any generated code | MEMORY.md |
+| R-SEC-02 | Validate all external input (RSS, API, scrape, CLI) | `~/.claude/standards/INPUT_VALIDATION_RULES.md` |
+| R-SEC-03 | Explicit CORS origins on all Cloud Run services | `~/.claude/standards/CORS_SECURITY_RULES.md` |
+| R-SEC-04 | TLS 1.2+, `hmac.compare_digest()`, `secrets` module | `~/.claude/standards/CRYPTOGRAPHY_RULES.md` |
+| R-SEC-05 | Incident response per playbook if breach detected | `~/.claude/standards/INCIDENT_RESPONSE_PLAYBOOK.md` |
+| R-SEC-06 | Verify credential rotation status before deploy | `~/.claude/standards/SECRETS_ROTATION_SCHEDULE.md` |
+| R-DEBUG-01 | Local dry-run before ANY deployment | MEMORY.md |
+| R-DEPLOY-01 | 6-step post-deployment security audit | MEMORY.md |
+
+**B-TECH** and **B-CODY** enforce during execution. **W-GARD** and **W-FLUX** validate during review. Violation = BLOCKED.
+
 ## Usage
 
 ```
@@ -328,6 +345,14 @@ You are **The Director** of BlackTeam. Execute the following workflow:
 
 ---
 
+## Phase 0.5: Log Session Start (MANDATORY)
+
+```bash
+python3 /home/andre/.claude/scripts/log_to_db.py --persona B-BOB --action execute --summary "Started /blackteam session" --username $(whoami) --command blackteam
+```
+
+---
+
 ## Phase 0: RAG Context Loading (MANDATORY - Before Any Execution)
 
 **CRITICAL:** Before Phase 1 begins, the Director MUST load relevant knowledge from the RAG system. Past session learnings, corrections, and patterns MUST inform current execution.
@@ -469,8 +494,8 @@ GIT HOME SELECTION
 Where should this project live?
 
 Available Git Homes (from PROJECT_REGISTRY.json):
-1. ParadiseMediaOrg/BI-AI_Agents_REPO (Monorepo - Bots, Tools, Automation)
-   Local: /home/andre/BI-AI_Agents_REPO
+1. ParadiseMediaOrg/AS-Virtual_Team_System_v2 (Monorepo - Bots, Tools, Automation)
+   Local: /home/andre/AS-Virtual_Team_System_v2
 
 2. ParadiseMediaOrg/europeangaming.eu (Content Site)
    Local: /home/andre/europeangaming.eu
@@ -1084,6 +1109,12 @@ PRICING = {
 - **/reflect is RECOMMENDED at Phase 1 and Phase 3 milestones**
 - **/capture_learnings is MANDATORY at project completion** (updates RAG index)
 - Activity dashboard can be synced to ClickUp with `bedrock team sync`
+
+### Final: Log Session Completion
+
+```bash
+python3 /home/andre/.claude/scripts/log_to_db.py --persona B-BOB --action complete --summary "Completed /blackteam session" --username $(whoami) --command blackteam
+```
 
 ---
 

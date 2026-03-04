@@ -38,7 +38,7 @@ When triggered with `run`:
 
 1. **Navigate to Pepper project:**
 ```bash
-cd /home/andre/BI-AI_Agents_REPO/Pepper/main
+cd /home/andre/AS-Virtual_Team_System_v2/Pepper/main
 ```
 
 2. **Set environment variables:**
@@ -77,11 +77,11 @@ All queries run for **yesterday's data** (SYSDATE-1):
 
 - **Slack:** Rich Block Kit message to configured channel
 - **Console:** Plain text summary (dry-run mode)
-- **Logs:** `/home/andre/BI-AI_Agents_REPO/Pepper/main/logs/daily_insights.log`
+- **Logs:** `/home/andre/AS-Virtual_Team_System_v2/Pepper/main/logs/daily_insights.log`
 
 ## Configuration
 
-Edit `/home/andre/BI-AI_Agents_REPO/Pepper/main/config/config.json`:
+Edit `/home/andre/AS-Virtual_Team_System_v2/Pepper/main/config/config.json`:
 - `slack.channel_id` - Target Slack channel
 - `insights.top_n` - Number of top/bottom performers (default: 10)
 - `insights.min_clicks_threshold` - Minimum clicks to include (default: 50)
@@ -90,8 +90,8 @@ Edit `/home/andre/BI-AI_Agents_REPO/Pepper/main/config/config.json`:
 
 - **Project ID:** BT-2026-005
 - **Bot Name:** Pepper (Tropical Fruit Suite)
-- **GitHub:** https://github.com/ParadiseMediaOrg/BI-AI_Agents_REPO/tree/main/Pepper
-- **Local Path:** `/home/andre/BI-AI_Agents_REPO/Pepper`
+- **GitHub:** https://github.com/ParadiseMediaOrg/AS-Virtual_Team_System_v2/tree/main/Pepper
+- **Local Path:** `/home/andre/AS-Virtual_Team_System_v2/Pepper`
 
 ---
 
@@ -104,7 +104,7 @@ Based on the action argument:
 2. Check if SLACK_BOT_TOKEN is configured
 3. If credentials exist, run the full insights:
    ```bash
-   cd /home/andre/BI-AI_Agents_REPO/Pepper/main
+   cd /home/andre/AS-Virtual_Team_System_v2/Pepper/main
    export GOOGLE_APPLICATION_CREDENTIALS=~/secrets/bi-chatbot-sa.json
    python3 src/main.py
    ```
@@ -113,7 +113,7 @@ Based on the action argument:
 ### If action is "dry-run":
 1. Run with mock data:
    ```bash
-   cd /home/andre/BI-AI_Agents_REPO/Pepper/main
+   cd /home/andre/AS-Virtual_Team_System_v2/Pepper/main
    python3 src/main.py --dry-run
    ```
 2. Display the output to the user

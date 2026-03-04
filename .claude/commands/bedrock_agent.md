@@ -69,6 +69,23 @@ rules = rag.query("content standards quality gates", collection_name="rules", to
 
 ---
 
+## Phase 0.4: Security Gate (MANDATORY)
+
+**W-GARD enforces R-SEC-01 through R-SEC-06 + R-DEPLOY-01 + R-DEBUG-01 on all bedrock_agent output.**
+
+Before generating any code or deploying:
+
+1. **R-SEC-01:** No hardcoded API keys — load from `~/.keys/.env` or Secret Manager
+2. **R-SEC-02:** All external input (RSS, API, scrape) validated per `~/.claude/standards/INPUT_VALIDATION_RULES.md`
+3. **R-SEC-03:** CORS on Cloud Run services — no wildcard origins (`~/.claude/standards/CORS_SECURITY_RULES.md`)
+4. **R-SEC-04:** TLS 1.2+, `hmac.compare_digest()` for tokens (`~/.claude/standards/CRYPTOGRAPHY_RULES.md`)
+5. **R-DEBUG-01:** Local dry-run BEFORE any Cloud Run deploy
+6. **R-DEPLOY-01:** Post-deployment security audit after every deploy
+
+**If deploying to Cloud Run:** Read `~/.claude/standards/SECRETS_ROTATION_SCHEDULE.md` and verify all credentials referenced are within rotation window.
+
+---
+
 ## Phase 0.5: Log Session Start (MANDATORY)
 
 ```bash
@@ -176,6 +193,7 @@ PRE-EXECUTION CHECKLIST
 ☐ R-SEO-03g: Schema.org types match entity types
 ☐ R-SEO-03h: Sitemap filters match page template filters
 ☐ R-SEO-03i: No thin content (< 200 words) without noindex
+☐ R-ANCHOR-01: Money page links use keyword-rich anchor text (no generic anchors), 2x max distribution
 ═══════════════════════════════════════════════════════════════════════════════
 
 ⚠️  IF ANY CHECKBOX IS UNCHECKED, DO NOT PROCEED TO NEXT STEP
@@ -198,10 +216,10 @@ PRE-EXECUTION CHECKLIST
 ## Project Reference
 
 - **Command ID:** BT-2026-004
-- **Base Path:** `/home/andre/BI-AI_Agents_REPO/bedrock_agent/`
+- **Base Path:** `/home/andre/AS-Virtual_Team_System_v2/projects/bedrock_agent/`
 - **Framework:** `bedrock_agent/The_Agent/`
 - **Docs:** `bedrock_agent/The_Agent/docs/`
-- **GitHub:** [ParadiseMediaOrg/BI-AI_Agents_REPO](https://github.com/ParadiseMediaOrg/BI-AI_Agents_REPO/tree/main/bedrock_agent)
+- **GitHub:** [ParadiseMediaOrg/AS-Virtual_Team_System_v2](https://github.com/ParadiseMediaOrg/AS-Virtual_Team_System_v2/tree/main/projects/bedrock_agent)
 
 ### Reference Projects (Use as Templates)
 
@@ -498,7 +516,7 @@ Content Style:  Sports Journalism + Statistical
 News Section:   Yes (auto-scraping enabled)
 Content Scope:  Standard (50 players, 20 teams)
 
-Project folder: /home/andre/BI-AI_Agents_REPO/bedrock_agent/Serie_A_2025-26/
+Project folder: /home/andre/AS-Virtual_Team_System_v2/projects/bedrock_agent/Serie_A_2025-26/
 
 ═════════════════════════════════════════════════════════════
 
@@ -512,7 +530,7 @@ Proceed with this configuration? (Yes / Edit / Cancel)
 After wizard completion, create:
 
 ```
-/home/andre/BI-AI_Agents_REPO/bedrock_agent/{Project_Name}/
+/home/andre/AS-Virtual_Team_System_v2/projects/bedrock_agent/{Project_Name}/
 ├── main/                           # Working directory
 │   ├── config/
 │   │   └── vertical.json           # Master config
@@ -659,6 +677,9 @@ Quality Gates:
   ✓ Section Presence    │ All files have proper headers
   ✓ Minimum Files       │ 37/30 minimum met
   ✓ Source Citations    │ All content has sources
+  ✓ R-CONTENT-04        │ Timestamps use YYYY-MM-DDTHH:MM, 2h min gap, separate pushes
+  ✓ R-CONTENT-05        │ No stale data: standings/ladders/fixtures current, "Last Updated" shown
+  ✓ R-ANCHOR-01         │ Money page links use keyword-rich anchor text, 2x max distribution
   ⚠ Image References    │ 5 files missing images (warning)
 
 Ralph Loops:
@@ -827,7 +848,7 @@ Content Scope:  Standard (50 players, 20 teams)
 User: Yes
 
 Agent:
-✓ Created: /home/andre/BI-AI_Agents_REPO/bedrock_agent/Bundesliga_2025-26/
+✓ Created: /home/andre/AS-Virtual_Team_System_v2/projects/bedrock_agent/Bundesliga_2025-26/
 ✓ Config: main/config/vertical.json
 ✓ Structure: main/, Version_1.0/, docs/
 ✓ News pipeline: Configured (daily at 12:00)
@@ -1057,7 +1078,11 @@ CHECKLIST - DATA QUALITY (Insight):
 ☐ Historical records verified
 ☐ Statistics match official sources
 ☐ News content relevant and timely
-☐ Data freshness appropriate
+☐ Data freshness appropriate (R-CONTENT-05)
+☐ Standings/ladders/fixtures match current round/matchweek from official sources
+☐ "Last Updated" timestamp visible on all data-driven pages (R-CONTENT-05d)
+☐ No false freshness claims like "being updated" without active pipeline (R-CONTENT-05a)
+☐ Off-season pages labelled correctly: "Final [YEAR] Standings" (R-CONTENT-05e)
 ☐ Coverage gaps identified and addressed
 
 CHECKLIST - NEWS PIPELINE (if enabled):
@@ -1302,6 +1327,66 @@ QUALITY GATES STATUS
 
 Release blocked until all gates show ✓
 ```
+
+---
+
+## R-TOPLIST-01: TechOps TopList Embed (MANDATORY for Money Pages)
+
+**ALL money pages** (betting roundups, casino roundups, or any new affiliate content) MUST use the TechOps TopList embed widget instead of a static "First Look" markdown table.
+
+**Implementation:**
+```html
+<div data-toplist="{TOPLIST_ID}"></div>
+<script src="https://cdn-6a4c.australiafootball.com/embed.js"></script>
+```
+
+**Rules:**
+1. The `data-toplist` ID is provided by TechOps — **ASK the user** for it if not supplied
+2. Replace the Palm-generated "First Look" static table with this embed during post-processing (Phase 10a / R-PALM-FMT-01)
+3. Each money page gets its OWN unique TopList ID (do NOT reuse IDs across pages)
+4. The CDN domain `cdn-6a4c.australiafootball.com` must be allowed in the site's Content Security Policy (`script-src`, `style-src`, `connect-src`)
+5. Applies to `roundup-review` and `roundup-review-sp` content types
+
+**Current TopList IDs:**
+| Page | TopList ID |
+|------|-----------|
+| `/betting/best-betting-sites-australia/` | `10-best-betting-sites-in-australia-for-2-7ur6rr` |
+| `/casino/best-online-casinos-australia/` | `best-online-casino-australia-review-yc7ynm` |
+
+---
+
+## R-ANCHOR-01: Keyword-Rich Anchor Text Distribution (MANDATORY for Money Page Links)
+
+**ALL internal links to money pages** (betting, casino) MUST use keyword-rich anchor text matching target page primary keywords. **NEVER** use generic action-verb anchors ("compare the best", "find the best", "explore the top") — these waste link equity.
+
+**Anchor text MUST** contain at least one high-volume AU search term from keyword research:
+
+| Vertical | Approved Anchor Keywords (search volume) |
+|----------|------------------------------------------|
+| Betting | "best betting sites in Australia" (5,400), "AFL betting" (3,600), "NRL betting tips" (1,300), "Melbourne Cup odds" (8,100), "sports betting sites" (1,600), "online betting in Australia" (1,600), "top Australian bookmakers" |
+| Casino | "online pokies in Australia" (110,000), "best online casinos in Australia" (14,800), "top Australian online casinos" (40,500), "best pokies online" (33,100), "real money casino sites" (6,600), "no deposit casino bonuses" (4,400) |
+
+**Rules:**
+1. **Distribution rule:** No single anchor text used more than 2x across the entire site
+2. **Sport-specific anchors preferred:** "AFL betting sites" in AFL articles, "NRL betting tips" in NRL articles, "Melbourne Cup odds" in horse racing articles
+3. **Mandatory check:** Before publishing any article with a money page link, verify the anchor text against this keyword list
+4. Applies to: /A_Virtual_Team, /bedrock_agent, /bedrock_agent_update, /launch_site, /news_update_agent, /content_palm
+
+**MANDATORY:** After any anchor text additions or changes to australiafootball.com, update `docs/ANCHOR_TEXT_INVENTORY.md` with the new anchors.
+
+---
+
+## R-ANCHOR-02: Menu-Priority Anchor Distribution (2026-02-26)
+
+**P1 High** — Anchor text distribution MUST reflect the site's navigation hierarchy. Top-level nav sports (A-League, Matildas, W-League, Socceroos, World Cup) get anchor priority over "More" dropdown sports.
+
+**MANDATORY:**
+1. Top-level nav sports MUST have anchors before any "More" dropdown sport gets a second anchor
+2. No sport should have more than 3x the anchor density (anchors/articles) of any top-level nav sport
+3. Zero-anchor sports are BLOCKED — every sport with 3+ articles MUST have at least 1 betting and 1 casino anchor
+4. When adding new articles, check anchor distribution per sport BEFORE choosing which article gets the link
+5. After any anchor text changes, UPDATE `docs/ANCHOR_TEXT_INVENTORY.md` for australiafootball.com to maintain manual monitoring
+6. Applies to: /A_Virtual_Team, /bedrock_agent, /launch_site, /news_update_agent, any content generation for australiafootball.com
 
 ---
 

@@ -18,7 +18,7 @@ Display this banner exactly:
 ── ANDRE WORKSPACE ──
 
 PROJECTS
-  • BI-01 | BI-AI_Agents_REPO  | [GH]
+  • BI-01 | AS-Virtual_Team_System_v2  | [GH]
   • EG-02 | europeangaming.eu  | [GH]
   • LV-03 | lover.io           | [GH]
   • NT-04 | northeasttimes.com | [GH]
