@@ -115,7 +115,7 @@ Arguments: $ARGUMENTS
 
 **Writer Selection:** Use CW-R9 (GEO routing) + CW-R10 (content type routing) from `rules/CONTENT_WRITER_RULES.md`
 
-### WhiteTeam (45 Validators — 25 Core + 20 Content Writer Validators)
+### WhiteTeam (44 Validators — 24 Core + 20 Content Writer Validators)
 
 | # | Persona | Code | Specialty | Validates |
 |---|---------|------|-----------|-----------|

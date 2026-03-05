@@ -18,7 +18,8 @@ Read these files for prior learnings and corrections:
 
 **RAG Query:**
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 context = rag.query("FTD analysis deep dive revenue", top_k=5)
 learnings = rag.query("FTD data accuracy numerical validation", collection_name="learnings", top_k=3)
@@ -60,9 +61,9 @@ rules = rag.query("data sanity checks comparison validation", collection_name="r
 
 Before generating ANY data in this report:
 
-1. **Source of Truth**: BigQuery `paradisemedia-bi.reporting.ARTICLE_PERFORMANCE`
-2. **FTDs**: Use GOALS column (NOT SIGNUPS!)
-3. **Signups**: Use SIGNUPS column (typically 3-5x higher than FTDs)
+1. **Source of Truth**: BigQuery `paradisemedia-bi.summary.ARTICLE_PERFORMANCE`
+2. **FTDs**: Use `FTD` column (NOT NRC!)
+3. **Signups**: Use `NRC` column (typically 3-5x higher than FTDs)
 4. **Revenue**: Use TOTAL_COMMISSION_USD column
 5. **Cross-check**: Validate row counts and totals before reporting
 
@@ -75,21 +76,21 @@ export GOOGLE_APPLICATION_CREDENTIALS=~/secrets/bi-chatbot-sa.json
 
 **DO NOT USE:** `/home/andre/secrets/paradisemedia-bi-sa.json` (papaya-drive-uploader - NO BigQuery access)
 
-### Primary Tables
+### Primary Tables (summary schema)
 
 | Table | Purpose |
 |-------|---------|
-| `reporting.ARTICLE_PERFORMANCE` | FTDs (GOALS), Signups, Commission |
-| `reporting.ARTICLE_INFORMATION` | Article metadata, TASK_ID, LIVE_URL |
-| `reporting.REPT_SEO_ACCURANKER` | Rankings, keyword positions |
-| `reporting.REPT_SEO_AHREFS` | DR, backlinks, referring domains |
+| `summary.ARTICLE_PERFORMANCE` | FTDs (`FTD`), Signups (`NRC`), Commission, TASK_ID, BRAND, VERTICAL |
+| `summary.ARTICLE_SEO` | Core Web Vitals, GA sessions, page views |
+| `summary.SEO_PERFORMANCE` | Rankings (ACCURANKER_*), DR/backlinks (AHREFS_*), GSC clicks |
+| `summary.DOMAIN_PERFORMANCE` | Domain-level aggregated metrics |
 
 ### Metric Definitions (MEMORIZE)
 
-| Term | Aliases | Definition |
-|------|---------|------------|
-| FTD | Goals, Conversions | First-Time Deposit - actual money deposited |
-| Signup | NRC, Registration | Account creation - NO money involved |
+| Term | Summary Column | Definition |
+|------|---------------|------------|
+| FTD | `FTD` | First-Time Deposit - actual money deposited |
+| Signup | `NRC` | New Registered Customer - account creation, NO money involved |
 | Conversion Rate | Conv% | FTDs / Signups * 100 |
 
 **CRITICAL**: Signups are typically 3-5x higher than FTDs. NEVER confuse them.

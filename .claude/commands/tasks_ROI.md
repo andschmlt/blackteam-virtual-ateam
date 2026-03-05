@@ -18,7 +18,8 @@ Read these files for prior learnings and corrections:
 
 **RAG Query:**
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 context = rag.query("ROI analysis tasks revenue FTD", top_k=5)
 learnings = rag.query("data accuracy corrections numerical comparison", collection_name="learnings", top_k=3)
@@ -30,20 +31,29 @@ learnings = rag.query("data accuracy corrections numerical comparison", collecti
 
 **Engine:** `/home/andre/scripts/tasks_roi_engine.py`
 - Complete Python implementation with all rules locked
-- **Master List v1.0 COMPLIANT** - uses `reporting` schema (NOT lakehouse)
-- Tables: `ARTICLE_INFORMATION`, `ARTICLE_PERFORMANCE`
-- FTDs column: `GOALS` (Rule R1)
-- Join: `TASK_ID = DYNAMIC` (Rule R9)
+- **Master List v1.0 COMPLIANT** - uses `summary` schema
+- Tables: `ARTICLE_PERFORMANCE`, `ARTICLE_SEO`, `SEO_PERFORMANCE`
+- FTDs column: `FTD` (summary naming)
+- Join: `ARTICLE_KEY` + `DATE` (summary surrogate keys)
 - ClickUpAPI client with LIVE status filtering
 - PDF report generation with reportlab
 - CLI entry point for automation
 
-**Weekly Scheduler:** Cloud Run Job `tasks-roi-weekly`
+**Weekly Scheduler:** Cloud Run Job `tasks-roi-engine-v2` via `tasks-roi-weekly-v2`
 - Schedule: Monday 16:00 UTC
 - Auto-processes ClickUp list `901323685943`
 - Posts ROI comments with ACTUAL BigQuery data (no estimates)
+- ALWAYS posts full YTD comment regardless of changes
 
-**Grand Totals (YTD 2026 - from reporting schema):**
+**Daily Delta Scheduler:** Same Cloud Run Job via `tasks-roi-daily-v2`
+- Schedule: Daily 22:00 Europe/Malta (10pm Malta time, auto CET/CEST)
+- Compares current YTD metrics against previous day snapshot (GCS)
+- If metrics changed: posts full ROI comment
+- If no change: posts "Nothing changed from yesterday"
+- Snapshot stored at `gs://paradisemedia-bi-tasks-roi/snapshots/latest.json`
+- Sanity guards: aborts if grand totals drop >50% (likely BQ data issue)
+
+**Grand Totals (YTD 2026 - from summary schema):**
 - Commission: **$2,836,102.96**
 - Clicks: **716,842**
 - FTDs: **5,418**
@@ -62,11 +72,11 @@ learnings = rag.query("data accuracy corrections numerical comparison", collecti
 - Post completion summary to ClickUp as per BlackTeam rules
 
 ### Rule 1: BigQuery ONLY - Master List v1.0 Compliant
-- **ONLY use BigQuery (`paradisemedia-bi.reporting`)** for all data queries
-- **NEVER use `lakehouse` schema** (Rule R7, R20 from Master List)
-- All queries must target `reporting.*` tables
-- Tables: `ARTICLE_INFORMATION`, `ARTICLE_PERFORMANCE`
-- FTDs stored in `GOALS` column (Rule R1)
+- **ONLY use BigQuery (`paradisemedia-bi.summary`)** for all data queries
+- **NEVER use `lakehouse` or `reporting` schema** (Rule R7, R20 from Master List)
+- All queries must target `summary.*` tables
+- Tables: `ARTICLE_PERFORMANCE`, `ARTICLE_SEO`, `SEO_PERFORMANCE`, `DOMAIN_PERFORMANCE`
+- FTDs stored in `FTD` column | Signups in `NRC` column | Date in `DATE` (DATE type, not INT)
 
 ### Rule 2: URL Discovery Workflow
 For each task, follow this sequence to find the LIVE URL:
@@ -77,10 +87,10 @@ For each task, follow this sequence to find the LIVE URL:
 5. If LIVE URL found, proceed to data lookup
 
 ### Rule 3: Revenue Lookup Workflow
-When LIVE URL is found but not in `DIM_PAGE`:
-1. First try: Match via `DIM_PAGE.PAGE_PATH` or `FULL_PAGE_PATH`
-2. If not found: Query revenue using **DYNAMIC** field in `DIM_ARTICLE`
-3. If not found: Query revenue using **TASK_ID** parameter in tracking (`QUERY_PARAMETERS LIKE '%{task_id}%'`)
+When LIVE URL is found:
+1. First try: Match via `ARTICLE_PERFORMANCE` using `TASK_ID`
+2. If not found: Query by LIVE_URL path match in `ARTICLE_PERFORMANCE`
+3. If not found: Query by domain via `DOMAIN_PERFORMANCE`
 4. If still not found: Report as "No tracking data - verify tracking links are implemented"
 
 ### Rule 4: Pre-Publication Handling
@@ -147,8 +157,8 @@ SELECT
   SUM(TOTAL_COMMISSION_USD) as gt_commission,
   SUM(CLICKS) as gt_clicks,
   SUM(FTD) as gt_ftd
-FROM `lakehouse.FCT_IGAMING_ARTICLE_PERFORMANCE`
-WHERE DATE_ID BETWEEN {START_DATE_ID} AND {END_DATE_ID}
+FROM `paradisemedia-bi.summary.ARTICLE_PERFORMANCE`
+WHERE DATE BETWEEN '{START_DATE}' AND '{END_DATE}'
 ```
 
 #### Step 0.3: Prompt for Date Range
@@ -235,67 +245,66 @@ curl -s "https://api.clickup.com/api/v2/task/{TASK_ID}/comment" \
 #### Step 2.1: Find Article in BigQuery
 
 ```sql
--- Try to match by LIVE URL
-SELECT ARTICLE_SK, TASK_NAME, LIVE_URL, DYNAMIC, NICHE, VERTICAL
-FROM `lakehouse.DIM_ARTICLE`
-WHERE LOWER(LIVE_URL) LIKE LOWER('%{url_path}%')
+-- Try to match by TASK_ID or LIVE URL
+SELECT DISTINCT ARTICLE_KEY, TASK_ID, VERTICAL
+FROM `paradisemedia-bi.summary.ARTICLE_PERFORMANCE`
+WHERE TASK_ID = '{task_id}'
+   OR LOWER(TASK_ID) LIKE LOWER('%{url_path}%')
 LIMIT 1
 ```
 
 #### Step 2.2: Revenue Lookup (Follow Rule 3)
 
 ```sql
--- Method 1: By ARTICLE_FK
+-- Method 1: By ARTICLE_KEY (primary)
 SELECT
   SUM(CLICKS) as clicks,
   SUM(NRC) as signups,
   SUM(FTD) as ftds,
   SUM(TOTAL_COMMISSION_USD) as commission
-FROM `lakehouse.FCT_IGAMING_ARTICLE_PERFORMANCE`
-WHERE ARTICLE_FK = {article_sk}
-  AND DATE_ID BETWEEN {START_DATE_ID} AND {END_DATE_ID}
+FROM `paradisemedia-bi.summary.ARTICLE_PERFORMANCE`
+WHERE ARTICLE_KEY = {article_key}
+  AND DATE BETWEEN '{START_DATE}' AND '{END_DATE}'
 ```
 
 ```sql
--- Method 2: By DYNAMIC field (if ARTICLE_FK not found)
+-- Method 2: By TASK_ID (if ARTICLE_KEY not found)
 SELECT
-  SUM(p.CLICKS) as clicks,
-  SUM(p.NRC) as signups,
-  SUM(p.FTD) as ftds,
-  SUM(p.TOTAL_COMMISSION_USD) as commission
-FROM `lakehouse.FCT_IGAMING_ARTICLE_PERFORMANCE` p
-JOIN `lakehouse.DIM_ARTICLE` a ON p.ARTICLE_FK = a.ARTICLE_SK
-WHERE a.DYNAMIC = '{dynamic_value}'
-  AND p.DATE_ID BETWEEN {START_DATE_ID} AND {END_DATE_ID}
+  SUM(CLICKS) as clicks,
+  SUM(NRC) as signups,
+  SUM(FTD) as ftds,
+  SUM(TOTAL_COMMISSION_USD) as commission
+FROM `paradisemedia-bi.summary.ARTICLE_PERFORMANCE`
+WHERE TASK_ID = '{task_id}'
+  AND DATE BETWEEN '{START_DATE}' AND '{END_DATE}'
 ```
 
 ```sql
--- Method 3: By Task ID in tracking parameters
+-- Method 3: By DOMAIN_KEY (domain-level fallback)
 SELECT
-  SUM(p.CLICKS) as clicks,
-  SUM(p.NRC) as signups,
-  SUM(p.FTD) as ftds,
-  SUM(p.TOTAL_COMMISSION_USD) as commission
-FROM `lakehouse.FCT_IGAMING_ARTICLE_PERFORMANCE` p
-JOIN `lakehouse.DIM_PAGE` pg ON p.PAGE_FK = pg.PAGE_SK
-WHERE pg.QUERY_PARAMETERS LIKE '%{task_id}%'
-  AND p.DATE_ID BETWEEN {START_DATE_ID} AND {END_DATE_ID}
+  SUM(CLICKS) as clicks,
+  SUM(NRC) as signups,
+  SUM(FTD) as ftds,
+  SUM(TOTAL_COMMISSION_USD) as commission
+FROM `paradisemedia-bi.summary.ARTICLE_PERFORMANCE`
+WHERE DOMAIN_KEY = {domain_key}
+  AND DATE BETWEEN '{START_DATE}' AND '{END_DATE}'
 ```
 
 #### Step 2.3: Get SEO/Keyword Data
 
 ```sql
--- Keyword positions and traffic
+-- Keyword positions and traffic (summary.SEO_PERFORMANCE)
 SELECT
-  COUNT(DISTINCT KEYWORD_FK) as keywords_tracked,
-  SUM(CASE WHEN RANK = 1 THEN 1 ELSE 0 END) as pos_1,
-  SUM(CASE WHEN RANK BETWEEN 2 AND 5 THEN 1 ELSE 0 END) as pos_2_5,
-  SUM(CASE WHEN RANK BETWEEN 6 AND 10 THEN 1 ELSE 0 END) as pos_6_10,
-  SUM(TOTAL_ORG_TRAFFIC) as organic_traffic,
-  SUM(VOLUME) as search_volume
-FROM `lakehouse.FCT_KEYWORD_STATS`
-WHERE ARTICLE_FK = {article_sk}
-  AND DATE_ID >= '{START_DATE_ID}'
+  COUNT(DISTINCT KEYWORD) as keywords_tracked,
+  SUM(CASE WHEN ACCURANKER_RANK = 1 THEN 1 ELSE 0 END) as pos_1,
+  SUM(CASE WHEN ACCURANKER_RANK BETWEEN 2 AND 5 THEN 1 ELSE 0 END) as pos_2_5,
+  SUM(CASE WHEN ACCURANKER_RANK BETWEEN 6 AND 10 THEN 1 ELSE 0 END) as pos_6_10,
+  SUM(GSC_CLICKS) as organic_traffic,
+  SUM(ACCURANKER_SEARCH_VOLUME) as search_volume
+FROM `paradisemedia-bi.summary.SEO_PERFORMANCE`
+WHERE ARTICLE_KEY = {article_key}
+  AND DATE >= '{START_DATE}'
 ```
 
 ---
@@ -376,18 +385,19 @@ curl -X POST "https://api.clickup.com/api/v2/task/{TASK_ID}/comment" \
 
 ---
 
-## BigQuery Tables Reference (ONLY USE THESE)
+## BigQuery Tables Reference (ONLY USE THESE — summary schema)
 
 | Table | Purpose |
 |-------|---------|
-| `lakehouse.DIM_ARTICLE` | Article metadata, LIVE_URL, DYNAMIC, TASK_NAME |
-| `lakehouse.DIM_PAGE` | Page paths, tracking parameters |
-| `lakehouse.FCT_IGAMING_ARTICLE_PERFORMANCE` | Revenue, clicks, FTDs, commission |
-| `lakehouse.FCT_KEYWORD_STATS` | Keyword rankings, organic traffic |
-| `lakehouse.FCT_TECH_SEO_STATS` | Core Web Vitals, page performance |
-| `lakehouse.FCT_BACKLINK_STATS` | Backlink data (may be empty) |
+| `summary.ARTICLE_PERFORMANCE` | Revenue, clicks, FTDs, commission, TASK_ID, BRAND, VERTICAL |
+| `summary.ARTICLE_SEO` | Core Web Vitals (LCP, INP, CLS), GA sessions, page views |
+| `summary.SEO_PERFORMANCE` | Keyword rankings (Accuranker), GSC clicks, Ahrefs DR/backlinks |
+| `summary.DOMAIN_PERFORMANCE` | Domain-level aggregated metrics, iGaming vs Growth splits |
+| `summary.ARTICLE_INVOICES` | Article costs, DLC, ClickUp invoice, Fixed Fee |
+| `summary.BRAND_PERFORMANCE` | Brand-level metrics (standalone — no article/domain joins) |
+| `summary.PRODUCTION_CYCLE` | Article production workflow, cycle times |
 
-**DO NOT USE:** Databricks, Datalake, or any non-lakehouse tables.
+**DO NOT USE:** `lakehouse`, `reporting`, Databricks, or Datalake tables.
 
 ---
 

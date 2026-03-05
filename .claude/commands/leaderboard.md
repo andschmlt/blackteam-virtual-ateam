@@ -7,7 +7,8 @@ Display persona and human user rankings, efficiency metrics, and time saved stat
 **Load persona roster from RAG.**
 
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 roster = rag.query("persona roster leaderboard rankings", collection_name="personas", top_k=5)
 ```

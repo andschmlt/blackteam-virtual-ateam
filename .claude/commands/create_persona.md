@@ -7,7 +7,8 @@ Generate a new virtual persona from a human team member's ClickUp activity data.
 **Load existing persona patterns from RAG before creating new ones.**
 
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 persona_patterns = rag.query("persona creation template structure", collection_name="personas", top_k=5)
 ```

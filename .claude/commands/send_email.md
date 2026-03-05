@@ -7,7 +7,8 @@ Send reports, files, or notifications via email using configured SMTP.
 **Load relevant context from the RAG system.**
 
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 context = rag.query("email report delivery", top_k=3)
 ```

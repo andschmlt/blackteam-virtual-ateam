@@ -381,11 +381,12 @@ Present completion with: Project name, ClickUp task ID (status updated to COMPLE
 
 When the user asks for infographics or visual reports:
 
-**Template:** FTD Decline Infographic — `~/AS-Virtual_Team_System_v2/blackteam/templates/content-team/FTD_DECLINE_INFOGRAPHIC_TEMPLATE.py`
+**Template (TODO — not yet created):** FTD Decline Infographic template for monthly sendouts.
+**Planned location:** `~/AS-Virtual_Team_System_v2/blackteam/templates/content-team/FTD_DECLINE_INFOGRAPHIC_TEMPLATE.py`
 
 **Use for:** Monthly FTD performance reports, SEO analysis visuals, page decline analysis infographics.
 
-**Includes:** DataForSEO metrics integration, SERP rankings display, alarms section, root cause analysis, comparison bar chart, PixelPerfect QA checklist (5-point).
+**Should include:** DataForSEO metrics integration, SERP rankings display, alarms section, root cause analysis, comparison bar chart, PixelPerfect QA checklist (5-point).
 
 **Review Chain:** PixelPerfect (creates) → Product Manager (reviews) → Head of SEO → Director
 

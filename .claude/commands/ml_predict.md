@@ -18,7 +18,8 @@ Read these files for prior learnings and corrections:
 
 **RAG Query:**
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 context = rag.query("ML prediction competitive analysis domain", top_k=5)
 learnings = rag.query("ML prediction accuracy corrections", collection_name="learnings", top_k=3)

@@ -5,7 +5,8 @@
 **Load workspace context from RAG.**
 
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 context = rag.query("workspace projects status overview", top_k=3)
 ```

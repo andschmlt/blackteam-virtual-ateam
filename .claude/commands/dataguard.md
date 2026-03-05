@@ -1,9 +1,9 @@
 # /dataguard - Data Terminology & Integrity Standards
 
-**Version:** 2.1
+**Version:** 2.2
 **Created:** 2026-01-28
-**Updated:** 2026-02-04
-**Purpose:** Enforce MASTER_LIST v1.0 compliance, data terminology, and calculation integrity
+**Updated:** 2026-02-13
+**Purpose:** Enforce MASTER_LIST v1.2 compliance, data terminology, and calculation integrity
 
 ---
 
@@ -17,7 +17,8 @@ Read these files for prior learnings and corrections:
 
 **RAG Query:**
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 context = rag.query("data terminology integrity standards master list", top_k=5)
 learnings = rag.query("data accuracy corrections comparison validation", collection_name="learnings", top_k=3)
@@ -26,7 +27,7 @@ rules = rag.query("dataguard master list compliance", collection_name="rules", t
 
 ---
 
-## MASTER_LIST v1.0 COMPLIANCE (MANDATORY - HIGHEST PRIORITY)
+## MASTER_LIST v1.2 COMPLIANCE (MANDATORY - HIGHEST PRIORITY)
 
 **Reference:** `/home/andre/.claude/MASTER_LIST_v1.0.md`
 
@@ -34,19 +35,18 @@ rules = rag.query("dataguard master list compliance", collection_name="rules", t
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  APPROVED SCHEMA: paradisemedia-bi.reporting ONLY               │
+│  APPROVED SCHEMA: paradisemedia-bi.summary (PRIMARY)             │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  TABLE                    │ PURPOSE                              │
 │  ─────────────────────────┼──────────────────────────────────────│
 │  ARTICLE_PERFORMANCE      │ Revenue, FTDs, clicks per article    │
-│  ARTICLE_INFORMATION      │ Article metadata, status, keywords   │
-│  BRAND_PERFORMANCE        │ Brand-level metrics                  │
-│  FINANCIAL_REPORT         │ High-level financials (THE BIBLE)    │
-│  COSTS_INFORMATION        │ Costs by type, domain, article       │
-│  CLOAKING_TRAFFIC         │ Clickout/redirect data               │
-│  REPT_SEO_AHREFS          │ DR, backlinks, referring domains     │
-│  REPT_SEO_ACCURANKER      │ Rankings, positions, traffic         │
+│  ARTICLE_SEO              │ Core Web Vitals, GA sessions         │
+│  ARTICLE_INVOICES         │ Article costs (DLC, ClickUp, Fixed)  │
+│  BRAND_PERFORMANCE        │ Brand-level metrics (standalone)     │
+│  DOMAIN_PERFORMANCE       │ Domain-level aggregated metrics      │
+│  SEO_PERFORMANCE          │ Rankings, backlinks, GSC traffic     │
+│  PRODUCTION_CYCLE         │ Article production workflow           │
 │  ARTICLE_CHANGELOG        │ Production cycles, TAT               │
 │  DIM_BRAND                │ Brand dimension                      │
 │  DIM_VERTICAL             │ Vertical/Niche hierarchy             │
@@ -54,6 +54,42 @@ rules = rag.query("dataguard master list compliance", collection_name="rules", t
 │  DIM_FIXED_FEE            │ Fixed fee agreements                 │
 │  DIM_PRODUCT              │ Domain/product dimension             │
 │  DIM_INVOICE              │ Invoice details                      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│  APPROVED SCHEMA: paradisemedia-bi.summary (SUPPLEMENTARY)       │
+│  Added v1.2 (2026-02-13) — Denormalized LLM-ready tables        │
+│  Uses DATE type (not DATE_ID), FLOAT64 for monetary fields       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  TABLE                    │ PURPOSE                              │
+│  ─────────────────────────┼──────────────────────────────────────│
+│  ARTICLE_PERFORMANCE      │ Revenue by Article×Brand×Program     │
+│                           │ (Multi-row grain — aggregate first)  │
+│  ARTICLE_SEO              │ CWV + GA metrics per article         │
+│  ARTICLE_INVOICES         │ Costs: DLC, ClickUp, Fixed Fee       │
+│  BRAND_PERFORMANCE        │ Brand-level (STANDALONE — no joins)  │
+│  DOMAIN_PERFORMANCE       │ Domain metrics (iGaming + Growth)    │
+│  PRODUCTION_CYCLE         │ Status changes, cycle times          │
+│  SEO_PERFORMANCE          │ GSC + Accuranker + Ahrefs keywords   │
+│                                                                  │
+│  JOIN KEYS:               │                                      │
+│  • ARTICLE_KEY + DATE     │ Between article tables               │
+│  • DOMAIN_KEY + DATE      │ Article/SEO → Domain                 │
+│  • TASK_ID                │ Any article table → PRODUCTION_CYCLE │
+│                                                                  │
+│  DEFAULT FILTERS (R26):                                          │
+│  • LIVE_URL NOT LIKE '%paradisemedia.com%'                       │
+│  • LIVE_URL != 'https://Not Applicable'                          │
+│                                                                  │
+│  RULES:                                                          │
+│  • R22: DATE type, not DATE_ID integers                          │
+│  • R23: FLOAT64 monetary — accept 0.05% variance                │
+│  • R24: ARTICLE_PERFORMANCE has multi-brand rows — aggregate     │
+│  • R25: Prefer DOMAIN_PERFORMANCE for domain queries             │
+│  • R26: Apply default filters (exclude internal pages)           │
+│  • R27: BRAND_PERFORMANCE is standalone (no article/domain join) │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -85,18 +121,40 @@ rules = rag.query("dataguard master list compliance", collection_name="rules", t
 ### CRITICAL JOIN RULES (MANDATORY)
 
 ```sql
--- Rule R9: Article join key
+-- REPORTING SCHEMA JOINS --
+
+-- Rule R9: Article join key (reporting)
 ARTICLE_INFORMATION.TASK_ID = ARTICLE_PERFORMANCE.DYNAMIC
 
--- Rule R12: Fixed fee join
+-- Rule R12: Fixed fee join (reporting)
 COSTS_INFORMATION.SOURCE = 'FIXED_FEES'
 COSTS_INFORMATION.LINK_FK = DIM_FIXED_FEE.FIXED_FEE_SK
 
--- Rule R6: Date format
+-- Rule R6: Date format (reporting)
 DATE_ID = YYYYMMDD (integer, e.g., 20260204)
 
 -- Rule R11: Total revenue calculation
 Total Revenue = Commission + Fixed Fees
+
+-- SUMMARY SCHEMA JOINS (Added v2.2) --
+
+-- Rule R24: Summary article joins (aggregate multi-brand rows first)
+summary.ARTICLE_PERFORMANCE → summary.ARTICLE_SEO
+  ON ARTICLE_KEY + DATE (Many:1 — aggregate revenue first)
+
+summary.ARTICLE_PERFORMANCE → summary.ARTICLE_INVOICES
+  ON ARTICLE_KEY + DATE (Many:1 — aggregate revenue first)
+
+-- Summary cross-table joins
+summary.*.DOMAIN_KEY = summary.DOMAIN_PERFORMANCE.DOMAIN_KEY
+summary.*.TASK_ID = summary.PRODUCTION_CYCLE.TASK_ID
+summary.*.ARTICLE_KEY = summary.SEO_PERFORMANCE.ARTICLE_KEY
+
+-- Rule R22: Summary date format
+DATE = 'YYYY-MM-DD' (native DATE type, NOT DATE_ID integer)
+
+-- Rule R27: BRAND_PERFORMANCE is standalone
+-- NEVER join summary.BRAND_PERFORMANCE to other tables
 ```
 
 ### COLUMN DEFINITIONS (MANDATORY)
@@ -117,20 +175,32 @@ Before executing ANY BigQuery query:
 
 ```
 ☐ 1. SCHEMA CHECK
-   □ Using paradisemedia-bi.reporting.* tables ONLY
+   □ Using paradisemedia-bi.summary.* ONLY ONLY
    □ NOT using bi_playground, lakehouse, analytics, testing
 
-☐ 2. JOIN KEY CHECK
+☐ 2. JOIN KEY CHECK (reporting)
    □ Using TASK_ID = DYNAMIC for article joins
    □ NOT matching by task name or keywords
 
-☐ 3. COLUMN CHECK
-   □ FTDs = GOALS column (not SIGNUPS)
-   □ DATE_ID in YYYYMMDD format
+☐ 3. JOIN KEY CHECK (summary)
+   □ Using ARTICLE_KEY + DATE for article-to-article joins
+   □ Using DOMAIN_KEY + DATE for article-to-domain joins
+   □ Using TASK_ID for article-to-production joins
+   □ NOT joining BRAND_PERFORMANCE to any other table (R27)
+   □ Aggregating ARTICLE_PERFORMANCE before joining to single-grain tables (R24)
 
-☐ 4. CALCULATION CHECK
+☐ 4. COLUMN CHECK
+   □ FTDs = GOALS column in reporting (not SIGNUPS)
+   □ FTDs = FTD column in summary
+   □ DATE_ID in YYYYMMDD format (reporting) OR DATE in YYYY-MM-DD format (summary — R22)
+
+☐ 5. FILTER CHECK (summary)
+   □ Applied LIVE_URL NOT LIKE '%paradisemedia.com%' (R26)
+   □ Applied LIVE_URL != 'https://Not Applicable' (R26)
+
+☐ 6. CALCULATION CHECK
    □ EPC = TOTAL_COMMISSION_USD / CLICKS
-   □ EPF = TOTAL_COMMISSION_USD / GOALS
+   □ EPF = TOTAL_COMMISSION_USD / GOALS (reporting) or FTD (summary)
    □ Total Revenue = Commission + Fixed Fees
 
 FAILURE TO COMPLY = AUTOMATIC TASK FAILURE
@@ -269,16 +339,47 @@ Before finalizing ANY analytics report, verify:
 
 ## BigQuery Field Mapping
 
+### Reporting Schema Fields
+
 | BigQuery Field | Standard Term | Report Label |
 |----------------|---------------|--------------|
 | `CONVERSIONS` | FTDs | First Time Deposits |
 | `FTD` | FTDs | First Time Deposits |
+| `GOALS` | FTDs | First Time Deposits (ARTICLE_PERFORMANCE) |
 | `SIGNUPS` | Signups | Registrations |
 | `NRC` | Signups | New Registered Customers |
 | `CLICKS` | Clicks | Outbound Clicks |
 | `TOTAL_COMMISSION_USD` | Revenue | Total Commission |
 | `TOTAL_COMMISSION_USD_NP` | NP Revenue | New Player Revenue |
 | `TOTAL_COMMISSION_USD_LP` | LP Revenue | Legacy Player Revenue |
+
+### Summary Schema Fields (Added v2.2)
+
+| BigQuery Field | Standard Term | Report Label | Table(s) |
+|----------------|---------------|--------------|----------|
+| `ARTICLE_KEY` | Article Key | Surrogate key (join) | All article tables |
+| `DOMAIN_KEY` | Domain Key | Surrogate key (join) | Most tables |
+| `FTD` | FTDs | First Time Deposits | ARTICLE_PERFORMANCE, BRAND_PERFORMANCE |
+| `NRC` | Signups | New Registered Customers | ARTICLE_PERFORMANCE |
+| `EPC_USD` | EPC | Earnings Per Click | ARTICLE_PERFORMANCE, BRAND_PERFORMANCE |
+| `EPF_USD` | EPF | Earnings Per FTD | ARTICLE_PERFORMANCE, BRAND_PERFORMANCE |
+| `CPA_COMMISSION_USD` | CPA Commission | CPA Payments | ARTICLE_PERFORMANCE |
+| `REVSHARE_COMMISSION_USD` | RevShare Commission | Revenue Share | ARTICLE_PERFORMANCE |
+| `DLC_COST_USD` | DLC Cost | Content Provider Cost | ARTICLE_INVOICES, DOMAIN_PERFORMANCE |
+| `CLICKUP_INVOICE_COST_USD` | ClickUp Cost | Internal Production Cost | ARTICLE_INVOICES, DOMAIN_PERFORMANCE |
+| `FIXED_FEE_EARNINGS_USD` | Fixed Fee | Monthly Retainer | ARTICLE_INVOICES, DOMAIN_PERFORMANCE |
+| `TOTAL_ARTICLE_COST_USD` | Article Cost | DLC + ClickUp (no FF) | ARTICLE_INVOICES, DOMAIN_PERFORMANCE |
+| `LCP_AVG` | LCP | Largest Contentful Paint (ms) | ARTICLE_SEO, DOMAIN_PERFORMANCE |
+| `INP_AVG` | INP | Interaction to Next Paint (ms) | ARTICLE_SEO, DOMAIN_PERFORMANCE |
+| `CLS_AVG` | CLS | Cumulative Layout Shift | ARTICLE_SEO, DOMAIN_PERFORMANCE |
+| `GA_SESSIONS` | Sessions | GA Sessions | ARTICLE_SEO, DOMAIN_PERFORMANCE |
+| `PRODUCTION_STAGE` | Production Stage | Workflow stage | PRODUCTION_CYCLE |
+| `MINUTES_IN_STATUS` | Time in Status | Minutes spent | PRODUCTION_CYCLE |
+| `IGAMING_*` | iGaming metrics | iGaming-prefixed | DOMAIN_PERFORMANCE |
+| `GROWTH_*` | Growth metrics | Growth-prefixed | DOMAIN_PERFORMANCE |
+| `GSC_*` | GSC metrics | Google Search Console | SEO_PERFORMANCE |
+| `ACCURANKER_*` | Accuranker metrics | Accuranker tracker | SEO_PERFORMANCE |
+| `AHREFS_*` | Ahrefs metrics | Ahrefs data | SEO_PERFORMANCE |
 
 ---
 
@@ -398,15 +499,28 @@ All analytics reports MUST invoke DataGuard validation:
 ```python
 # Example auto-validation pattern
 def execute_query(sql):
-    # STEP 1: DataGuard validation
-    if "lakehouse" in sql.lower():
-        raise Error("FORBIDDEN: lakehouse schema not allowed")
-    if "bi_playground" in sql.lower():
-        raise Error("FORBIDDEN: bi_playground schema not allowed")
-    if "reporting." not in sql.lower():
-        raise Warning("Query should use reporting schema")
+    sql_lower = sql.lower()
 
-    # STEP 2: Execute only if validation passes
+    # STEP 1: DataGuard forbidden schema check
+    if "lakehouse" in sql_lower:
+        raise Error("FORBIDDEN: lakehouse schema not allowed")
+    if "bi_playground" in sql_lower:
+        raise Error("FORBIDDEN: bi_playground schema not allowed")
+
+    # STEP 2: Verify approved schema
+    if "reporting." not in sql_lower and "summary." not in sql_lower:
+        raise Warning("Query should use reporting or summary schema")
+
+    # STEP 3: Summary-specific checks
+    if "summary." in sql_lower:
+        # R22: Ensure DATE format, not DATE_ID
+        if "date_id" in sql_lower:
+            raise Error("R22: summary tables use DATE type, not DATE_ID")
+        # R27: BRAND_PERFORMANCE standalone check
+        if "summary.brand_performance" in sql_lower and "join" in sql_lower:
+            raise Warning("R27: summary.BRAND_PERFORMANCE is standalone - no joins allowed")
+
+    # STEP 4: Execute only if validation passes
     return bigquery.execute(sql)
 ```
 
@@ -565,7 +679,7 @@ REQUIRED VERIFICATION PROCESS:
 
 ---
 
-**/dataguard v2.1 | MASTER_LIST v1.0 Enforcer | BlackTeam Data Integrity | Paradise Media Group**
+**/dataguard v2.2 | MASTER_LIST v1.2 Enforcer | BlackTeam Data Integrity | Paradise Media Group**
 
 ---
 
@@ -574,13 +688,15 @@ REQUIRED VERIFICATION PROCESS:
 Every data extraction or analysis report MUST include:
 
 ```markdown
-## DataGuard v2.1 Compliance
+## DataGuard v2.2 Compliance
 
-### MASTER_LIST v1.0 Verification
-☑ Schema: paradisemedia-bi.reporting ONLY
+### MASTER_LIST v1.2 Verification
+☑ Schema: paradisemedia-bi.summary ONLY ONLY
 ☑ Forbidden sources: None used (bi_playground, lakehouse, etc.)
-☑ Join keys: TASK_ID = DYNAMIC (verified)
-☑ Column definitions: GOALS = FTDs (verified)
+☑ Join keys: reporting TASK_ID=DYNAMIC / summary ARTICLE_KEY+DATE (verified)
+☑ Column definitions: GOALS=FTDs (reporting) / FTD (summary) (verified)
+☑ Summary default filters applied: R26 (exclude internal/placeholder URLs)
+☑ Summary ARTICLE_PERFORMANCE aggregated before cross-joins: R24 (verified)
 
 ### Terminology Verification
 ☑ FTDs ≠ Signups (verified)

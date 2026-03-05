@@ -7,7 +7,8 @@ Monitor the Virtual Team v2 RAG system health, verify learnings capture, and che
 **Initialize RAG connection before health check.**
 
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 # Verify connection before running diagnostics
 ```

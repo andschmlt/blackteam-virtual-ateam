@@ -7,7 +7,8 @@ Display comprehensive information about the BlackTeam virtual workforce, team st
 **Load team roster and rules from RAG.**
 
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 roster = rag.query("blackteam roster personas routing", collection_name="personas", top_k=5)
 rules = rag.query("blackteam rules governance", collection_name="rules", top_k=3)

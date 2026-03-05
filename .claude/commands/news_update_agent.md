@@ -13,7 +13,8 @@ Read these files for prior learnings:
 
 **RAG Query:**
 ```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
+import sys; sys.path.insert(0, "/home/andre/AS-Virtual_Team_System_v2/rag")
+from rag_client import VTeamRAG
 rag = VTeamRAG()
 context = rag.query("news update agent sports content", top_k=5)
 learnings = rag.query("news content quality corrections", collection_name="learnings", top_k=3)
@@ -483,14 +484,12 @@ done
 This agent can be scheduled:
 
 ```bash
-# Daily at 12:00 PM - Update all projects
-0 12 * * * /home/andre/AS-Virtual_Team_System_v2/projects/bedrock_agent/scripts/news_update_all.sh
+# australiafootball.com - 09:00 AEST daily (editorial generator + news aggregator)
+0 23 * * * /home/andre/scripts/australiafootball_daily_cron.sh
 
-# Individual project schedules (if needed)
-0 8 * * * /path/to/news_update.sh wc2026
-0 9 * * * /path/to/news_update.sh premier-league
-# australiafootball.com - 09:00 AEST daily (8 sport verticals)
-0 23 * * * /path/to/news_update.sh australiafootball
+# Individual project news updates (use cloud_news_updater.py or astro_news_aggregator.py)
+# Example: python3 ~/AS-Virtual_Team_System_v2/projects/bedrock_agent/scripts/cloud_news_updater.py --project wc2026
+# Example: python3 ~/AS-Virtual_Team_System_v2/projects/bedrock_agent/scripts/astro_news_aggregator.py --site australiafootball
 ```
 
 ---
