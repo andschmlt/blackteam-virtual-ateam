@@ -783,6 +783,28 @@ When user runs `/codeguard review`, execute this comprehensive 6-phase feedback 
 
 ---
 
+### Phase 7.5: Red Team Challenge (R-WORKFLOW-02 — MANDATORY, NEVER SKIP)
+
+**DELIVERY BLOCKED until Red Team passes. This phase is NON-NEGOTIABLE.**
+
+Before closing the review cycle or creating ClickUp tasks:
+
+1. **R-REX reviews** all CodeGuard findings and proposed fixes
+2. **Execute applicable Red Gates:**
+   - RG-1: Validation Integrity — did CodeGuard scan what it claimed to scan? (100%)
+   - RG-2: Adversarial Edge Cases — false positives, missed edge cases in rules (95%)
+   - RG-3: Regression & Drift — do proposed fixes break existing code? (100%)
+   - RG-5: Security — no new vulnerabilities introduced by fixes (100%)
+   - RG-7: Root Cause & Pattern — are we fixing symptoms or root causes? (100%)
+
+3. **Challenge Report:**
+   - `CERTIFIED` — Finalize and close cycle
+   - `FLAGGED` — Re-evaluate findings before creating ClickUp tasks (max 2 cycles)
+
+**If RedTeam is skipped:** The session is NON-COMPLIANT with R-WORKFLOW-02.
+
+---
+
 ## Scheduling Note
 
 This command is designed to run twice daily. To automate:

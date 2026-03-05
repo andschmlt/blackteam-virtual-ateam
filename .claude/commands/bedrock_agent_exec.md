@@ -621,7 +621,19 @@ Deploy URL: `{project-slug}.vercel.app`
 - [ ] Pages have filters and detail pages
 - [ ] Card components consistent
 
+**RED TEAM CHALLENGE (R-WORKFLOW-02 — MANDATORY, NEVER SKIP)**
+- [ ] R-REX Red Team challenge invoked BEFORE release
+- [ ] RG-1: Validation Integrity (100%)
+- [ ] RG-2: Adversarial Edge Cases (95%)
+- [ ] RG-3: Regression & Drift (100%)
+- [ ] RG-4: Systemic Bias (95%)
+- [ ] RG-5: Security Penetration (100%)
+- [ ] RG-6: Integration Stress (90%)
+- [ ] RG-7: Root Cause & Pattern (100%)
+- [ ] RT Status: CERTIFIED (DELIVERY BLOCKED until CERTIFIED)
+
 **RELEASE & DEPLOY**
+- [ ] RT Challenge Report: CERTIFIED
 - [ ] RELEASE_NOTES.md generated
 - [ ] Director final approval
 - [ ] Git commit + push to GitHub

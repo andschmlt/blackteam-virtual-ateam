@@ -481,6 +481,25 @@ cp style_bible.md ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/[site-s
 - Load any API keys from `~/.keys/.env`
 - Scan all output for: `phx_`, `phc_`, `pk_`, `sk-`, `ntn_`, `AIzaSy`, `xoxb-`
 
+### Red Team Challenge (R-WORKFLOW-02 — MANDATORY, NEVER SKIP)
+
+**DELIVERY BLOCKED until Red Team passes. This phase is NON-NEGOTIABLE.**
+
+Before deploying updates or marking session complete:
+
+1. **R-REX reviews** all updated content and style fidelity
+2. **Execute applicable Red Gates:**
+   - RG-1: Validation Integrity — did Fidelity Gates actually validate style match? (100%)
+   - RG-2: Adversarial Edge Cases — broken layouts, missing assets, encoding (95%)
+   - RG-3: Regression & Drift — do updates break existing pages? (100%)
+   - RG-4: Systemic Bias — gambling ratio check, brand balance (95%)
+   - RG-5: Security — no leaked keys, CSP intact (100%)
+   - RG-7: Root Cause & Pattern — no known anti-pattern repetition (100%)
+
+3. **Challenge Report:** `CERTIFIED` to proceed, `FLAGGED` to fix (max 2 cycles)
+
+**If RedTeam is skipped:** The session is NON-COMPLIANT with R-WORKFLOW-02.
+
 ### Final: Log Session Completion
 
 ```bash

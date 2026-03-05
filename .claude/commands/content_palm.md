@@ -1073,6 +1073,36 @@ BEDROCK PUBLISH COMPLETE
 
 ---
 
+## Phase 10.5: Red Team Challenge (R-WORKFLOW-02 — MANDATORY, NEVER SKIP)
+
+**DELIVERY BLOCKED until Red Team passes. This phase is NON-NEGOTIABLE.**
+
+Before publishing, deploying, or marking session complete, run RedTeam challenge:
+
+1. **R-REX reviews** the generated content and any code changes
+2. **Execute applicable Red Gates:**
+   - RG-1: Validation Integrity — did Ralph Loops actually validate what they claimed? (100%)
+   - RG-2: Adversarial Edge Cases — broken links, missing images, encoding issues (95%)
+   - RG-3: Regression & Drift — does new content break existing pages? (100%)
+   - RG-4: Systemic Bias — hidden bias in brand recommendations, content framing (95%)
+   - RG-5: Security — no leaked keys, no XSS in embeds (100%)
+   - RG-7: Root Cause & Pattern — no known anti-pattern repetition (100%)
+
+3. **Challenge Report:**
+   - `CERTIFIED` — Proceed to Phase 11
+   - `FLAGGED` — Fix issues, re-run affected Ralph Loops (max 2 cycles)
+
+```
+RT CHALLENGE REPORT
+Status: CERTIFIED / FLAGGED
+Gates Passed: X/7
+Findings: [list or "none"]
+```
+
+**If RedTeam is skipped:** The session is NON-COMPLIANT with R-WORKFLOW-02.
+
+---
+
 ## Phase 11: Session Completion Logging
 
 ```bash

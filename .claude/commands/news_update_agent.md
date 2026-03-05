@@ -494,6 +494,29 @@ This agent can be scheduled:
 
 ---
 
+## Red Team Challenge (R-WORKFLOW-02 — MANDATORY, NEVER SKIP)
+
+**DELIVERY BLOCKED until Red Team passes. This phase is NON-NEGOTIABLE.**
+
+Before pushing news articles or deploying updates:
+
+1. **R-REX reviews** all generated articles and code changes
+2. **Execute applicable Red Gates:**
+   - RG-1: Validation Integrity — did Ralph Loops QA actually check what was claimed? (100%)
+   - RG-2: Adversarial Edge Cases — broken source URLs, missing dates, encoding (95%)
+   - RG-3: Regression & Drift — do new articles break existing pages/sitemap? (100%)
+   - RG-4: Systemic Bias — source diversity, no single-outlet dependency (95%)
+   - RG-5: Security — no XSS in RSS content, no leaked keys (100%)
+   - RG-7: Root Cause & Pattern — no timestamp clustering (R-CONTENT-04), no duplicate stories (100%)
+
+3. **Challenge Report:**
+   - `CERTIFIED` — Proceed to push/deploy
+   - `FLAGGED` — Fix issues before publishing (max 2 cycles)
+
+**If RedTeam is skipped:** The session is NON-COMPLIANT with R-WORKFLOW-02.
+
+---
+
 ## Notes
 
 - Always confirm with user before pushing to main

@@ -847,7 +847,43 @@ LOG DECISION: Director - "Release Approval"
 
 ---
 
+## Phase 4.5: Red Team Challenge (R-WORKFLOW-02 — MANDATORY, NEVER SKIP)
+
+**DELIVERY BLOCKED until Red Team passes. This phase is NON-NEGOTIABLE.**
+
+Before ANY delivery, sign-off, merge, or deploy, invoke RedTeam challenge:
+
+1. **Load RedTeam context:** Read `~/AS-Virtual_Team_System_v2/redteam/personas/R-REX.md`
+2. **R-REX assigns Red Gate leads** based on deliverable type
+3. **Execute 7 Red Gates** (RG-1 through RG-7):
+   - RG-1: Validation Integrity — did we validate what we claimed? (100% required)
+   - RG-2: Adversarial Edge Cases — empty inputs, boundaries, encoding (95% required)
+   - RG-3: Regression & Drift — does this break existing work? (100% required)
+   - RG-4: Systemic Bias — hidden bias in content/data/algo (95% required)
+   - RG-5: Security Penetration — no active exploits (100% required)
+   - RG-6: Integration Stress — API resilience, failure cascade (90% required)
+   - RG-7: Root Cause & Pattern — no known anti-pattern repetition (100% required)
+
+4. **R-REX issues Challenge Report:**
+   - `CERTIFIED` — All 7 gates passed, proceed to Phase 5
+   - `FLAGGED` — Issues found, return to relevant phase for fix (max 2 cycles)
+   - `ESCALATED` — Systemic issue, stakeholder review required
+
+```
+RT CHALLENGE REPORT
+Status: CERTIFIED / FLAGGED / ESCALATED
+Gates Passed: X/7
+Findings: [list]
+```
+
+**If FLAGGED:** Fix issues, re-run affected gates. Max 2 BT->RT cycles before escalation.
+**If RedTeam is skipped:** The session is NON-COMPLIANT with R-WORKFLOW-02. Log the violation.
+
+---
+
 ## Phase 5: Director Review & Delivery
+
+**PREREQUISITE: Phase 4.5 Red Team must be CERTIFIED before entering Phase 5.**
 
 1. **Review all deliverables** against quality gates
 2. **Log review activities** for each work stream
@@ -1096,6 +1132,7 @@ PRICING = {
 - Specialists work autonomously within their assigned tasks
 - Decision points return control to Director
 - Quality gates must pass before final delivery
+- **MANDATORY: Red Team Challenge (Phase 4.5) MUST pass CERTIFIED before ANY delivery, merge, or deploy (R-WORKFLOW-02)**
 - **MANDATORY: Visual QA by PixelPerfect MUST pass before ANY UI project release**
 - **MANDATORY: Release notes MUST be generated before ANY merge to main or branch releases**
 - **MANDATORY: Release notes MUST be QA-reviewed by Post Production Manager**
