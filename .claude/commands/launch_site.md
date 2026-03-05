@@ -80,6 +80,8 @@ python3 /home/andre/.claude/scripts/log_to_db.py --persona B-BOB --action execut
 
 **When entering Phase 3 (Money Pages),** load:
 - `~/.claude/standards/PALM_CONTENT_RULES.md`
+- `~/.claude/standards/ANCHOR_TEXT_RULES.md` — R-ANCHOR-01
+- `~/.claude/standards/ANCHOR_DISTRIBUTION_RULES.md` — R-ANCHOR-02
 - BlackTeam learnings matching palm/toplist/money:
   ```bash
   ls -t ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/*palm* ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/*toplist* ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/*money* ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/*betting* 2>/dev/null | head -5
@@ -99,7 +101,11 @@ python3 /home/andre/.claude/scripts/log_to_db.py --persona B-BOB --action execut
   ```bash
   ls -t ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/*news* ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/*editorial* ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/*content_writer* 2>/dev/null | head -5
   ```
-- Security standards (Cloud Run deploy): `~/.claude/standards/SECRETS_ROTATION_SCHEDULE.md`
+- Security standards (Cloud Run deploy):
+  - `~/.claude/standards/SECRETS_ROTATION_SCHEDULE.md` — R-SEC-06
+  - `~/.claude/standards/INPUT_VALIDATION_RULES.md` — R-SEC-02
+  - `~/.claude/standards/CORS_SECURITY_RULES.md` — R-SEC-03
+  - `~/.claude/standards/CRYPTOGRAPHY_RULES.md` — R-SEC-04
 
 **When entering Phase 8B (API Leak Diagnosis),** load:
 - `~/.claude/standards/GOOGLE_API_LEAK_DIAGNOSIS.md` — R-SEO-04
