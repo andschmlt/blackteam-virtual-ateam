@@ -61,6 +61,28 @@ Arguments: $ARGUMENTS
 
 ---
 
+## Writer Selection Per Project (CW-R9 + CW-R10)
+
+Before generating news content, select a content writer persona:
+1. Identify the site's target GEO (e.g., australiafootball.com → AU)
+2. Apply **CW-R9** (GEO routing) to get primary writer pool
+3. Rotate writers per article — check `data/writer_rotation.json`, no 3x consecutive
+4. Apply writer's `[Grammatical_Error_%_Allowance]` and `[Sentiment]` variables to content
+
+| Site GEO | Primary News Writers | Style |
+|----------|---------------------|-------|
+| AU | B-FINN (Aussie Voice), B-JACK (Breaking) | Conversational/Direct |
+| DACH | B-NINW (Weekly Digest), B-HANA (Precision) | Measured/Analytical |
+| FR | B-CLEO (Cultural), B-OLGA (Investigative) | Provocative/Narrative |
+| IT | B-MARC (Mediterranean), B-DAVI (Transfer) | Storytelling/Direct |
+| ES | B-LEON (Hard News), B-RAJA (Column) | Direct/Passionate |
+| UK | B-MILA (Narrative), B-ROSA (Feature) | Storytelling/Empathetic |
+| US | B-JACK (Breaking), B-SURI (Data) | Direct/Factual |
+
+Full writer roster: `AS-Virtual_Team_System_v2/blackteam/rules/CONTENT_WRITER_RULES.md`
+
+---
+
 ## Quality Assurance: Ralph Loops (4 Cycles)
 
 All news articles MUST pass 4 quality review cycles:
@@ -294,13 +316,11 @@ For [SITE NAME] ([N] sections available):
 BASE_PATH="/home/andre/AS-Virtual_Team_System_v2/projects/bedrock_agent"
 PROJECT_PATH="$BASE_PATH/[PROJECT_FOLDER]"
 
-# Check if news script exists
-if [ -f "$PROJECT_PATH/scripts/news_update.py" ]; then
-    python3 "$PROJECT_PATH/scripts/news_update.py" --manual
-else
-    # Use generic news fetcher
-    python3 "$BASE_PATH/scripts/generic_news_fetcher.py" --project [project-id]
-fi
+# Use the shared news scripts
+python3 "$BASE_PATH/scripts/cloud_news_updater.py" --project [project-id]
+
+# Or for Astro-based aggregation:
+# python3 "$BASE_PATH/scripts/astro_news_aggregator.py" --project [project-id]
 ```
 
 ### Step 2.5: Data Freshness Check (R-CONTENT-05 — MANDATORY for sports sites)

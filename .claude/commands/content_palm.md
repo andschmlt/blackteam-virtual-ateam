@@ -7,32 +7,24 @@ This command is a **READ-ONLY API consumer** — it NEVER modifies, deploys, or 
 
 ---
 
-## Phase 0: RAG Context Loading (MANDATORY)
+## Phase 0: Context Loading (CONDITIONAL)
 
-Load relevant context before content generation:
+**Always load:**
+- `~/pitaya/knowledge/feedback_corrections.md` — Data accuracy rules, R-DATA-07
 
-```python
-from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
-rag = VTeamRAG()
-context = rag.query("palm content generation SEO articles", top_k=5)
-learnings = rag.query("palm v3 article generation", collection_name="learnings", top_k=3)
-rules = rag.query("content standards quality gates", collection_name="rules", top_k=3)
+**Load when generating money pages (betting, casino):**
+- `~/.claude/standards/GOOGLE_API_LEAK_DIAGNOSIS.md` — R-SEO-04 (Firefly/YMYL parameters)
+- Key API Leak parameters for money pages: `numOfGamblingPages` (ID 30), `rhubarb` (ID 56), `contentEffort` (ID 45), `racterScores` (ID 52), `productReviewPUhqPage` (ID 178), `affiliateLinkDensity`
+
+**Load when article includes images:**
+- `~/.claude/standards/IMAGE_OPTIMIZATION_RULES.md` — R-IMG-01
+
+**Load relevant learnings (match to content type):**
+```bash
+ls -t ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/*palm* ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/*content* 2>/dev/null | head -3
 ```
 
-Also read:
-- `~/pitaya/knowledge/feedback_corrections.md` — Data accuracy rules
-- `~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/` — Latest team learnings
-- `~/.claude/standards/IMAGE_OPTIMIZATION_RULES.md` — **R-IMG-01: Google Image Optimization (MANDATORY)**
-- `~/.claude/standards/GOOGLE_API_LEAK_DIAGNOSIS.md` — **R-SEO-04: API Leak Diagnosis Framework (MANDATORY)**
-
-**API Leak Context for Palm Content:**
-Palm generates money pages (betting, casino) which face the HIGHEST scrutiny from Google's Firefly/Copia system and YMYL classifiers. The SEO Strategy KB at `seo-strategy-hphbw.sevalla.app/api-leak` (206 parameters, 4,123+ atoms) is the CORE reference. Key parameters for Palm content:
-- `numOfGamblingPages` (Firefly ID 30) — Every Palm money page increases the gambling ratio
-- `rhubarb` (ID 56) — Money page quality must match site average quality
-- `contentEffort` (ID 45) — Palm content must demonstrate genuine editorial effort
-- `racterScores` (ID 52) — AI-generated content flags automated production
-- `productReviewPUhqPage` (ID 178) — Review pages need UHQ signals (testing evidence, original data)
-- `affiliateLinkDensity` — Max 1 affiliate link per 300 words
+**Do NOT load all standards upfront. Read each file only when relevant to the content being generated.**
 
 ---
 
@@ -494,12 +486,28 @@ Select author persona:
 
   B. Persona Index — Select persona 0-3 from the default set
 
-  C. Skip — Let Palm use the default author
+  C. ATeam Writer — Select a Virtual ATeam content writer persona
+     Apply CW-R9 (GEO routing) + CW-R10 (content type routing):
+     ┌─────────┬──────────────────────────────────────────────────┐
+     │ GEO     │ Primary Writers                                   │
+     ├─────────┼──────────────────────────────────────────────────┤
+     │ AU      │ B-FINN, B-JACK, B-ROSA, B-RENO                   │
+     │ DACH    │ B-HANA, B-YUKI, B-NINW, B-KAIA                   │
+     │ FR      │ B-CLEO, B-OLGA, B-HUGL, B-ABEL, B-ASHA           │
+     │ IT      │ B-MARC, B-ZARA, B-DAVI, B-RENO                   │
+     │ ES      │ B-RAJA, B-LEON, B-ABEL                            │
+     │ UK      │ B-HANA, B-CLEO, B-MILA, B-FINN, B-ROSA           │
+     │ US      │ B-SURI, B-JACK, B-MILA, B-OLGA, B-LEON           │
+     └─────────┴──────────────────────────────────────────────────┘
+     Full roster: rules/CONTENT_WRITER_RULES.md (25 writers)
+
+  D. Skip — Let Palm use the default author
 
 Persona choice:
 ```
 
 Store as `author_persona_id` and/or `author_persona_index`.
+If ATeam Writer selected, load persona variables ([Grammatical_Error_%_Allowance] + [Sentiment]) and pass as style guidance to Palm API.
 
 ### If Screenshots selected:
 

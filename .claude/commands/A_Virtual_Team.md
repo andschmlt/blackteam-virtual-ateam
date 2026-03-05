@@ -28,7 +28,7 @@ Arguments: $ARGUMENTS
                                                          Back to BT
 ```
 
-**Total Team Size:** 70+ personas working in concert (16 BT + 25 WT + 29 RT)
+**Total Team Size:** 110+ personas working in concert (36 BT + 45 WT + 29 RT)
 
 ---
 
@@ -83,7 +83,39 @@ Arguments: $ARGUMENTS
 | 15 | Head of Asset Strategy | B-HUGO | Portfolio Mgmt |
 | 16 | Tech Lead | B-TECH | Infrastructure |
 
-### WhiteTeam (25 Validators)
+### Content Writers — 25 Writers (5 Original + 20 Multi-GEO)
+
+| # | Persona | Code | Style | GEOs | Grammar |
+|---|---------|------|-------|------|---------|
+| 1 | Luca Ferrara | B-LUCA | Breaking Insider | US, UK | 97.5% |
+| 2 | Emmett Cole | B-EMMT | Long-form Storyteller | US, UK | 99.8% |
+| 3 | Victoria Sharp | B-VICS | Provocative Columnist | UK, US | 99% |
+| 4 | Alistair Keane | B-ALIS | Tactical Analyst | UK, US | 100% |
+| 5 | Nate Calloway | B-NATE | Weekly Chronicler | US, AU | 98% |
+| 6 | Hana Richter | B-HANA | Precision Analyst | DACH, UK | 99.5% |
+| 7 | Marco Vassallo | B-MARC | Mediterranean Storyteller | IT, ES | 99.2% |
+| 8 | Cleo Dupont | B-CLEO | Cultural Critic | FR, UK | 98.5% |
+| 9 | Finn Doyle | B-FINN | Aussie Voice | AU, UK | 97% |
+| 10 | Suri Chen | B-SURI | Data Reporter | US, DACH | 100% |
+| 11 | Raja Navarro | B-RAJA | Latin Fire Columnist | ES, IT | 98% |
+| 12 | Yuki Bergmann | B-YUKI | Tactical Innovator | DACH, World | 99.8% |
+| 13 | Olga Marchand | B-OLGA | Investigative Long-form | FR, US | 99.5% |
+| 14 | Jack Summers | B-JACK | Breaking Pace Setter | AU, US | 97.5% |
+| 15 | Zara Piccoli | B-ZARA | Cultural Commentary | IT, FR | 99% |
+| 16 | Leon Torres | B-LEON | Hard News Insider | ES, US | 97% |
+| 17 | Nina Wolff | B-NINW | Weekly Digest | DACH, UK | 98.5% |
+| 18 | Hugo Laurent | B-HUGL | Essayist & Thinker | FR, World | 99.8% |
+| 19 | Rosa Keating | B-ROSA | Feature Profile Writer | AU, UK | 99.2% |
+| 20 | Davi Rossi | B-DAVI | Fast Transfer Specialist | IT, ES | 97.5% |
+| 21 | Kaia Lundberg | B-KAIA | Scandinavian Clarity | World, DACH | 99.5% |
+| 22 | Abel Garcia | B-ABEL | Opinion Firebrand | ES, FR | 98% |
+| 23 | Mila Crawford | B-MILA | Narrative Investigator | UK, US | 99% |
+| 24 | Reno DiMarco | B-RENO | Combat Sports & F1 | IT, AU | 97.5% |
+| 25 | Asha Fontaine | B-ASHA | Quiet Authority | FR, AU | 99.8% |
+
+**Writer Selection:** Use CW-R9 (GEO routing) + CW-R10 (content type routing) from `rules/CONTENT_WRITER_RULES.md`
+
+### WhiteTeam (45 Validators — 25 Core + 20 Content Writer Validators)
 
 | # | Persona | Code | Specialty | Validates |
 |---|---------|------|-----------|-----------|
@@ -383,6 +415,30 @@ R-REX Signature: _________________ | CERTIFIED   | Date: _________
 - [ ] RG-6: Integration Stress — API resilience, failure cascade (90% required)
 - [ ] RG-7: Root Cause & Pattern — no known anti-pattern repetition (100% required)
 
+### Timestamp Stagger Gate (R-CONTENT-04) — MANDATORY FOR ALL CONTENT
+- [ ] All article `date` fields use ISO datetime format `YYYY-MM-DDTHH:MM` (NOT date-only `YYYY-MM-DD`)
+- [ ] Minimum 2-hour gap between article timestamps on the same day
+- [ ] Each article committed and pushed SEPARATELY (no batch pushes)
+- [ ] Check existing articles for today before assigning times — avoid collisions with RSS/automated articles
+- [ ] Timestamps staggered across the day (morning/midday/evening) to simulate natural editorial cadence
+
+### Anchor Text Gate (R-ANCHOR-01) — MANDATORY FOR ALL MONEY PAGE LINKS
+- [ ] All internal links to money pages (betting, casino) use keyword-rich anchor text matching target page primary keywords
+- [ ] No generic action-verb anchors ("compare the best", "find the best", "explore the top") — these waste link equity
+- [ ] Anchor text contains at least one high-volume AU search term (e.g., "best betting sites in Australia", "online pokies in Australia", "top Australian online casinos")
+- [ ] No single anchor text used more than 2x across the entire site (distribution rule)
+- [ ] Sport-specific anchors used where applicable: "AFL betting sites" in AFL articles, "NRL betting tips" in NRL articles, "Melbourne Cup odds" in horse racing articles
+
+### Menu-Priority Anchor Distribution Gate (R-ANCHOR-02) — MANDATORY FOR ALL ANCHOR TEXT
+- [ ] Top-level nav sports (A-League, Matildas, W-League, Socceroos, World Cup) get anchor priority over "More" dropdown sports
+- [ ] Top-level nav sports MUST have anchors before any "More" dropdown sport gets a second anchor
+- [ ] No sport has more than 3x the anchor density (anchors/articles) of any top-level nav sport
+- [ ] Zero-anchor sports are BLOCKED — every sport with 3+ articles MUST have at least 1 betting and 1 casino anchor
+- [ ] When adding new articles, anchor distribution per sport checked BEFORE choosing which article gets the link
+- [ ] After any anchor text changes, `docs/ANCHOR_TEXT_INVENTORY.md` updated for australiafootball.com
+
+**MANDATORY:** After any anchor text additions or changes to australiafootball.com, update `docs/ANCHOR_TEXT_INVENTORY.md` with the new anchors.
+
 ### Joint Gates
 - [ ] All three Directors approve (B-BOB, W-WOL, R-REX)
 - [ ] All cross-team handoffs documented
@@ -393,23 +449,14 @@ R-REX Signature: _________________ | CERTIFIED   | Date: _________
 
 ## Activity Logging
 
-All activities logged to unified system:
+All activities logged via the session database:
 
 ```bash
-# BlackTeam execution
-bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh task "B-BOB" "DataForge" "Build ETL pipeline"
-
-# WhiteTeam validation
-bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh review "W-FLUX" "B-CODY" "Code audit complete"
-
-# Cross-team handoff
-bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh handoff "B-CODY" "W-FLUX" "Code ready for security review"
-
-# Joint decision
-bash /home/andre/AS-Virtual_Team_System_v2/blackteam/tools/log_activity.sh decision "B-BOB+W-WOL" "" "Release authorized"
+# Log any activity (task, review, handoff, decision)
+python3 /home/andre/.claude/scripts/log_to_db.py --persona B-BOB --action task --summary "Build ETL pipeline" --username $(whoami) --command A_Virtual_Team
 ```
 
-**Fallback:** If logging fails, see `/home/andre/.claude/standards/API_ERROR_HANDLING.md`
+**Log types:** task, review, handoff, decision. Always include --persona and --summary.
 
 ---
 

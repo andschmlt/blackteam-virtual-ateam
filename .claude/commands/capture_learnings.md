@@ -106,7 +106,7 @@ python3 ~/AS-Virtual_Team_System_v2/rag/scripts/index_all.py
 ```bash
 # Verify new document count
 python3 -c "
-from rag.rag_client import VTeamRAG
+from AS-Virtual_Team_System_v2.rag.rag_client import VTeamRAG
 rag = VTeamRAG()
 stats = rag.get_stats()
 total = sum(c.get('document_count', 0) for c in stats.get('collections', {}).values())
