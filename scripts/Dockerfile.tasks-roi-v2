@@ -1,0 +1,31 @@
+# =============================================================================
+# TASKS ROI ENGINE v2.0 - Cloud Run Job Container
+# Master List v1.0 Compliant (paradisemedia-bi.reporting)
+# =============================================================================
+# Author: W-FLUX (Felix Chang) - WhiteTeam Head of Tech
+# Created: 2026-02-03
+# =============================================================================
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+RUN pip install --no-cache-dir requests google-cloud-bigquery google-cloud-storage
+
+# Copy the v2.0 engine script
+COPY tasks_roi_engine.py /app/
+
+# Create config directory (ClickUp API key comes from Secret Manager)
+RUN mkdir -p /root/.claude
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1
+ENV GOOGLE_CLOUD_PROJECT=paradisemedia-bi
+
+# Default command - processes the standard ClickUp list
+ENTRYPOINT ["python", "tasks_roi_engine.py", \
+            "--list-id", "901323685943", \
+            "--date-range", "ytd", \
+            "--display", "both", \
+            "--post-comments"]
