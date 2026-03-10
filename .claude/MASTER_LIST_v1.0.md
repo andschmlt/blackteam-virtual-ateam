@@ -1,7 +1,7 @@
 # MASTER LIST v1.0 - Data Source Architecture
 
 ## Paradise Media BI - Approved Data Sources
-**Version:** 1.1 | **Date:** 2026-02-11 | **Status:** APPROVED | **Owner:** Andre
+**Version:** 1.2 | **Date:** 2026-02-13 | **Status:** APPROVED | **Owner:** Andre
 
 ---
 
@@ -31,7 +31,7 @@
 
 ---
 
-## SECTION 1: BigQuery - paradisemedia-bi.reporting (PRIMARY)
+## SECTION 1: BigQuery - paradisemedia-bi.reporting (LEGACY — use summary schema instead)
 
 ### Approved Tables (10)
 
@@ -52,26 +52,96 @@
 
 ## SECTION 1B: BigQuery - paradisemedia-bi.summary (SUPPLEMENTARY)
 
-**Added:** 2026-02-11 | **Status:** APPROVED (4 of 5 tables) | **Approved By:** Andre
+**Added:** 2026-02-11 | **Updated:** 2026-02-13 | **Status:** APPROVED (7 of 7 tables) | **Approved By:** Andre
 
-> **NOTE:** The `summary` schema is a denormalized reporting layer that pre-joins dimensions
-> and consolidates sources. It uses native `DATE` type (not `DATE_ID` integers) and `FLOAT64`
-> for monetary fields (not `NUMERIC`). See rules R22-R25 below.
+> **NOTE:** The `summary` schema is a denormalized reporting layer optimised for LLM/chatbot
+> consumption. It pre-joins dimensions and consolidates sources. Uses native `DATE` type (not
+> `DATE_ID` integers) and `FLOAT64` for monetary fields (not `NUMERIC`). Refreshed daily.
+> See rules R22-R27 below.
+>
+> **Source documentation:** `BI-REPO-PARADISEMEDIA/exports/chatbot/CHATBOT_TABLES_DOCUMENTATION.md`
 
-### Approved Tables (4)
+### Approved Tables (7)
 
-| # | Table | Purpose | Row Count | Scope | Keywords |
-|---|-------|---------|-----------|-------|----------|
-| 1 | **BRAND_PERFORMANCE** | Brand-level metrics - clicks, FTD, commission, EPC, EPF (pre-calculated) | 307,523 | Use for brand/program analysis. FTDs match reporting 100%. Commission 99.98% match. No VERTICAL column - data appears pre-filtered | Brand analysis, Program analysis, EPF, EPC |
-| 2 | **DOMAIN_PERFORMANCE** | Domain-level daily metrics - iGaming + Growth revenue, GA, CWV, costs, article counts (consolidated) | 333,924 | **PRIMARY for domain-level queries** - replaces multi-table joins. Splits iGaming vs Growth metrics. Includes GA sessions, CWV averages, article counts | Domain analysis, Domain performance, Domain ROI, GA sessions |
-| 3 | **PRODUCTION_CYCLE** | Article production workflow - status changes, cycle times | 215,829 | Equivalent to reporting.ARTICLE_CHANGELOG with cleaner column names. 1:1 data match | Production, TAT, Status changes, Workflow |
-| 4 | **SEO_PERFORMANCE** | Consolidated SEO - GSC + Accuranker + Ahrefs in single table by keyword | 35,202,339 | Consolidates 3 SEO sources. 60% GSC coverage, 27% Accuranker, 14% Ahrefs. 666 domains | SEO, Rankings, Keywords, Traffic, Backlinks |
+| # | Table | Grain | Purpose | Scope | Keywords |
+|---|-------|-------|---------|-------|----------|
+| 1 | **ARTICLE_PERFORMANCE** | Article × Brand × Program × Date | Article-level revenue with full brand/program attribution. Fixes the old `sfmax("BRAND_FK")` brand misattribution bug. Multiple rows per article per day (one per brand/program) | Use for article revenue analysis. Aggregate across brands for article totals. Join to ARTICLE_SEO/ARTICLE_INVOICES via ARTICLE_KEY + DATE | Article revenue, Brand attribution, FTD, EPC, EPF, Clicks, Commission |
+| 2 | **ARTICLE_SEO** | Article × Date | Article-level Core Web Vitals (LCP, INP, CLS) and Google Analytics metrics (sessions, users, bounces, engagement) | Companion to ARTICLE_PERFORMANCE. SEO metrics are article-level, not brand-level | CWV, Core Web Vitals, GA sessions, Bounce rate, LCP, INP, CLS |
+| 3 | **ARTICLE_INVOICES** | Article × Payment Date | Article-level costs split by DLC, ClickUp Invoice, and Fixed Fee. Date is DATE_PAID, not invoice creation date | Use for article cost/ROI analysis. TOTAL_ARTICLE_COST_USD = DLC + ClickUp (excludes Fixed Fee) | Costs, DLC, Invoice, Fixed Fee, ROI |
+| 4 | **BRAND_PERFORMANCE** | Brand × Date | Brand-level metrics - clicks, FTD, commission, EPC, EPF (pre-calculated). Standalone — NO joins to articles or domains | Use for brand/program analysis only. Cannot be linked to articles or domains | Brand analysis, Program analysis, EPF, EPC |
+| 5 | **DOMAIN_PERFORMANCE** | Domain × Date | Domain-level daily metrics - separate iGaming + Growth columns, GA, CWV, costs, article counts (consolidated) | **PRIMARY for domain-level queries** — replaces multi-table joins. Splits iGaming vs Growth metrics. Includes acquisition costs | Domain analysis, Domain performance, Domain ROI, GA sessions |
+| 6 | **PRODUCTION_CYCLE** | Task × Status Change | Article production workflow - status changes, cycle times, production stage mapping | Track article lifecycle. PRODUCTION_CYCLE integer = revision count. Current status has NULL MINUTES_IN_STATUS | Production, TAT, Status changes, Workflow, Bottleneck |
+| 7 | **SEO_PERFORMANCE** | Keyword × Article × Date × Device × Country | Consolidated SEO - GSC + Accuranker + Ahrefs in single table. Metrics prefixed by source (GSC_*, ACCURANKER_*, AHREFS_*) | Consolidates 3 SEO sources. Not all keywords have data from all sources | SEO, Rankings, Keywords, Traffic, Backlinks |
 
-### BLOCKED Table (1)
+### Summary Schema Table Details
 
-| # | Table | Reason | Alternative |
-|---|-------|--------|-------------|
-| 1 | **ARTICLE_PERFORMANCE** | **P0 DATA LOSS**: 54% fewer rows than reporting (97K vs 215K for Jan 2026). FTD attribution lost for brand-article mappings (98.4% loss for some brands). Over-aggregation drops granular data | Continue using `reporting.ARTICLE_PERFORMANCE` |
+#### Table 1: ARTICLE_PERFORMANCE — Key Columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `ARTICLE_KEY` | INTEGER | Surrogate key — join to ARTICLE_SEO, ARTICLE_INVOICES, SEO_PERFORMANCE |
+| `DOMAIN_KEY` | INTEGER | Surrogate key — join to DOMAIN_PERFORMANCE |
+| `DATE` | DATE | Calendar date (YYYY-MM-DD) |
+| `TASK_ID` | STRING | ClickUp task ID (= reporting.DYNAMIC) |
+| `BRAND` | STRING | Affiliate brand name (each brand = separate row) |
+| `PROGRAM` | STRING | Affiliate program/network |
+| `VERTICAL` | STRING | "iGaming" or "Growth" |
+| `CLICKS` | INTEGER | Affiliate link clicks |
+| `NRC` | INTEGER | New Registered Customers |
+| `FTD` | INTEGER | First Time Depositors (Growth = 0) |
+| `DEPOSIT_VALUE_USD` | NUMERIC | Total deposit value |
+| `NET_REVENUE_USD` | NUMERIC | Net revenue after deductions |
+| `CPA_COMMISSION_USD` | FLOAT | CPA commission |
+| `REVSHARE_COMMISSION_USD` | FLOAT | Revenue share commission |
+| `TOTAL_COMMISSION_USD` | NUMERIC | CPA + RevShare combined |
+| `EPC_USD` | FLOAT | Earnings Per Click |
+| `EPF_USD` | FLOAT | Earnings Per FTD |
+
+#### Table 2: ARTICLE_SEO — Key Columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `ARTICLE_KEY` + `DATE` | PK | Article × Date grain |
+| `LCP_AVG` | FLOAT | Largest Contentful Paint (ms). Good: < 2500ms |
+| `INP_AVG` | FLOAT | Interaction to Next Paint (ms). Good: < 200ms |
+| `CLS_AVG` | FLOAT | Cumulative Layout Shift. Good: < 0.1 |
+| `GA_SESSIONS` | INTEGER | Google Analytics sessions |
+| `GA_TOTAL_USERS` | INTEGER | Unique visitors |
+| `GA_PAGE_VIEWS` | INTEGER | Page view count |
+| `GA_BOUNCES` | INTEGER | Bounced sessions |
+| `GA_AVG_ENGAGEMENT_TIME` | NUMERIC | Avg engagement time (seconds) |
+
+#### Table 3: ARTICLE_INVOICES — Key Columns
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `ARTICLE_KEY` + `DATE` | PK | Article × Payment Date grain |
+| `DLC_COST_USD` | NUMERIC | External content provider costs |
+| `CLICKUP_INVOICE_COST_USD` | NUMERIC | Internal production costs |
+| `FIXED_FEE_EARNINGS_USD` | NUMERIC | Monthly retainer earnings |
+| `TOTAL_ARTICLE_COST_USD` | NUMERIC | DLC + ClickUp (excludes Fixed Fee) |
+
+### Cross-Table Join Keys (summary schema)
+
+| Table A | Join Column(s) | Table B | Join Column(s) | Relationship |
+|---------|----------------|---------|----------------|--------------|
+| ARTICLE_PERFORMANCE | `ARTICLE_KEY` + `DATE` | ARTICLE_SEO | `ARTICLE_KEY` + `DATE` | Many:1 (multi-brand → single article-date) |
+| ARTICLE_PERFORMANCE | `ARTICLE_KEY` + `DATE` | ARTICLE_INVOICES | `ARTICLE_KEY` + `DATE` | Many:1 (multi-brand → single article-date) |
+| ARTICLE_PERFORMANCE | `TASK_ID` | PRODUCTION_CYCLE | `TASK_ID` | Many:Many (brands × status changes) |
+| ARTICLE_PERFORMANCE | `DOMAIN_KEY` | DOMAIN_PERFORMANCE | `DOMAIN_KEY` | Many:1 (articles → domain) |
+| ARTICLE_PERFORMANCE | `ARTICLE_KEY` | SEO_PERFORMANCE | `ARTICLE_KEY` | Many:Many (brands × keywords) |
+| ARTICLE_SEO | `ARTICLE_KEY` + `DATE` | ARTICLE_INVOICES | `ARTICLE_KEY` + `DATE` | 1:1 (different date coverage) |
+| ARTICLE_SEO | `DOMAIN_KEY` | DOMAIN_PERFORMANCE | `DOMAIN_KEY` | Many:1 (articles → domain) |
+| SEO_PERFORMANCE | `DOMAIN_KEY` | DOMAIN_PERFORMANCE | `DOMAIN_KEY` | Many:1 (keywords → domain) |
+| PRODUCTION_CYCLE | `PRODUCT_KEY` | DOMAIN_PERFORMANCE | `DOMAIN_KEY` | Many:1 (status changes → domain) |
+| BRAND_PERFORMANCE | — | (No joins) | — | **Standalone** — cannot link to articles/domains |
+
+### Default Query Filters (summary schema)
+
+**Always apply these filters unless the user explicitly asks to include:**
+
+1. **Exclude internal pages:** `WHERE LIVE_URL NOT LIKE '%paradisemedia.com%'`
+2. **Exclude placeholders:** `AND LIVE_URL != 'https://Not Applicable'`
 
 ### Key Column Mappings (summary vs reporting)
 
@@ -79,12 +149,14 @@
 |----------------|---------------------|-------|
 | `DATE` (DATE type) | `DATE_ID` (INT64 YYYYMMDD) | **R22**: Use `DATE >= '2026-01-01'` format, NOT `DATE_ID >= 20260101` |
 | `TASK_ID` | `DYNAMIC` | Same data, cleaner name |
-| `ARTICLE_KEY` | No equivalent | New surrogate key in summary |
-| `DOMAIN_KEY` | No equivalent | New surrogate key in summary |
+| `ARTICLE_KEY` | No equivalent | Surrogate key in summary — primary join key |
+| `DOMAIN_KEY` | No equivalent | Surrogate key in summary — primary join key |
 | `FTD` | `FTD` (BRAND_PERF) / `GOALS` (ARTICLE_PERF) | Consistent naming in summary |
 | `IGAMING_FTD` | Derived from VERTICAL filter | DOMAIN_PERFORMANCE pre-splits by vertical |
 | `PRODUCTION_STAGE` | `PRODUCTION_CYCLE_STATUS` | Renamed in summary |
 | `ARTICLE_STATUS_START_DATE` | `STATUS_START_DATE` | Renamed in summary |
+| `NRC` | `SIGNUPS` | New Registered Customers = Signups |
+| `PRODUCT_KEY` | No equivalent | Same as DOMAIN_KEY in PRODUCTION_CYCLE |
 
 ---
 
@@ -134,7 +206,7 @@
 | **R4** | Commission LP | `TOTAL_COMMISSION_USD_LP` = Legacy Player commission split |
 | **R5** | EPF Calculation | EPF = `TOTAL_COMMISSION_USD / GOALS` |
 | **R6** | Date Format | DATE_ID format is YYYYMMDD integer (e.g., 20260202) |
-| **R7** | Schema Rule | Use `paradisemedia-bi.reporting` ONLY - **NEVER use lakehouse** |
+| **R7** | Schema Rule | Use `paradisemedia-bi.summary` ONLY - **NEVER use lakehouse or reporting** |
 | **R8** | Task-Level Analysis | Always query at TASK_ID level for /tasks_ROI, NOT domain or keyword level |
 | **R9** | Join Key | ARTICLE_INFORMATION.TASK_ID = ARTICLE_PERFORMANCE.DYNAMIC |
 | **R10** | Commission Tables | Commission data comes from ARTICLE_PERFORMANCE, BRAND_PERFORMANCE, FINANCIAL_REPORT |
@@ -147,8 +219,10 @@
 |---------|-----------|-------------|
 | **R22** | Summary Date Format | Summary tables use native `DATE` type (`'2026-01-15'`). Use `WHERE DATE >= '...'` format. **NEVER** mix DATE_ID integers with summary table queries |
 | **R23** | Summary FLOAT64 Warning | Summary monetary columns use FLOAT64 (not NUMERIC). Accept up to 0.05% variance in cross-validation. For exact financial totals, prefer `reporting.FINANCIAL_REPORT` |
-| **R24** | Summary ARTICLE_PERFORMANCE BLOCKED | **NEVER** use `summary.ARTICLE_PERFORMANCE` — it has 54% row loss and up to 98% FTD data loss for specific brands. Always use `reporting.ARTICLE_PERFORMANCE` |
+| **R24** | Summary ARTICLE_PERFORMANCE Grain | `summary.ARTICLE_PERFORMANCE` has **multiple rows per article per day** (one per Brand × Program). When joining to single-grain tables (ARTICLE_SEO, ARTICLE_INVOICES), **always aggregate revenue first** via `SUM(...) GROUP BY ARTICLE_KEY, DATE`. The old sfmax brand bug is fixed — this table now preserves correct brand attribution |
 | **R25** | Summary Domain Priority | For domain-level aggregations, prefer `summary.DOMAIN_PERFORMANCE` over building from base reporting tables. It pre-joins iGaming revenue, GA, CWV, and costs |
+| **R26** | Summary Default Filters | Always apply: `WHERE LIVE_URL NOT LIKE '%paradisemedia.com%' AND LIVE_URL != 'https://Not Applicable'` unless the user explicitly asks to include internal/placeholder pages |
+| **R27** | Summary BRAND_PERFORMANCE Standalone | `summary.BRAND_PERFORMANCE` has **NO joins** to articles, domains, or other summary tables. Use for brand-level analysis only. Cannot attribute brand revenue to specific articles or domains |
 
 ### API Rules
 
@@ -309,14 +383,15 @@ ORDER BY COMMISSION DESC
 
 | # | Source | Reason | Alternative |
 |---|--------|--------|-------------|
-| 1 | `paradisemedia-bi.lakehouse.*` | Internal ETL layer - NOT for reporting | Use `paradisemedia-bi.reporting.*` |
-| 2 | `paradisemedia-bi.analytics.*` | ML/analytics only - not for revenue data | Use `reporting.ARTICLE_PERFORMANCE` |
-| 3 | `paradisemedia-bi.testing.*` | Development/testing only | Use `reporting.*` tables |
-| 4 | `paradisemedia-bi.bi_playground.*` | Experimentation area - unstable | Use `reporting.*` tables |
-| 5 | Domain-level aggregation for /tasks_ROI | Wrong granularity - loses task attribution | Use TASK_ID / DYNAMIC level |
+| 1 | `paradisemedia-bi.lakehouse.*` | Internal ETL layer - NOT for reporting | Use `paradisemedia-bi.summary.*` |
+| 2 | `paradisemedia-bi.reporting.*` | Deprecated — replaced by summary schema | Use `paradisemedia-bi.summary.*` |
+| 3 | `paradisemedia-bi.analytics.*` | ML/analytics only - not for revenue data | Use `summary.ARTICLE_PERFORMANCE` |
+| 4 | `paradisemedia-bi.testing.*` | Development/testing only | Use `summary.*` tables |
+| 5 | `paradisemedia-bi.bi_playground.*` | Experimentation area - unstable | Use `summary.*` tables |
+| 6 | Domain-level aggregation for /tasks_ROI | Wrong granularity - loses task attribution | Use ARTICLE_KEY + DATE level |
 | 6 | DataForSEO keywords for revenue linkage | Keywords from DataForSEO **cannot be linked to revenue** | Use only for "Target Keywords" field |
 | 7 | BigQuery for live SEO data | Stale data - not real-time | Use DataForSEO API |
-| 8 | `paradisemedia-bi.summary.ARTICLE_PERFORMANCE` | **R24**: 54% row loss, FTD data loss up to 98% for some brands | Use `reporting.ARTICLE_PERFORMANCE` |
+| 8 | ~~`paradisemedia-bi.summary.ARTICLE_PERFORMANCE`~~ | **R24 UPDATED (v1.2)**: Table restructured — brand attribution bug fixed. Now APPROVED. See Section 1B | N/A — table is now approved |
 
 ### Critical Anti-Patterns
 
@@ -336,6 +411,7 @@ ORDER BY COMMISSION DESC
 |------|---------|-------------|-------|
 | 2026-02-02 | 1.0 | Andre | Initial approval with governance rules G1-G3 |
 | 2026-02-11 | 1.1 | Andre | Added Section 1B: summary schema (4 tables approved, ARTICLE_PERFORMANCE blocked). Added rules R22-R25. Blocked summary.ARTICLE_PERFORMANCE in Forbidden Sources |
+| 2026-02-13 | 1.2 | Andre | Full summary schema update from CHATBOT_TABLES_DOCUMENTATION. Expanded to 7 approved tables (unblocked ARTICLE_PERFORMANCE after brand fix, added ARTICLE_SEO + ARTICLE_INVOICES). Added cross-table join matrix, default query filters, table detail columns. Added rules R26-R27. Updated R24 (grain awareness replaces block). Removed summary.ARTICLE_PERFORMANCE from Forbidden Sources |
 
 ---
 
@@ -343,12 +419,14 @@ ORDER BY COMMISSION DESC
 
 Before any SQL query or data model reference:
 
-- [ ] Referenced Master List v1.1
-- [ ] Used `reporting` or approved `summary` tables (NOT lakehouse)
-- [ ] Used correct join keys (TASK_ID = DYNAMIC for reporting; TASK_ID/ARTICLE_KEY for summary)
-- [ ] Applied correct column definitions (GOALS = FTDs in reporting; FTD column in summary)
-- [ ] Used correct date format (DATE_ID integers for reporting; DATE strings for summary — R22)
-- [ ] **NEVER** used summary.ARTICLE_PERFORMANCE (R24)
+- [ ] Referenced Master List v1.2
+- [ ] Used `summary` schema tables ONLY (NEVER reporting or lakehouse)
+- [ ] Used correct join keys (ARTICLE_KEY + DATE for article joins; TASK_ID for production joins)
+- [ ] Applied correct column definitions (FTD = FTDs, NRC = signups, TOTAL_COMMISSION_USD)
+- [ ] Used correct date format (DATE type, YYYY-MM-DD — R22)
+- [ ] Applied default query filters for summary tables (R26 — exclude paradisemedia.com and placeholder URLs)
+- [ ] Aggregated summary.ARTICLE_PERFORMANCE before joining to single-grain tables (R24 — multi-brand rows)
+- [ ] Did NOT join BRAND_PERFORMANCE to articles/domains (R27 — standalone table)
 - [ ] No invented relationships
 - [ ] No assumptions beyond this document
 
@@ -357,4 +435,5 @@ Before any SQL query or data model reference:
 ---
 
 *Document Location: `/home/andre/.claude/MASTER_LIST_v1.0.md`*
+*Source Reference: `BI-REPO-PARADISEMEDIA/exports/chatbot/CHATBOT_TABLES_DOCUMENTATION.md`*
 *Owner: Andre | Maintained by: WOL & BOB (with approval)*

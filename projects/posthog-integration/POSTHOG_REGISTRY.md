@@ -65,6 +65,7 @@ This registry is the source of truth for all PostHog configurations across Parad
 | thesunpapers.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf51u | 86aewrm2b | 📦 v1.2.1 READY |
 | topdocumentaryfilms.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf55v | 86aewrm5c | 📦 v1.2.1 READY |
 | warcraftmovies.com | 1.2.1 | N/A | ❌ 0 | ❌ 0 | 86aepf5b2 | 86aewrm9b | 📦 v1.2.1 READY |
+| **australiafootball.com** | **Custom** | **2.0.0** | **✅ Active** | **✅ v2.0.0** | - | - | **✅ LIVE** |
 
 ---
 
@@ -72,8 +73,8 @@ This registry is the source of truth for all PostHog configurations across Parad
 
 | Metric | Count |
 |--------|-------|
-| Total Domains in Registry | 29 |
-| ✅ LIVE (PostHog data confirmed) | **1** (hudsonreporter.com) |
+| Total Domains in Registry | 30 |
+| ✅ LIVE (PostHog data confirmed) | **2** (hudsonreporter.com, australiafootball.com) |
 | 📦 v1.2.1 READY (complete package with attachments) | **26** |
 | ❌ NO DATA / NO REPO | **3** (lover.io, metrotimes, philadelphiaweekly, silvergames) |
 

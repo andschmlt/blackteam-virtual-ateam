@@ -8,7 +8,7 @@
  * PostHog Project ID: 295222
  * Site Type: News/Media
  *
- * @version 1.0.0
+ * @version 1.3.1
  * @date 2026-01-21
  */
 
@@ -21,17 +21,14 @@ if (!defined('ABSPATH')) {
  * Enqueue PostHog and NavBoost scripts
  */
 function hudsonreporter_enqueue_posthog_scripts() {
-    // PostHog base snippet (loads from CDN)
-    wp_enqueue_script(
-        'posthog-js',
-        'https://us-assets.i.posthog.com/static/array.js',
-        array(),
-        null,
-        false // Load in header
-    );
+    // PostHog initialization (v1.3.1 - direct injection, no duplicate SDK load)
 
-    // PostHog initialization
-    wp_add_inline_script('posthog-js', "
+    add_action('wp_head', function() {
+
+        ?>
+
+        <script>
+
         !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split('.');2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement('script')).type='text/javascript',p.async=!0,p.src=s.api_host+'/static/array.js',(r=t.getElementsByTagName('script')[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a='posthog',u.people=u.people||[],u.toString=function(t){var e='posthog';return'posthog'!==a&&(e+='.'+a),t||(e+=' (stub)'),e},u.people.toString=function(){return u.toString(1)+'.people (stub)'},o='capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys'.split(' '),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
 
         posthog.init('phc_DJ5hzzuZSNBOUABbughuopjOvjfGT5CEzU9p5eDc805', {
@@ -56,14 +53,16 @@ function hudsonreporter_enqueue_posthog_scripts() {
             // Console logs (for debugging)
             capture_console_log_opt_in: false
         });
-    ", 'before');
+
+        </script>
+
+    <?php
+
+    });
 
     // NavBoost tracker (load after PostHog)
     wp_enqueue_script(
-        'navboost-tracker',
-        get_template_directory_uri() . '/js/navboost-tracker.js',
-        array('posthog-js'),
-        '1.0.0',
+        'navboost-tracker', get_template_directory_uri() . '/js/navboost-tracker.js', array(), '1.3.1',
         true // Load in footer
     );
 }

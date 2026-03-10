@@ -116,6 +116,7 @@ All news articles MUST pass 4 quality review cycles:
     - `freshboxArticleScores` — Consistent daily publishing cadence maintains favorable freshness signals. Gaps > 3 days degrade this score.
     - `numOfGamblingPages` — When adding R-CONTENT-03 betting/casino links to articles, the article itself does NOT count as a gambling page. Only pages IN `/betting/` or `/casino/` paths count toward the ratio.
     - `badClicks` / NavBoost — Articles that cause high pogo rates (users return to Google immediately) accumulate `badClicks` in a 13-month rolling window. Ensure articles answer the headline promise.
+12. **R-SOURCE-01: Date & Year Verification** — ALL scraped, fetched, or referenced news content MUST have the full publication date (YYYY-MM-DD) AND year verified against the source page metadata before use. Never assume content from a URL is current — always extract and confirm the publication year and date match the intended event. When using API endpoints with IDs (race IDs, event IDs, match IDs), cross-reference the ID against the official schedule to confirm it maps to the correct event and year. Content with mismatched or unverified dates = HARD BLOCK — cannot be published until date/year confirmed.
 
 **MANDATORY:** After any anchor text additions or changes to australiafootball.com, update `docs/ANCHOR_TEXT_INVENTORY.md` with the new anchors.
 

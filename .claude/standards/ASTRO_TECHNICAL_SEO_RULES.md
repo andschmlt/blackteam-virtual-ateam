@@ -220,6 +220,7 @@ Before any Astro deployment, verify:
 ## Related Files
 
 - **R-SEO-02:** `~/.claude/standards/ASTRO_SEO_RULES.md` -- astro-seo component and OG/Twitter standards
+- **R-SEO-04:** `~/.claude/standards/GOOGLE_API_LEAK_DIAGNOSIS.md` -- traffic decline diagnosis using API leak parameters
 - **R-IMG-01:** `~/.claude/standards/IMAGE_OPTIMIZATION_RULES.md` -- image format and optimization
 - **VALIDATION_STANDARDS:** `~/.claude/standards/VALIDATION_STANDARDS.md` -- pre-response checklist
 - **TEAM_CONFIG:** `~/AS-Virtual_Team_System_v2/TEAM_CONFIG.md` -- persona assignments

@@ -523,6 +523,7 @@ These gates ensure the site structure is optimized for Google's classification a
 | Navigation UX | `navDemotion` | Clean navigation, no interstitials, mobile-friendly. Max 8-12 top-level nav items (R-SEO-03f) | Test mobile viewport, verify no popups on first visit |
 | Ad Density | `clutterScore` | No display ads on initial launch. Zero above-the-fold commercial content on non-money pages | Visual audit of every page template |
 | Schema Signals | `entityAnnotations` / `pqData` | WebSite + BreadcrumbList JSON-LD must be valid. Author markup if YMYL vertical | Run Google Rich Results Test on homepage |
+| Source Dates | R-SOURCE-01 | ALL sourced content must have publication date + year verified against source metadata. API IDs cross-referenced against official schedules. | Verify `datePublished` on every scraped article matches intended event year |
 
 **HARD GATE:** Commercial ratio >= 5% at launch = BLOCKED. Add more editorial content to dilute ratio before proceeding.
 

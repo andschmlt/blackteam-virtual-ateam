@@ -97,6 +97,7 @@ Before generating any code or deploying:
 4. **R-SEC-04:** TLS 1.2+, `hmac.compare_digest()` for tokens
 5. **R-DEBUG-01:** Local dry-run BEFORE any Cloud Run deploy
 6. **R-DEPLOY-01:** Post-deployment security audit after every deploy
+7. **R-SOURCE-01:** ALL sourced content must have publication date (YYYY-MM-DD) AND year verified against source metadata. API endpoint IDs (race/event/match) must be cross-referenced against official schedules. Mismatched dates = HARD BLOCK.
 
 ---
 

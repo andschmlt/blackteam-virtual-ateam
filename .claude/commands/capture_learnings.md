@@ -27,11 +27,13 @@ File: ~/pitaya/knowledge/feedback_corrections.md
 Add to the Correction Log table:
 | Date | Issue | Correction |
 
-### 2. Update Virtual Team v2 Knowledge Base
+### 2. Update Virtual Team v2 Knowledge Base (ALL THREE TEAMS — R-LEARN-01)
 ```
 BlackTeam: ~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/
 WhiteTeam: ~/AS-Virtual_Team_System_v2/whiteteam/skills/learnings/
+RedTeam:   ~/AS-Virtual_Team_System_v2/redteam/skills/learnings/
 ```
+**NEVER skip RedTeam.** R-LEARN-01 + R-WORKFLOW-02 require all three.
 
 ### 3. What to Capture
 
@@ -50,7 +52,7 @@ WhiteTeam: ~/AS-Virtual_Team_System_v2/whiteteam/skills/learnings/
 ## Learning: [Brief Title]
 **Date:** YYYY-MM-DD
 **Source:** [User feedback / Bug fix / Enhancement]
-**Teams Affected:** [BlackTeam / WhiteTeam / Both]
+**Teams Affected:** [BlackTeam / WhiteTeam / RedTeam / All]
 
 ### Issue
 [What was wrong or missing]
@@ -91,9 +93,10 @@ ALWAYS capture learnings when:
 
 ### Step 1: Write Learnings to Files
 
-Write to appropriate locations:
+Write to ALL THREE team locations (R-LEARN-01):
 - `~/AS-Virtual_Team_System_v2/blackteam/skills/learnings/YYYY-MM-DD_topic.md`
 - `~/AS-Virtual_Team_System_v2/whiteteam/skills/learnings/YYYY-MM-DD_topic.md`
+- `~/AS-Virtual_Team_System_v2/redteam/skills/learnings/YYYY-MM-DD_topic.md`
 
 ### Step 2: Run RAG Indexer (MANDATORY)
 
@@ -123,7 +126,7 @@ print(f'Learnings collection: {stats.get(\"collections\", {}).get(\"learnings\",
 ```bash
 # Commit learnings files to git
 cd ~/AS-Virtual_Team_System_v2
-git add blackteam/skills/learnings/ whiteteam/skills/learnings/
+git add blackteam/skills/learnings/ whiteteam/skills/learnings/ redteam/skills/learnings/
 git commit -m "Capture session learnings - [brief description]
 
 Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>"
@@ -187,7 +190,7 @@ Last sync: [timestamp]
 When `/capture_learnings` is invoked:
 
 - [ ] Identify learnings from the session
-- [ ] Write to appropriate markdown files (BlackTeam/WhiteTeam)
+- [ ] Write to ALL THREE team markdown files (BlackTeam/WhiteTeam/RedTeam) — R-LEARN-01
 - [ ] **Run RAG indexer** (`python3 rag/scripts/index_all.py`)
 - [ ] Verify document count increased
 - [ ] Commit and push changes to git

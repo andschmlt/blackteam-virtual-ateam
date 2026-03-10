@@ -104,6 +104,23 @@ ls ~/AS-Virtual_Team_System_v2/redteam/skills/learnings/ | tail -5
 cat ~/AS-Virtual_Team_System_v2/redteam/anti-patterns/ANTI_PATTERN_DATABASE.md
 ```
 
+### Phase 0.4: Security Standards Gate (MANDATORY — R-ZERO Enforced)
+
+**ALL Red Team challenges MUST test against the full R-SEC security standards suite.**
+
+| Standard | RG-5 Challenge | Spec |
+|----------|---------------|------|
+| R-SEC-01 | Credential scan + git history audit | MEMORY.md |
+| R-SEC-02 | Input validation bypass (SSRF, traversal, injection) | `~/.claude/standards/INPUT_VALIDATION_RULES.md` |
+| R-SEC-03 | CORS probing + webhook HMAC bypass | `~/.claude/standards/CORS_SECURITY_RULES.md` |
+| R-SEC-04 | Weak crypto detection (MD5, verify=False, random) | `~/.claude/standards/CRYPTOGRAPHY_RULES.md` |
+| R-SEC-05 | Incident response readiness simulation | `~/.claude/standards/INCIDENT_RESPONSE_PLAYBOOK.md` |
+| R-SEC-06 | Rotation log audit against schedule | `~/.claude/standards/SECRETS_ROTATION_SCHEDULE.md` |
+| R-DEPLOY-01 | Verify post-deploy audit was executed | MEMORY.md |
+| R-DEBUG-01 | Verify dry-run evidence before deploy | MEMORY.md |
+
+**R-ZERO is PRIMARY challenger for all R-SEC standards. R-BRCH secondary for code-level checks.**
+
 ### Phase 1: Challenge Intake (R-REX)
 
 1. Receive T18 Challenge Request from W-WOL

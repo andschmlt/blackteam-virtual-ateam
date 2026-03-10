@@ -892,6 +892,7 @@ gh pr create --title "Your PR title" --body "What you changed and why"
 | R29 | 2026-03-02 | **P0 Fix**: CTA selector bug — `a[rel="sponsored"]` doesn't match multi-word rel attributes. Fix to `a[rel~="sponsored"]`. Navboost dual event firing (double pogo count). | **P0** | B-TECH | **Done** (2026-03-02) — Triple-Team verified |
 | R30 | 2026-03-02 | **P0 Fix**: Anchor text inventory corrected. Old 7x/10x fixed via P1-7 (33 replacements). March article anchor corrected. Inventory v4.1. 0 violations. | **P0** | B-RANK | **Done** (2026-03-02) — Triple-Team verified |
 | R31 | 2026-03-02 | **Priority Plan v2.1** saved to `docs/PRIORITY_PLAN_v2.md`. Covers all 206 API leak parameters, 7 Red Gate findings, CEO Firefly directive. Triple sign-off: B-BOB + W-WOL + R-REX. | P0 | Andre | **Done** (2026-03-02) |
+| R32 | 2026-03-05 | **GSC Product Schema Fix**: GSC flagged 3 casino pages (payid, blackjack, fast-payout) for missing `offers`/`review`/`aggregateRating` on Product structured data. Added editorial `review` + `reviewRating` (4.8/5) to `itemReviewed.Product` in `[slug].astro`. Also fixed hardcoded Product name → dynamic `entry.data.title`. Affects all 6 casino roundup-review pages. Triple-Team certified (Option C2). Commit `6938f32`. | P1 | Andre (B-RANK) | **Done** (2026-03-05) |
 
 ### In Progress
 
@@ -913,6 +914,7 @@ gh pr create --title "Your PR title" --body "What you changed and why"
 
 | # | Issue | Branch | Owner | Completed | Commit/PR |
 |---|-------|--------|-------|-----------|-----------|
+| R32 | GSC Product schema fix — added review+reviewRating to casino roundup pages | main (direct) | Andre | 2026-03-05 | `6938f32` |
 | 17 | [#17](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/17) Casino money page | main (direct) | Andre | 2026-02-24 | `063dbbc` |
 | 18 | [#18](https://github.com/ParadiseMediaOrg/australiafootball.com/issues/18) Casino content links | main (direct) | Andre | 2026-02-24 | `063dbbc` |
 | — | TechOps TopList embeds (betting + casino) | main (direct) | Andre | 2026-02-24 | `834bde7` |

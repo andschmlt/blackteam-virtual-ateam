@@ -8,7 +8,7 @@
  * 4. Article Completion
  * 5. Return Visits
  *
- * PostHog Project ID: 295222
+ * PostHog Project ID: 295238
  * Generated: 2026-01-21
  */
 

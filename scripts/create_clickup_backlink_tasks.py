@@ -10,8 +10,25 @@ import requests
 import time
 import json
 import sys
+import os
+from pathlib import Path
 
-API_KEY = "pk_60332880_BFGB37OGS3728SKRG41AB9EPIKK5O3GY"
+# R-SEC-01: Load credentials from ~/.keys/.env — NEVER hardcode
+_env_path = Path.home() / ".keys" / ".env"
+if _env_path.exists():
+    with open(_env_path) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, _, value = line.partition("=")
+                os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+API_KEY = os.environ.get("CLICKUP_API_KEY")
+if not API_KEY:
+    raise ValueError(
+        "CLICKUP_API_KEY not found. Set it in ~/.keys/.env or as an environment variable."
+    )
+
 LIST_ID = "901323608605"
 MARTA_ID = 112045921
 BASE_URL = "https://api.clickup.com/api/v2"

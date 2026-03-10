@@ -406,6 +406,12 @@ R-REX Signature: _________________ | CERTIFIED   | Date: _________
 - [ ] Report includes specific file paths, actual vs expected, severity ratings
 - [ ] Audit depth: source-level verification, not just "does it load?"
 
+### Source Date Verification Gate (R-SOURCE-01) — MANDATORY FOR ALL SOURCED CONTENT
+- [ ] ALL scraped/fetched news has full publication date (YYYY-MM-DD) AND year verified against source metadata
+- [ ] Never assume URL content is current — extract and confirm publication year matches intended event
+- [ ] API endpoints with IDs (race IDs, event IDs, match IDs) cross-referenced against official schedule
+- [ ] Content with mismatched or unverified dates = HARD BLOCK until confirmed
+
 ### RedTeam Gates (7 Red Gates)
 - [ ] RG-1: Validation Integrity — WT validated what they claimed (100% required)
 - [ ] RG-2: Adversarial Edge Cases — empty inputs, boundaries, encoding (95% required)
