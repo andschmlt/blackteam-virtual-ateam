@@ -271,6 +271,25 @@ When "BUILD NEW" is selected:
 │  19. Scheduler timezone?                                 │
 │      (e.g., Australia/Sydney, Europe/London)             │
 │                                                          │
+│  20. Event Calendar?                                     │
+│      [ ] Yes — Search for sporting events and build a    │
+│          calendar that boosts editorial content around    │
+│          major events (Grand Finals, World Cups, etc.)   │
+│          Sports to track: ____________________________   │
+│          (e.g., afl,nrl,cricket,f1 or "auto-detect")    │
+│      [ ] No — Skip event calendar                        │
+│                                                          │
+│      When enabled, the editorial generator:              │
+│      - Reads events_calendar.json for upcoming events    │
+│      - Boosts weight for sports with events in lead      │
+│        window (7-21 days before, based on magnitude)     │
+│      - Injects event context into Claude prompts         │
+│      - Supports warmup campaigns (e.g., World Cup drip)  │
+│                                                          │
+│      CLI: pm-launcher event-calendar {domain}            │
+│       or: nexus-launcher event-calendar {domain}         │
+│           --sports afl,nrl --year $(date +%Y)            │
+│                                                          │
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -1156,7 +1175,55 @@ gcloud scheduler jobs create http editorial-generator-{domain}-3daily \
   --uri="https://{region}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/paradisemedia-bi/jobs/editorial-generator-{domain}:run"
 ```
 
-### 7D: Deploy Standings Updater (R-CONTENT-05 — for sports sites)
+### 7D: Event Calendar Setup (if Q20 = Yes)
+
+If the user enabled the event calendar in Q20:
+
+1. **Search for events** relevant to the site's vertical and geography:
+   ```bash
+   # Use PM or Nexus Site Launcher CLI to generate a calendar
+   pm-launcher event-calendar {domain} --sports {sports_from_q20} --year $(date +%Y) \
+     --output {domain}/scripts/events_calendar_$(date +%Y).json
+   # OR (Nexus module):
+   nexus-launcher event-calendar {domain} --sports {sports_from_q20} --year $(date +%Y) \
+     --output {domain}/scripts/events_calendar_$(date +%Y).json
+   ```
+
+2. **Review and customize** the generated calendar:
+   - Verify event dates are correct for the current year
+   - Add any site-specific events not in the templates
+   - Set up warmup campaigns for major tournaments (optional)
+   - Adjust lead_days and magnitude per event
+
+3. **Wire into editorial_generator.py**:
+   - Add `events_calendar_YYYY.json` to the Docker COPY in `Dockerfile.editorial-generator`
+   - The editorial generator already has event calendar support built in:
+     - `load_event_calendar()` reads the JSON
+     - `get_active_events()` finds events in lead window
+     - `get_event_weight_boost()` increases selection weight
+     - `build_event_context()` injects context into Claude prompts
+   - Warmup topics are injected into the candidate pool automatically
+
+4. **Add calendar to Docker image**:
+   ```dockerfile
+   # In Dockerfile.editorial-generator, add:
+   COPY scripts/events_calendar_*.json /app/
+   ```
+
+5. **Verify event boost works**:
+   ```bash
+   # Dry run — check for "Active events" and "Event context injected" in output
+   LOCAL_REPO=~/{domain} EDITORIAL_DRY_RUN=true python3 scripts/editorial_generator.py
+   ```
+
+**Checklist:**
+- [ ] Event calendar JSON generated with correct dates
+- [ ] Calendar includes all relevant sports for this site
+- [ ] Warmup campaigns configured for major tournaments
+- [ ] Calendar COPY added to Dockerfile.editorial-generator
+- [ ] Dry run shows event detection and weight boost working
+
+### 7E: Deploy Standings Updater (R-CONTENT-05 — for sports sites)
 
 If the site has standings/ladder/fixture pages with hardcoded data:
 - [ ] Create `scripts/update_standings.py` (Wikipedia scraper + Monte Carlo probabilities)
@@ -1165,7 +1232,7 @@ If the site has standings/ladder/fixture pages with hardcoded data:
 - [ ] Label off-season pages correctly: "Final [YEAR] Standings" (R-CONTENT-05e)
 - [ ] No false freshness claims on pages without active pipelines (R-CONTENT-05a)
 
-### 7E: Verify Automation
+### 7F: Verify Automation
 
 - [ ] Trigger news-updater manually — verify article appears on site
 - [ ] Trigger editorial-generator manually — verify article appears on site
