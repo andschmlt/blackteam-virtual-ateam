@@ -13,7 +13,6 @@ Designed to run daily via cron at 08:00 AEST.
 """
 
 import os
-import sys
 import json
 import base64
 import requests
@@ -69,23 +68,7 @@ TARGET_KEYWORDS = [
 # ---------------------------------------------------------------------------
 # Load credentials
 # ---------------------------------------------------------------------------
-def load_env():
-    """Load config from ~/.keys/.env with os.environ taking precedence (Cloud Run)."""
-    env_vars = {}
-    env_file = os.path.expanduser("~/.keys/.env")
-    if os.path.exists(env_file):
-        with open(env_file) as f:
-            for line in f:
-                line = line.strip()
-                if line and "=" in line and not line.startswith("#"):
-                    key, value = line.split("=", 1)
-                    env_vars[key] = value
-    # Cloud Run injects secrets as env vars — these take precedence
-    for key in ("POSTHOG_PERSONAL_API_KEY", "DATAFORSEO_LOGIN",
-                "DATAFORSEO_PASSWORD", "SLACK_BOT_TOKEN"):
-        if key in os.environ:
-            env_vars[key] = os.environ[key]
-    return env_vars
+from shared import load_env
 
 ENV = load_env()
 POSTHOG_API_KEY = ENV.get("POSTHOG_PERSONAL_API_KEY", "")
@@ -125,7 +108,8 @@ def posthog_query(query_str):
         if resp.status_code == 200:
             return resp.json()
         return {"error": resp.text, "results": []}
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException,
+            json.JSONDecodeError, ValueError) as e:
         return {"error": str(e), "results": []}
 
 
@@ -297,8 +281,10 @@ def get_bq_domain_daily(date_str):
             r = dict(rows[0])
             return {k: (float(v) if v is not None else None) for k, v in r.items()}
         return {"clicks": 0, "signups": 0, "ftds": 0, "epf": 0, "commission": 0, "traffic": 0}
-    except Exception as e:
+    except (ImportError, KeyError, ValueError, TypeError) as e:
         return {"error": str(e)}
+    except Exception as e:
+        return {"error": f"BQ unexpected: {e}"}
 
 
 def get_bq_domain_ytd():
@@ -323,8 +309,10 @@ def get_bq_domain_ytd():
             r = dict(rows[0])
             return {k: (float(v) if v is not None else 0) for k, v in r.items()}
         return {"clicks": 0, "signups": 0, "ftds": 0, "epf": 0, "commission": 0, "traffic": 0}
-    except Exception as e:
+    except (ImportError, KeyError, ValueError, TypeError) as e:
         return {"error": str(e)}
+    except Exception as e:
+        return {"error": f"BQ unexpected: {e}"}
 
 
 def get_bq_article_performance(date_str):
@@ -353,8 +341,10 @@ def get_bq_article_performance(date_str):
         """
         rows = list(client.query(q).result())
         return [dict(r) for r in rows]
-    except Exception as e:
+    except (ImportError, KeyError, ValueError, TypeError) as e:
         return {"error": str(e)}
+    except Exception as e:
+        return {"error": f"BQ unexpected: {e}"}
 
 
 def get_bq_article_ytd():
@@ -382,8 +372,10 @@ def get_bq_article_ytd():
         """
         rows = list(client.query(q).result())
         return [dict(r) for r in rows]
-    except Exception as e:
+    except (ImportError, KeyError, ValueError, TypeError) as e:
         return {"error": str(e)}
+    except Exception as e:
+        return {"error": f"BQ unexpected: {e}"}
 
 
 # ---------------------------------------------------------------------------
@@ -396,12 +388,18 @@ def _get_gsc_service():
     """Build GSC API service using application default credentials."""
     try:
         import google.auth
+        import google.auth.exceptions
         from googleapiclient.discovery import build
+    except ImportError as e:
+        print(f"  GSC auth error (missing library): {e}")
+        return None
+    try:
         creds, _ = google.auth.default(
             scopes=["https://www.googleapis.com/auth/webmasters.readonly"]
         )
         return build("searchconsole", "v1", credentials=creds)
-    except Exception as e:
+    except (google.auth.exceptions.DefaultCredentialsError,
+            google.auth.exceptions.TransportError, OSError) as e:
         print(f"  GSC auth error: {e}")
         return None
 
@@ -430,7 +428,7 @@ def get_gsc_daily(date_str):
                 "position": rows[0]["position"],
             }
         return {"clicks": 0, "impressions": 0, "ctr": 0, "position": 0}
-    except Exception as e:
+    except (KeyError, IndexError, TypeError, OSError) as e:
         return {"error": str(e)}
 
 
@@ -461,7 +459,7 @@ def get_gsc_top_pages(date_from, date_to, limit=15):
                 "position": row["position"],
             })
         return {"results": results}
-    except Exception as e:
+    except (KeyError, IndexError, TypeError, OSError) as e:
         return {"error": str(e)}
 
 
@@ -491,7 +489,7 @@ def get_gsc_top_queries(date_from, date_to, limit=20):
                 "position": row["position"],
             })
         return {"results": results}
-    except Exception as e:
+    except (KeyError, IndexError, TypeError, OSError) as e:
         return {"error": str(e)}
 
 
@@ -526,7 +524,7 @@ def analyze_content(date_str):
         try:
             with open(f) as fh:
                 content = fh.read()
-        except Exception:
+        except (IOError, OSError):
             continue
 
         # Parse frontmatter
@@ -652,7 +650,8 @@ def dataforseo_keyword_rankings():
                 })
 
         return {"results": results}
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException,
+            json.JSONDecodeError, KeyError, IndexError, ValueError) as e:
         return {"error": str(e)}
 
 
@@ -697,7 +696,8 @@ def dataforseo_ranked_keywords():
                 })
         results.sort(key=lambda x: x.get("volume", 0), reverse=True)
         return {"results": results[:50]}
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException,
+            json.JSONDecodeError, KeyError, IndexError, ValueError) as e:
         return {"error": str(e)}
 
 
@@ -737,7 +737,8 @@ def get_psi_scores(url, strategy="mobile"):
             }
 
         return {"scores": scores, "cwv": cwv}
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException,
+            json.JSONDecodeError, KeyError, TypeError, ValueError) as e:
         return {"error": str(e)}
 
 
@@ -753,7 +754,7 @@ def check_site_health():
         r = requests.get(f"{SITE_URL}/", timeout=15, allow_redirects=True)
         checks["homepage_status"] = r.status_code
         checks["homepage_time_ms"] = int(r.elapsed.total_seconds() * 1000)
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException) as e:
         checks["homepage_status"] = f"ERROR: {e}"
 
     # Sitemap accessible
@@ -762,7 +763,7 @@ def check_site_health():
         checks["sitemap_status"] = r.status_code
         if r.status_code == 200:
             checks["sitemap_urls"] = r.text.count("<loc>")
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException) as e:
         checks["sitemap_status"] = f"ERROR: {e}"
 
     # News sitemap
@@ -771,28 +772,28 @@ def check_site_health():
         checks["news_sitemap_status"] = r.status_code
         if r.status_code == 200:
             checks["news_sitemap_urls"] = r.text.count("<loc>")
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException) as e:
         checks["news_sitemap_status"] = f"ERROR: {e}"
 
     # Robots.txt
     try:
         r = requests.get(f"{SITE_URL}/robots.txt", timeout=15)
         checks["robots_status"] = r.status_code
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException) as e:
         checks["robots_status"] = f"ERROR: {e}"
 
     # Casino page check
     try:
         r = requests.get(f"{SITE_URL}/casino/best-online-casinos-australia/", timeout=15)
         checks["casino_money_page"] = r.status_code
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException) as e:
         checks["casino_money_page"] = f"ERROR: {e}"
 
     # Betting page check
     try:
         r = requests.get(f"{SITE_URL}/betting/best-betting-sites-australia/", timeout=15)
         checks["betting_money_page"] = r.status_code
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException) as e:
         checks["betting_money_page"] = f"ERROR: {e}"
 
     return checks
@@ -2195,6 +2196,7 @@ def send_to_slack(messages):
         return _send_email_fallback(plain_text)
 
     from slack_sdk import WebClient
+    from slack_sdk.errors import SlackApiError
     client = WebClient(token=SLACK_BOT_TOKEN)
 
     try:
@@ -2228,12 +2230,12 @@ def send_to_slack(messages):
                     print(f"    Thread posted: {title}")
                 else:
                     print(f"    Thread failed ({title}): {t_result.get('error')}")
-            except Exception as te:
+            except (SlackApiError, requests.RequestException) as te:
                 print(f"    Thread error ({title}): {te}")
 
         return True
 
-    except Exception as e:
+    except (SlackApiError, requests.RequestException, KeyError, ValueError) as e:
         print(f"Slack error: {e}")
         return _send_email_fallback(plain_text)
 
@@ -2269,7 +2271,7 @@ def _send_email_fallback(plain_text):
             server.sendmail(from_email, to_emails, msg.as_string())
         print(f"  Email sent to {to_emails}")
         return True
-    except Exception as e:
+    except (smtplib.SMTPException, OSError, ConnectionError) as e:
         print(f"Email error: {e}")
         print(plain_text)
         return False

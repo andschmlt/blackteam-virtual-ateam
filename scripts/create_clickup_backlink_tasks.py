@@ -90,12 +90,12 @@ tech_spec_md = ""
 try:
     with open("/home/andre/projects/paradise-backlink-manager/PROJECT_PLAN.md", "r") as f:
         project_plan_md = f.read()
-except:
+except (IOError, OSError):
     project_plan_md = "See ~/projects/paradise-backlink-manager/PROJECT_PLAN.md"
 try:
     with open("/home/andre/projects/paradise-backlink-manager/TECHNICAL_SPECIFICATION.md", "r") as f:
         tech_spec_md = f.read()
-except:
+except (IOError, OSError):
     tech_spec_md = "See ~/projects/paradise-backlink-manager/TECHNICAL_SPECIFICATION.md"
 
 # Truncate to ClickUp desc limit (~50KB)

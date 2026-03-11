@@ -189,7 +189,6 @@ def derive_sentiment_combo(members, persona_geos):
 
 def derive_avg_metrics(members):
     """Average NLP metrics across cluster members."""
-    import numpy as np
     metrics_keys = ["avg_sentence_length", "std_sentence_length", "flesch_kincaid_grade",
                     "gunning_fog", "type_token_ratio", "fragment_ratio", "long_sentence_ratio"]
     read_keys = ["flesch_reading_ease", "smog_index", "coleman_liau_index"]

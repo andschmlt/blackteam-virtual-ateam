@@ -23,17 +23,7 @@ PROJECT_NAME = "hudsonreporter.com"
 BASE_URL = "https://us.i.posthog.com"
 
 # Load environment variables from .keys/.env
-def load_env():
-    env_file = "/home/andre/.keys/.env"
-    env_vars = {}
-    if os.path.exists(env_file):
-        with open(env_file, 'r') as f:
-            for line in f:
-                line = line.strip()
-                if line and '=' in line and not line.startswith('#'):
-                    key, value = line.split('=', 1)
-                    env_vars[key] = value
-    return env_vars
+from shared import load_env
 
 ENV = load_env()
 API_KEY = ENV.get('POSTHOG_PERSONAL_API_KEY', '')
@@ -54,7 +44,8 @@ def run_query(query):
         if resp.status_code == 200:
             return resp.json()
         return {"error": resp.text, "results": []}
-    except Exception as e:
+    except (requests.Timeout, requests.ConnectionError, requests.RequestException,
+            json.JSONDecodeError, ValueError) as e:
         return {"error": str(e), "results": []}
 
 def get_lcp_rating(lcp):
@@ -647,7 +638,7 @@ def send_email(subject, body):
 
         print(f"Email sent successfully to: {', '.join(TO_EMAILS)}")
         return True
-    except Exception as e:
+    except (smtplib.SMTPException, OSError, ConnectionError) as e:
         print(f"ERROR sending email: {e}")
         return False
 

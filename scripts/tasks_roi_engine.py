@@ -17,7 +17,6 @@ MASTER LIST: /home/andre/.claude/MASTER_LIST_v1.0.md
 """
 
 import os
-import sys
 import json
 import requests
 from datetime import datetime, timedelta
